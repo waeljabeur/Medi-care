@@ -202,13 +202,15 @@ export default function Patients() {
                     </td>
                     <td className="py-5 px-3">
                       <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="hover:bg-primary/10 hover:text-primary transition-colors"
-                        >
-                          <FileText className="w-4 h-4" />
-                        </Button>
+                        <Link to={`/patients/${patient.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="hover:bg-primary/10 hover:text-primary transition-colors"
+                          >
+                            <FileText className="w-4 h-4" />
+                          </Button>
+                        </Link>
                         <Button
                           variant="ghost"
                           size="sm"
