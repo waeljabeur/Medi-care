@@ -68,13 +68,15 @@ export default function Patients() {
             Manage your patient information and medical records
           </p>
         </div>
-        <Button
-          size="default"
-          className="shadow-sm hover:shadow-md transition-shadow"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Patient
-        </Button>
+        <Link to="/patients/new">
+          <Button
+            size="default"
+            className="shadow-sm hover:shadow-md transition-shadow"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Patient
+          </Button>
+        </Link>
       </div>
 
       {/* Stats and Search */}
