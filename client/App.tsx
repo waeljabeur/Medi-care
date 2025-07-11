@@ -41,10 +41,26 @@ const App = () => (
             }
           />
           <Route
+            path="/patients/new"
+            element={
+              <DashboardLayout>
+                <AddEditPatient />
+              </DashboardLayout>
+            }
+          />
+          <Route
             path="/patients/:patientId"
             element={
               <DashboardLayout>
                 <PatientProfile />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/patients/:patientId/edit"
+            element={
+              <DashboardLayout>
+                <AddEditPatient />
               </DashboardLayout>
             }
           />
