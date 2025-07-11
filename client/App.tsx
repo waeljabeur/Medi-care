@@ -40,6 +40,14 @@ const App = () => (
             }
           />
           <Route
+            path="/patients/:patientId"
+            element={
+              <DashboardLayout>
+                <PatientProfile />
+              </DashboardLayout>
+            }
+          />
+          <Route
             path="/appointments"
             element={
               <DashboardLayout>
