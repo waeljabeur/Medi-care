@@ -138,10 +138,13 @@ export default function Patients() {
                 {mockPatients.map((patient) => (
                   <tr
                     key={patient.id}
-                    className="border-b border-border/30 hover:bg-background/50 transition-all duration-200 group"
+                    className="border-b border-border/30 hover:bg-background/50 transition-all duration-200 group cursor-pointer"
                   >
                     <td className="py-5 px-3">
-                      <div className="flex items-center space-x-4">
+                      <Link
+                        to={`/patients/${patient.id}`}
+                        className="flex items-center space-x-4 w-full"
+                      >
                         <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                           <span className="text-sm font-bold text-primary">
                             {patient.name
@@ -151,15 +154,16 @@ export default function Patients() {
                           </span>
                         </div>
                         <div>
-                          <div className="font-semibold text-foreground text-base">
+                          <div className="font-semibold text-foreground text-base flex items-center">
                             {patient.name}
+                            <ExternalLink className="w-3 h-3 ml-2 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                           <div className="text-sm text-muted-foreground font-medium">
                             Patient ID: #
                             {patient.id.toString().padStart(4, "0")}
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     </td>
                     <td className="py-5 px-3">
                       <div className="space-y-2">
