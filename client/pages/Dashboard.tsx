@@ -32,6 +32,7 @@ const mockData = {
     {
       id: 1,
       patient: "Emma Wilson",
+      patientId: 1,
       time: "9:00 AM",
       date: "Today",
       reason: "Annual Checkup",
@@ -40,6 +41,7 @@ const mockData = {
     {
       id: 2,
       patient: "Michael Chen",
+      patientId: 2,
       time: "10:30 AM",
       date: "Today",
       reason: "Follow-up",
@@ -48,6 +50,7 @@ const mockData = {
     {
       id: 3,
       patient: "Sarah Davis",
+      patientId: 3,
       time: "2:00 PM",
       date: "Today",
       reason: "Consultation",
@@ -56,6 +59,7 @@ const mockData = {
     {
       id: 4,
       patient: "Robert Johnson",
+      patientId: 4,
       time: "9:00 AM",
       date: "Tomorrow",
       reason: "Blood Test Review",
@@ -64,6 +68,7 @@ const mockData = {
     {
       id: 5,
       patient: "Lisa Anderson",
+      patientId: 5,
       time: "11:00 AM",
       date: "Tomorrow",
       reason: "Physical Exam",
