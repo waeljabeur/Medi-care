@@ -274,49 +274,52 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-3">
               {mockData.upcomingAppointments.map((appointment) => (
-                <div
+                <Link
                   key={appointment.id}
-                  className="flex items-center justify-between p-5 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group"
+                  to={`/patients/${appointment.patientId}`}
+                  className="block"
                 >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Calendar className="w-6 h-6 text-primary" />
+                  <div className="flex items-center justify-between p-5 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group cursor-pointer">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <Calendar className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-foreground text-base">
+                          {appointment.patient}
+                        </div>
+                        <div className="text-sm text-muted-foreground font-medium">
+                          {appointment.reason}
+                        </div>
+                        <div className="text-sm text-muted-foreground flex items-center mt-1">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {appointment.date} at {appointment.time}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-semibold text-foreground text-base">
-                        {appointment.patient}
-                      </div>
-                      <div className="text-sm text-muted-foreground font-medium">
-                        {appointment.reason}
-                      </div>
-                      <div className="text-sm text-muted-foreground flex items-center mt-1">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {appointment.date} at {appointment.time}
-                      </div>
+                    <div className="flex items-center space-x-3">
+                      <Badge
+                        variant={
+                          appointment.status === "confirmed"
+                            ? "default"
+                            : "secondary"
+                        }
+                        className={
+                          appointment.status === "confirmed"
+                            ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
+                            : "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
+                        }
+                      >
+                        {appointment.status === "confirmed" ? (
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                        ) : (
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                        )}
+                        {appointment.status}
+                      </Badge>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Badge
-                      variant={
-                        appointment.status === "confirmed"
-                          ? "default"
-                          : "secondary"
-                      }
-                      className={
-                        appointment.status === "confirmed"
-                          ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
-                          : "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
-                      }
-                    >
-                      {appointment.status === "confirmed" ? (
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                      ) : (
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                      )}
-                      {appointment.status}
-                    </Badge>
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           </CardContent>
