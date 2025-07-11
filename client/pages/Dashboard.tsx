@@ -103,21 +103,41 @@ const mockData = {
 
 export default function Dashboard() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-8 bg-primary rounded-full"></div>
+            <h1 className="text-4xl font-bold text-foreground tracking-tight">
+              Dashboard
+            </h1>
+          </div>
+          <p className="text-muted-foreground text-lg">
             Welcome back, Dr. Johnson. Here's what's happening today.
           </p>
+          <div className="text-sm text-muted-foreground">
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
         </div>
-        <div className="flex items-center space-x-3 mt-4 sm:mt-0">
-          <Button size="sm" variant="outline">
+        <div className="flex items-center space-x-3">
+          <Button
+            size="default"
+            variant="outline"
+            className="shadow-sm hover:shadow-md transition-shadow"
+          >
             <Calendar className="w-4 h-4 mr-2" />
             View Calendar
           </Button>
-          <Button size="sm">
+          <Button
+            size="default"
+            className="shadow-sm hover:shadow-md transition-shadow"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Quick Add
           </Button>
@@ -126,141 +146,150 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="border-l-4 border-l-primary">
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-200 border-0 shadow-md bg-gradient-to-br from-primary/5 to-primary/10">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Total Patients
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-3xl font-bold text-foreground mb-1">
                   {mockData.stats.totalPatients}
                 </div>
-                <div className="flex items-center text-success text-sm mt-1">
+                <div className="flex items-center text-success text-sm">
                   <TrendingUp className="w-3 h-3 mr-1" />+
                   {mockData.stats.thisMonthPatients} this month
                 </div>
               </div>
-              <div className="p-3 bg-primary/10 rounded-full">
-                <Users className="w-6 h-6 text-primary" />
+              <div className="p-4 bg-primary/20 rounded-2xl group-hover:scale-110 transition-transform duration-200">
+                <Users className="w-7 h-7 text-primary" />
               </div>
             </div>
           </CardContent>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -translate-y-12 translate-x-12"></div>
         </Card>
 
-        <Card className="border-l-4 border-l-info">
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-200 border-0 shadow-md bg-gradient-to-br from-info/5 to-info/10">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Today's Appointments
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-3xl font-bold text-foreground mb-1">
                   {mockData.stats.todaysAppointments}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
+                <div className="text-sm text-muted-foreground">
                   3 confirmed, 1 pending
                 </div>
               </div>
-              <div className="p-3 bg-info/10 rounded-full">
-                <Calendar className="w-6 h-6 text-info" />
+              <div className="p-4 bg-info/20 rounded-2xl group-hover:scale-110 transition-transform duration-200">
+                <Calendar className="w-7 h-7 text-info" />
               </div>
             </div>
           </CardContent>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-info/5 rounded-full -translate-y-12 translate-x-12"></div>
         </Card>
 
-        <Card className="border-l-4 border-l-success">
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-200 border-0 shadow-md bg-gradient-to-br from-success/5 to-success/10">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               This Month
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-3xl font-bold text-foreground mb-1">
                   {mockData.stats.thisMonthPatients}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
+                <div className="text-sm text-muted-foreground">
                   New patients added
                 </div>
               </div>
-              <div className="p-3 bg-success/10 rounded-full">
-                <Activity className="w-6 h-6 text-success" />
+              <div className="p-4 bg-success/20 rounded-2xl group-hover:scale-110 transition-transform duration-200">
+                <Activity className="w-7 h-7 text-success" />
               </div>
             </div>
           </CardContent>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-success/5 rounded-full -translate-y-12 translate-x-12"></div>
         </Card>
 
-        <Card className="border-l-4 border-l-warning">
+        <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-200 border-0 shadow-md bg-gradient-to-br from-warning/5 to-warning/10">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Pending Tasks
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-3xl font-bold text-foreground mb-1">
                   {mockData.stats.pendingTasks}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
+                <div className="text-sm text-muted-foreground">
                   Require attention
                 </div>
               </div>
-              <div className="p-3 bg-warning/10 rounded-full">
-                <Clock className="w-6 h-6 text-warning" />
+              <div className="p-4 bg-warning/20 rounded-2xl group-hover:scale-110 transition-transform duration-200">
+                <Clock className="w-7 h-7 text-warning" />
               </div>
             </div>
           </CardContent>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-warning/5 rounded-full -translate-y-12 translate-x-12"></div>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Upcoming Appointments */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
+        <Card className="lg:col-span-2 shadow-md border-0 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold">
+              <CardTitle className="text-xl font-bold text-foreground">
                 Upcoming Appointments
               </CardTitle>
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                className="shadow-sm hover:shadow-md transition-shadow"
+              >
                 View All
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
-            <CardDescription>
+            <CardDescription className="text-base">
               Your next 5 scheduled appointments
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {mockData.upcomingAppointments.map((appointment) => (
                 <div
                   key={appointment.id}
-                  className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                  className="flex items-center justify-between p-5 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group"
                 >
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                      <Calendar className="w-5 h-5 text-primary" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Calendar className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <div className="font-medium text-foreground">
+                      <div className="font-semibold text-foreground text-base">
                         {appointment.patient}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-muted-foreground font-medium">
                         {appointment.reason}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-muted-foreground flex items-center mt-1">
+                        <Clock className="w-3 h-3 mr-1" />
                         {appointment.date} at {appointment.time}
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Badge
                       variant={
                         appointment.status === "confirmed"
@@ -269,8 +298,8 @@ export default function Dashboard() {
                       }
                       className={
                         appointment.status === "confirmed"
-                          ? "bg-success/10 text-success hover:bg-success/20"
-                          : ""
+                          ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
+                          : "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
                       }
                     >
                       {appointment.status === "confirmed" ? (
@@ -288,34 +317,46 @@ export default function Dashboard() {
         </Card>
 
         {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
+        <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-bold text-foreground">
               Recent Activity
             </CardTitle>
-            <CardDescription>Latest updates and actions</CardDescription>
+            <CardDescription className="text-base">
+              Latest updates and actions
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockData.recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
-                    {activity.type === "patient" && (
-                      <Users className="w-4 h-4 text-primary" />
-                    )}
-                    {activity.type === "appointment" && (
-                      <Calendar className="w-4 h-4 text-primary" />
-                    )}
-                    {activity.type === "update" && (
-                      <Activity className="w-4 h-4 text-primary" />
+              {mockData.recentActivity.map((activity, index) => (
+                <div
+                  key={activity.id}
+                  className="flex items-start space-x-4 group"
+                >
+                  <div className="relative">
+                    <div className="w-10 h-10 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      {activity.type === "patient" && (
+                        <Users className="w-5 h-5 text-primary" />
+                      )}
+                      {activity.type === "appointment" && (
+                        <Calendar className="w-5 h-5 text-primary" />
+                      )}
+                      {activity.type === "update" && (
+                        <Activity className="w-5 h-5 text-primary" />
+                      )}
+                    </div>
+                    {index < mockData.recentActivity.length - 1 && (
+                      <div className="absolute top-10 left-1/2 w-px h-6 bg-border -translate-x-1/2"></div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-foreground">
+                  <div className="flex-1 min-w-0 pb-4">
+                    <div className="text-sm text-foreground font-medium">
                       {activity.action}{" "}
-                      <span className="font-medium">{activity.subject}</span>
+                      <span className="font-semibold text-primary">
+                        {activity.subject}
+                      </span>
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-muted-foreground font-medium mt-1">
                       {activity.time}
                     </div>
                   </div>
