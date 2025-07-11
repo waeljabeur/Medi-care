@@ -252,14 +252,16 @@ export default function PatientProfile() {
               Add Appointment
             </Button>
           </Link>
-          <Button
-            variant="outline"
-            size="default"
-            className="shadow-sm hover:shadow-md transition-shadow"
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Edit Patient
-          </Button>
+          <Link to={`/patients/${patient.id}/edit`}>
+            <Button
+              variant="outline"
+              size="default"
+              className="shadow-sm hover:shadow-md transition-shadow"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Edit Patient
+            </Button>
+          </Link>
         </div>
       </div>
 
