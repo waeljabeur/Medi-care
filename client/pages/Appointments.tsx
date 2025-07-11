@@ -65,16 +65,24 @@ const mockAppointments = [
 
 export default function Appointments() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Appointments</h1>
-          <p className="text-muted-foreground mt-1">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-8 bg-primary rounded-full"></div>
+            <h1 className="text-4xl font-bold text-foreground tracking-tight">
+              Appointments
+            </h1>
+          </div>
+          <p className="text-muted-foreground text-lg">
             Schedule and manage patient appointments
           </p>
         </div>
-        <Button>
+        <Button
+          size="default"
+          className="shadow-sm hover:shadow-md transition-shadow"
+        >
           <Plus className="w-4 h-4 mr-2" />
           Book Appointment
         </Button>
@@ -118,58 +126,76 @@ export default function Appointments() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="shadow-md border-0 bg-gradient-to-br from-primary/5 to-primary/10 group hover:shadow-lg transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Today</p>
-                <p className="text-2xl font-bold text-foreground">3</p>
+                <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
+                  Today
+                </p>
+                <p className="text-3xl font-bold text-foreground">3</p>
               </div>
-              <Calendar className="w-8 h-8 text-primary/60" />
+              <div className="p-3 bg-primary/20 rounded-2xl group-hover:scale-110 transition-transform">
+                <Calendar className="w-8 h-8 text-primary" />
+              </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
+        <Card className="shadow-md border-0 bg-gradient-to-br from-info/5 to-info/10 group hover:shadow-lg transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">This Week</p>
-                <p className="text-2xl font-bold text-foreground">12</p>
+                <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
+                  This Week
+                </p>
+                <p className="text-3xl font-bold text-foreground">12</p>
               </div>
-              <Clock className="w-8 h-8 text-info/60" />
+              <div className="p-3 bg-info/20 rounded-2xl group-hover:scale-110 transition-transform">
+                <Clock className="w-8 h-8 text-info" />
+              </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
+        <Card className="shadow-md border-0 bg-gradient-to-br from-warning/5 to-warning/10 group hover:shadow-lg transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Pending</p>
-                <p className="text-2xl font-bold text-foreground">1</p>
+                <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
+                  Pending
+                </p>
+                <p className="text-3xl font-bold text-foreground">1</p>
               </div>
-              <User className="w-8 h-8 text-warning/60" />
+              <div className="p-3 bg-warning/20 rounded-2xl group-hover:scale-110 transition-transform">
+                <User className="w-8 h-8 text-warning" />
+              </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
+        <Card className="shadow-md border-0 bg-gradient-to-br from-success/5 to-success/10 group hover:shadow-lg transition-all duration-200">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Completed</p>
-                <p className="text-2xl font-bold text-foreground">45</p>
+                <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
+                  Completed
+                </p>
+                <p className="text-3xl font-bold text-foreground">45</p>
               </div>
-              <Calendar className="w-8 h-8 text-success/60" />
+              <div className="p-3 bg-success/20 rounded-2xl group-hover:scale-110 transition-transform">
+                <Calendar className="w-8 h-8 text-success" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Appointments List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Upcoming Appointments</CardTitle>
-          <CardDescription>
+      <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-bold">
+            Upcoming Appointments
+          </CardTitle>
+          <CardDescription className="text-base">
             View and manage your scheduled appointments
           </CardDescription>
         </CardHeader>
@@ -178,34 +204,37 @@ export default function Appointments() {
             {mockAppointments.map((appointment) => (
               <div
                 key={appointment.id}
-                className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex items-center justify-between p-6 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group"
               >
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Calendar className="w-6 h-6 text-primary" />
+                <div className="flex items-center space-x-5">
+                  <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Calendar className="w-7 h-7 text-primary" />
                   </div>
                   <div>
-                    <div className="font-medium text-foreground">
+                    <div className="font-bold text-foreground text-lg">
                       {appointment.patient}
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-muted-foreground font-medium mb-2">
                       {appointment.reason}
                     </div>
-                    <div className="flex items-center space-x-3 mt-1">
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Calendar className="w-3 h-3 mr-1" />
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center text-sm text-muted-foreground font-medium">
+                        <Calendar className="w-4 h-4 mr-2" />
                         {new Date(appointment.date).toLocaleDateString()}
                       </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Clock className="w-3 h-3 mr-1" />
+                      <div className="flex items-center text-sm text-muted-foreground font-medium">
+                        <Clock className="w-4 h-4 mr-2" />
                         {appointment.time} ({appointment.duration})
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <Badge variant="outline" className="text-xs">
+                <div className="flex items-center space-x-4">
+                  <Badge
+                    variant="outline"
+                    className="text-xs font-semibold px-3 py-1 bg-muted/30"
+                  >
                     {appointment.type}
                   </Badge>
                   <Badge
@@ -216,15 +245,19 @@ export default function Appointments() {
                     }
                     className={
                       appointment.status === "confirmed"
-                        ? "bg-success/10 text-success hover:bg-success/20"
+                        ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
                         : appointment.status === "pending"
-                          ? "bg-warning/10 text-warning hover:bg-warning/20"
-                          : ""
+                          ? "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
+                          : "px-3 py-1"
                     }
                   >
                     {appointment.status}
                   </Badge>
-                  <Button variant="ghost" size="sm">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+                  >
                     View Details
                   </Button>
                 </div>
