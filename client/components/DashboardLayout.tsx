@@ -37,11 +37,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 lg:hidden bg-black/50"
+          className="fixed inset-0 z-40 lg:hidden bg-black/60 backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -49,22 +49,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-sidebar transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+          "fixed inset-y-0 left-0 z-50 w-64 bg-sidebar shadow-xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:shadow-none",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center px-6 py-4 border-b border-sidebar-border">
+          <div className="flex items-center px-6 py-5 border-b border-sidebar-border/50">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-primary rounded-lg">
+              <div className="p-2.5 bg-primary rounded-xl shadow-lg">
                 <Stethoscope className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-sidebar-foreground">
+                <h1 className="text-xl font-bold text-sidebar-foreground">
                   MedDash
                 </h1>
-                <p className="text-xs text-sidebar-foreground/70">
+                <p className="text-xs text-sidebar-foreground/60 font-medium">
                   Doctor Portal
                 </p>
               </div>
@@ -72,7 +72,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-3 py-4 space-y-1">
+          <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const isActive =
                 item.href === "/"
@@ -84,14 +84,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                    "flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group",
                     isActive
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-lg"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:translate-x-1",
                   )}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className="w-5 h-5 mr-3" />
+                  <item.icon
+                    className={cn(
+                      "w-5 h-5 mr-3 transition-transform group-hover:scale-110",
+                      isActive
+                        ? "text-sidebar-primary-foreground"
+                        : "text-sidebar-foreground/70",
+                    )}
+                  />
                   {item.name}
                 </Link>
               );
@@ -99,10 +106,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </nav>
 
           {/* User profile */}
-          <div className="p-3 border-t border-sidebar-border">
-            <div className="flex items-center px-3 py-2">
-              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-primary-foreground">
+          <div className="p-4 border-t border-sidebar-border/50">
+            <div className="flex items-center px-3 py-3 rounded-xl bg-sidebar-accent/30">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-md">
+                <span className="text-sm font-bold text-primary-foreground">
                   {doctor.name
                     .split(" ")
                     .map((n) => n[0])
@@ -110,10 +117,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </span>
               </div>
               <div className="ml-3 min-w-0 flex-1">
-                <p className="text-sm font-medium text-sidebar-foreground truncate">
+                <p className="text-sm font-semibold text-sidebar-foreground truncate">
                   {doctor.name}
                 </p>
-                <p className="text-xs text-sidebar-foreground/70 truncate">
+                <p className="text-xs text-sidebar-foreground/60 truncate">
                   {doctor.email}
                 </p>
               </div>
@@ -123,15 +130,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Main content */}
-      <div className="lg:ml-64">
+      <div className="flex-1 flex flex-col lg:ml-0">
         {/* Top bar */}
-        <header className="bg-card shadow-sm border-b border-border">
-          <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+        <header className="bg-card/50 backdrop-blur-sm border-b border-border/50 sticky top-0 z-30">
+          <div className="flex items-center justify-between px-4 py-4 sm:px-6">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
-                className="lg:hidden"
+                className="lg:hidden hover:bg-accent"
                 onClick={() => setSidebarOpen(true)}
               >
                 <Menu className="w-5 h-5" />
@@ -142,26 +149,32 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <input
                   type="text"
                   placeholder="Search patients, appointments..."
-                  className="pl-10 pr-4 py-2 w-80 text-sm border border-input rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="pl-10 pr-4 py-2.5 w-80 text-sm border border-input rounded-xl bg-background/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:bg-background"
                 />
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="relative">
+            <div className="flex items-center space-x-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="relative hover:bg-accent transition-colors"
+              >
                 <Bell className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-destructive rounded-full"></span>
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-destructive rounded-full animate-pulse"></span>
               </Button>
 
-              <div className="hidden sm:flex items-center space-x-3">
+              <div className="hidden sm:flex items-center space-x-3 px-3 py-2 rounded-xl bg-accent/30">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-foreground">
+                  <p className="text-sm font-semibold text-foreground">
                     {doctor.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">Doctor</p>
+                  <p className="text-xs text-muted-foreground font-medium">
+                    Doctor
+                  </p>
                 </div>
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                  <span className="text-sm font-medium text-primary-foreground">
+                <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-sm font-bold text-primary-foreground">
                     {doctor.name
                       .split(" ")
                       .map((n) => n[0])
@@ -170,7 +183,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
               </div>
 
-              <Button variant="ghost" size="sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:bg-destructive/10 hover:text-destructive transition-colors"
+              >
                 <LogOut className="w-5 h-5" />
               </Button>
             </div>
@@ -178,7 +195,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="p-4 sm:p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-background to-muted/20 min-h-0">
+          {children}
+        </main>
       </div>
     </div>
   );
