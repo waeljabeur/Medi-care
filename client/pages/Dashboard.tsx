@@ -140,13 +140,15 @@ export default function Dashboard() {
             <Calendar className="w-4 h-4 mr-2" />
             View Calendar
           </Button>
-          <Button
-            size="default"
-            className="shadow-sm hover:shadow-md transition-shadow"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Quick Add
-          </Button>
+          <Link to="/patients/new">
+            <Button
+              size="default"
+              className="shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Quick Add
+            </Button>
+          </Link>
         </div>
       </div>
 
