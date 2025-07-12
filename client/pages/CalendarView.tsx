@@ -183,11 +183,11 @@ export default function CalendarView() {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="space-y-3">
           <Link
-            to="/appointments"
+            to="/"
             className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Appointments
+            Back to Dashboard
           </Link>
           <div className="flex items-center space-x-2">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
