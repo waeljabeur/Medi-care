@@ -382,16 +382,128 @@ export default function CalendarView() {
                 </div>
               )}
 
-              {/* Day View Placeholder */}
-              {viewType === "day" && (
-                <div className="text-center py-12">
-                  <Clock className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    Day View
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Day view will display detailed schedule for the selected day
-                  </p>
+              {/* Day View */}
+              {viewType === "day" && selectedDate && (
+                <div className="space-y-6">
+                  {/* Day Header */}
+                  <div className="text-center pb-4 border-b border-border/50">
+                    <h2 className="text-2xl font-bold text-foreground">
+                      {selectedDate.toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </h2>
+                    <p className="text-muted-foreground mt-1">
+                      Detailed schedule for this day
+                    </p>
+                  </div>
+
+                  {(() => {
+                    const dayAppointments =
+                      getAppointmentsForDate(selectedDate);
+
+                    if (dayAppointments.length === 0) {
+                      return (
+                        <div className="text-center py-12">
+                          <Calendar className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+                          <h3 className="text-lg font-semibold text-foreground mb-2">
+                            No Appointments
+                          </h3>
+                          <p className="text-muted-foreground mb-6">
+                            No appointments scheduled for this day
+                          </p>
+                          <Link to="/appointments/new">
+                            <Button>
+                              <Plus className="w-4 h-4 mr-2" />
+                              Schedule Appointment
+                            </Button>
+                          </Link>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold text-foreground">
+                            {dayAppointments.length} Appointment
+                            {dayAppointments.length !== 1 ? "s" : ""}
+                          </h3>
+                          <Link to="/appointments/new">
+                            <Button size="sm">
+                              <Plus className="w-4 h-4 mr-2" />
+                              Add Appointment
+                            </Button>
+                          </Link>
+                        </div>
+
+                        <div className="space-y-3">
+                          {dayAppointments
+                            .sort((a, b) => a.time.localeCompare(b.time))
+                            .map((apt) => (
+                              <Link
+                                key={apt.id}
+                                to={`/patients/${apt.patientId}`}
+                                className="block"
+                              >
+                                <div className="p-6 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex items-start space-x-4">
+                                      <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                                        <User className="w-6 h-6 text-primary" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="flex items-center space-x-3 mb-2">
+                                          <h4 className="font-bold text-foreground text-lg">
+                                            {apt.patient}
+                                          </h4>
+                                          <Badge
+                                            variant="outline"
+                                            className={`text-xs ${
+                                              apt.status === "confirmed"
+                                                ? "bg-success/15 text-success border-success/20"
+                                                : "bg-warning/15 text-warning border-warning/20"
+                                            }`}
+                                          >
+                                            {apt.status}
+                                          </Badge>
+                                        </div>
+                                        <div className="space-y-2">
+                                          <div className="flex items-center text-sm text-muted-foreground">
+                                            <Clock className="w-4 h-4 mr-2" />
+                                            {new Date(
+                                              `2000-01-01T${apt.time}`,
+                                            ).toLocaleTimeString("en-US", {
+                                              hour: "numeric",
+                                              minute: "2-digit",
+                                              hour12: true,
+                                            })}
+                                          </div>
+                                          <div className="flex items-center text-sm text-muted-foreground">
+                                            <Stethoscope className="w-4 h-4 mr-2" />
+                                            {apt.reason}
+                                          </div>
+                                          {apt.notes && (
+                                            <div className="flex items-start text-sm text-muted-foreground">
+                                              <FileText className="w-4 h-4 mr-2 mt-0.5" />
+                                              <span className="flex-1">
+                                                {apt.notes}
+                                              </span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </Link>
+                            ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
             </CardContent>
