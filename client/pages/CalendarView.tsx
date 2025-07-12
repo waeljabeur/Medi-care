@@ -91,6 +91,7 @@ type ViewType = "month" | "week" | "day";
 export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewType, setViewType] = useState<ViewType>("month");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   // Get current month/year for display
   const currentMonth = currentDate.getMonth();
