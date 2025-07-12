@@ -262,14 +262,16 @@ export default function Dashboard() {
               <CardTitle className="text-xl font-bold text-foreground">
                 Upcoming Appointments
               </CardTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                className="shadow-sm hover:shadow-md transition-shadow"
-              >
-                View All
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+              <Link to="/appointments">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="shadow-sm hover:shadow-md transition-shadow"
+                >
+                  View All
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
             </div>
             <CardDescription className="text-base">
               Your next 5 scheduled appointments
