@@ -139,7 +139,7 @@ export default function Dashboard() {
               className="shadow-sm hover:shadow-md transition-shadow"
             >
               <Calendar className="w-4 h-4 mr-2" />
-              View Calendar
+              View Appointments
             </Button>
           </Link>
           <Link to="/patients/new">
