@@ -80,13 +80,15 @@ export default function Appointments() {
             Schedule and manage patient appointments
           </p>
         </div>
-        <Button
-          size="default"
-          className="shadow-sm hover:shadow-md transition-shadow"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Book Appointment
-        </Button>
+        <Link to="/appointments/new">
+          <Button
+            size="default"
+            className="shadow-sm hover:shadow-md transition-shadow"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Book Appointment
+          </Button>
+        </Link>
       </div>
 
       {/* Calendar Navigation and Controls */}
