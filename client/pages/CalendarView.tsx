@@ -647,19 +647,19 @@ export default function CalendarView() {
             </CardHeader>
             <CardContent className="space-y-3">
               <Link to="/appointments/new" className="block">
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full">
                   <Plus className="w-4 h-4 mr-2" />
                   Schedule Appointment
                 </Button>
               </Link>
               <Link to="/patients" className="block">
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full">
                   <User className="w-4 h-4 mr-2" />
                   View Patients
                 </Button>
               </Link>
               <Link to="/appointments" className="block">
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full">
                   <Calendar className="w-4 h-4 mr-2" />
                   Appointments List
                 </Button>
