@@ -12,6 +12,7 @@ import Patients from "./pages/Patients";
 import PatientProfile from "./pages/PatientProfile";
 import AddEditPatient from "./pages/AddEditPatient";
 import Appointments from "./pages/Appointments";
+import CalendarView from "./pages/CalendarView";
 import AddEditAppointment from "./pages/AddEditAppointment";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
