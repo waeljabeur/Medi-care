@@ -20,6 +20,8 @@ import {
   LayoutGrid,
   CalendarDays,
   ArrowLeft,
+  Stethoscope,
+  FileText,
 } from "lucide-react";
 
 // Mock appointments data - in real app this would come from API filtered by doctor_id
