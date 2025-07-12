@@ -75,6 +75,14 @@ const App = () => (
             }
           />
           <Route
+            path="/appointments/calendar"
+            element={
+              <DashboardLayout>
+                <CalendarView />
+              </DashboardLayout>
+            }
+          />
+          <Route
             path="/appointments/new"
             element={
               <DashboardLayout>
