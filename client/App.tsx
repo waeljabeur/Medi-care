@@ -74,6 +74,22 @@ const App = () => (
             }
           />
           <Route
+            path="/appointments/new"
+            element={
+              <DashboardLayout>
+                <AddEditAppointment />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/appointments/:appointmentId/edit"
+            element={
+              <DashboardLayout>
+                <AddEditAppointment />
+              </DashboardLayout>
+            }
+          />
+          <Route
             path="/settings"
             element={
               <DashboardLayout>
