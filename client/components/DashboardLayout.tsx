@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { LogoutButton } from "@/components/ui/logout-button";
 import {
   LayoutDashboard,
   Users,
@@ -12,7 +13,6 @@ import {
   X,
   Bell,
   Search,
-  LogOut,
   Stethoscope,
 } from "lucide-react";
 
@@ -185,13 +185,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
               </div>
 
-              <Button
+              <LogoutButton
                 variant="ghost"
                 size="sm"
-                className="hover:bg-destructive/10 hover:text-destructive transition-colors"
-              >
-                <LogOut className="w-5 h-5" />
-              </Button>
+                showIcon={true}
+                showText={false}
+                className="hover:bg-destructive/10 hover:text-destructive"
+              />
             </div>
           </div>
         </header>

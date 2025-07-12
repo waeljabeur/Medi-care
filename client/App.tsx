@@ -14,6 +14,11 @@ import AddEditPatient from "./pages/AddEditPatient";
 import Appointments from "./pages/Appointments";
 import CalendarView from "./pages/CalendarView";
 import AddEditAppointment from "./pages/AddEditAppointment";
+import ViewToggleDemo from "./pages/ViewToggleDemo";
+import PrintExportDemo from "./pages/PrintExportDemo";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -106,6 +111,11 @@ const App = () => (
               </DashboardLayout>
             }
           />
+          <Route path="/demo/view-toggle" element={<ViewToggleDemo />} />
+          <Route path="/demo/print-export" element={<PrintExportDemo />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

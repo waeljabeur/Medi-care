@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ViewToggle, type ViewType } from "@/components/ui/view-toggle";
+import { PrintExportCalendar } from "@/components/ui/print-export-calendar";
 import {
   Calendar,
   ChevronLeft,
@@ -17,8 +19,6 @@ import {
   Clock,
   User,
   Grid3X3,
-  LayoutGrid,
-  CalendarDays,
   ArrowLeft,
   Stethoscope,
   FileText,
@@ -87,8 +87,6 @@ const mockAppointments = [
     notes: "Review current medications",
   },
 ];
-
-type ViewType = "month" | "week" | "day";
 
 export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -178,7 +176,7 @@ export default function CalendarView() {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 print-container">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="space-y-3">
@@ -199,7 +197,7 @@ export default function CalendarView() {
             View and manage your appointment schedule
           </p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 no-print">
           <Link to="/appointments/new">
             <Button
               size="default"
@@ -217,75 +215,55 @@ export default function CalendarView() {
         <div className="lg:col-span-3">
           <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
             <CardHeader className="pb-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <CardTitle className="text-2xl font-bold">
-                    {monthNames[currentMonth]} {currentYear}
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    Your appointment schedule overview
-                  </CardDescription>
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-2xl font-bold">
+                      {monthNames[currentMonth]} {currentYear}
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      Your appointment schedule overview
+                    </CardDescription>
+                  </div>
                 </div>
 
-                {/* Navigation and View Controls */}
-                <div className="flex items-center space-x-3">
-                  {/* View Type Selector */}
-                  <div className="flex items-center space-x-1 bg-muted/50 rounded-lg p-1">
-                    <Button
-                      variant={viewType === "month" ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setViewType("month")}
-                      className="h-8 px-3"
-                    >
-                      <Grid3X3 className="w-3 h-3 mr-1" />
-                      Month
-                    </Button>
-                    <Button
-                      variant={viewType === "week" ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setViewType("week")}
-                      className="h-8 px-3"
-                    >
-                      <LayoutGrid className="w-3 h-3 mr-1" />
-                      Week
-                    </Button>
-                    <Button
-                      variant={viewType === "day" ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setViewType("day")}
-                      className="h-8 px-3"
-                    >
-                      <CalendarDays className="w-3 h-3 mr-1" />
-                      Day
-                    </Button>
-                  </div>
+                {/* Controls Section */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    {/* View Type Selector */}
+                    <ViewToggle
+                      currentView={viewType}
+                      onViewChange={setViewType}
+                    />
 
-                  {/* Navigation Controls */}
-                  <div className="flex items-center space-x-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToPreviousDay}
-                      className="h-8 w-8 p-0"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToToday}
-                      className="h-8 px-3"
-                    >
-                      Today
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToNextDay}
-                      className="h-8 w-8 p-0"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </Button>
+                    {/* Navigation Controls */}
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={goToPreviousDay}
+                        className="h-9 w-9 p-0 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={goToToday}
+                        className="h-9 px-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-medical-50 to-medical-100/50 hover:from-medical-100 hover:to-medical-200/50 text-medical-700 border-medical-200/50"
+                      >
+                        Today
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={goToNextDay}
+                        className="h-9 w-9 p-0 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -307,11 +285,11 @@ export default function CalendarView() {
                   </div>
 
                   {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-px bg-border rounded-lg overflow-hidden">
+                  <div className="grid grid-cols-7 gap-px bg-border rounded-lg overflow-hidden calendar-grid">
                     {calendarDays.map((day, index) => (
                       <div
                         key={index}
-                        className={`min-h-[120px] bg-background p-2 transition-colors hover:bg-muted/20 cursor-pointer ${
+                        className={`min-h-[120px] bg-background p-2 transition-colors hover:bg-muted/20 cursor-pointer calendar-day ${
                           !day.isCurrentMonth ? "opacity-30" : ""
                         } ${
                           day.isToday
@@ -343,7 +321,7 @@ export default function CalendarView() {
                                 className="block"
                               >
                                 <div
-                                  className={`p-1 px-2 rounded text-xs font-medium cursor-pointer transition-colors ${
+                                  className={`p-1 px-2 rounded text-xs font-medium cursor-pointer transition-colors appointment-item ${
                                     apt.status === "confirmed"
                                       ? "bg-success/15 text-success hover:bg-success/25"
                                       : "bg-warning/15 text-warning hover:bg-warning/25"
@@ -406,7 +384,7 @@ export default function CalendarView() {
                       variant="outline"
                       size="sm"
                       onClick={() => setViewType("month")}
-                      className="ml-4"
+                      className="ml-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-medical-50 to-medical-100/50 hover:from-medical-100 hover:to-medical-200/50 text-medical-700 border-medical-200/50"
                     >
                       <Grid3X3 className="w-4 h-4 mr-2" />
                       Month View
@@ -524,7 +502,27 @@ export default function CalendarView() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-8">
+        <div className="space-y-8 no-print">
+          {/* Print/Export Calendar */}
+          <Card className="shadow-md border-0 bg-gradient-to-br from-medical-50 to-medical-100/30">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-bold flex items-center">
+                <div className="p-2 bg-medical-500/20 rounded-lg mr-3">
+                  <FileText className="w-4 h-4 text-medical-600" />
+                </div>
+                Export & Print
+              </CardTitle>
+              <CardDescription>Download or print your calendar</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PrintExportCalendar
+                appointments={mockAppointments}
+                currentDate={currentDate}
+                viewType={viewType}
+              />
+            </CardContent>
+          </Card>
+
           {/* Today's Appointments */}
           <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
             <CardHeader className="pb-4">

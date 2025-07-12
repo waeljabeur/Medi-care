@@ -121,3 +121,48 @@
     -webkit-line-clamp: 2;
   }
 }
+
+/* Print-specific styles */
+@media print {
+  /* Hide navigation and unnecessary elements */
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure print-friendly colors */
+  * {
+    color: black !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+
+  /* Calendar specific print styles */
+  .calendar-grid {
+    break-inside: avoid;
+  }
+
+  .calendar-day {
+    border: 1px solid #ccc !important;
+    background: white !important;
+  }
+
+  /* Ensure appointments are visible in print */
+  .appointment-item {
+    border: 1px solid #14b8a6 !important;
+    background: #f0fdf9 !important;
+    color: black !important;
+  }
+
+  /* Page breaks */
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* Adjust layout for print */
+  .print-container {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
