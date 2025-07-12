@@ -121,7 +121,7 @@ export default function Appointments() {
               className="pl-10 w-full sm:w-60"
             />
           </div>
-          <Link to="/appointments/calendar">
+          <Link to="/calendar">
             <Button variant="outline" size="sm">
               <Calendar className="w-4 h-4 mr-2" />
               Calendar
