@@ -309,13 +309,14 @@ export default function CalendarView() {
                     {calendarDays.map((day, index) => (
                       <div
                         key={index}
-                        className={`min-h-[120px] bg-background p-2 transition-colors hover:bg-muted/20 ${
+                        className={`min-h-[120px] bg-background p-2 transition-colors hover:bg-muted/20 cursor-pointer ${
                           !day.isCurrentMonth ? "opacity-30" : ""
                         } ${
                           day.isToday
                             ? "bg-primary/5 border-2 border-primary/20"
                             : ""
                         }`}
+                        onClick={() => handleDayClick(day.date)}
                       >
                         <div className="space-y-2">
                           {/* Date Number */}
