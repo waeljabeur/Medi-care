@@ -256,7 +256,7 @@ export default function CalendarView() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={goToPreviousMonth}
+                      onClick={goToPreviousDay}
                       className="h-8 w-8 p-0"
                     >
                       <ChevronLeft className="w-4 h-4" />
@@ -272,7 +272,7 @@ export default function CalendarView() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={goToNextMonth}
+                      onClick={goToNextDay}
                       className="h-8 w-8 p-0"
                     >
                       <ChevronRight className="w-4 h-4" />
