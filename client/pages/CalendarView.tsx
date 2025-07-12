@@ -388,18 +388,29 @@ export default function CalendarView() {
               {viewType === "day" && selectedDate && (
                 <div className="space-y-6">
                   {/* Day Header */}
-                  <div className="text-center pb-4 border-b border-border/50">
-                    <h2 className="text-2xl font-bold text-foreground">
-                      {selectedDate.toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </h2>
-                    <p className="text-muted-foreground mt-1">
-                      Detailed schedule for this day
-                    </p>
+                  <div className="flex items-center justify-between pb-4 border-b border-border/50">
+                    <div className="text-center flex-1">
+                      <h2 className="text-2xl font-bold text-foreground">
+                        {selectedDate.toLocaleDateString("en-US", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </h2>
+                      <p className="text-muted-foreground mt-1">
+                        Detailed schedule for this day
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setViewType("month")}
+                      className="ml-4"
+                    >
+                      <Grid3X3 className="w-4 h-4 mr-2" />
+                      Month View
+                    </Button>
                   </div>
 
                   {(() => {
