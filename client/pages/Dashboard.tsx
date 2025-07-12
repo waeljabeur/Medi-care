@@ -132,14 +132,16 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <Button
-            size="default"
-            variant="outline"
-            className="shadow-sm hover:shadow-md transition-shadow"
-          >
-            <Calendar className="w-4 h-4 mr-2" />
-            View Calendar
-          </Button>
+          <Link to="/appointments">
+            <Button
+              size="default"
+              variant="outline"
+              className="shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Calendar className="w-4 h-4 mr-2" />
+              View Calendar
+            </Button>
+          </Link>
           <Link to="/patients/new">
             <Button
               size="default"
