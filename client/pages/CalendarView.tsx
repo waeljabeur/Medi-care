@@ -1,0 +1,536 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Clock,
+  User,
+  Grid3X3,
+  LayoutGrid,
+  CalendarDays,
+  ArrowLeft,
+} from "lucide-react";
+
+// Mock appointments data - in real app this would come from API filtered by doctor_id
+const mockAppointments = [
+  {
+    id: 1,
+    patientId: 1,
+    patient: "Emma Wilson",
+    date: "2024-01-20",
+    time: "09:00",
+    reason: "Annual Checkup",
+    status: "confirmed",
+    notes: "Complete physical examination",
+  },
+  {
+    id: 2,
+    patientId: 2,
+    patient: "Michael Chen",
+    date: "2024-01-20",
+    time: "11:00",
+    reason: "Blood Pressure Check",
+    status: "confirmed",
+    notes: "Follow-up on hypertension",
+  },
+  {
+    id: 3,
+    patientId: 3,
+    patient: "Sarah Davis",
+    date: "2024-01-22",
+    time: "14:00",
+    reason: "Consultation",
+    status: "pending",
+    notes: "New patient consultation",
+  },
+  {
+    id: 4,
+    patientId: 1,
+    patient: "Emma Wilson",
+    date: "2024-01-25",
+    time: "10:30",
+    reason: "Follow-up",
+    status: "confirmed",
+    notes: "Review test results",
+  },
+  {
+    id: 5,
+    patientId: 4,
+    patient: "Robert Johnson",
+    date: "2024-01-25",
+    time: "15:00",
+    reason: "Physical Exam",
+    status: "confirmed",
+    notes: "Annual physical examination",
+  },
+  {
+    id: 6,
+    patientId: 2,
+    patient: "Michael Chen",
+    date: "2024-01-28",
+    time: "09:30",
+    reason: "Medication Review",
+    status: "confirmed",
+    notes: "Review current medications",
+  },
+];
+
+type ViewType = "month" | "week" | "day";
+
+export default function CalendarView() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [viewType, setViewType] = useState<ViewType>("month");
+
+  // Get current month/year for display
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  // Navigation functions
+  const goToPreviousMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
+  };
+
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  // Get appointments for a specific date
+  const getAppointmentsForDate = (date: Date) => {
+    const dateString = date.toISOString().split("T")[0];
+    return mockAppointments.filter((apt) => apt.date === dateString);
+  };
+
+  // Generate calendar days
+  const generateCalendarDays = () => {
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+    const days = [];
+    const today = new Date();
+
+    for (let i = 0; i < 42; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+
+      const isCurrentMonth = date.getMonth() === currentMonth;
+      const isToday =
+        date.toDateString() === today.toDateString() && isCurrentMonth;
+      const appointments = getAppointmentsForDate(date);
+
+      days.push({
+        date,
+        isCurrentMonth,
+        isToday,
+        appointments,
+        dayNumber: date.getDate(),
+      });
+    }
+
+    return days;
+  };
+
+  const calendarDays = generateCalendarDays();
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return (
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="space-y-3">
+          <Link
+            to="/appointments"
+            className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Appointments
+          </Link>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-8 bg-primary rounded-full"></div>
+            <h1 className="text-4xl font-bold text-foreground tracking-tight">
+              Calendar View
+            </h1>
+          </div>
+          <p className="text-muted-foreground text-lg">
+            View and manage your appointment schedule
+          </p>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Link to="/appointments/new">
+            <Button
+              size="default"
+              className="shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Appointment
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Main Calendar */}
+        <div className="lg:col-span-3">
+          <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
+            <CardHeader className="pb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <CardTitle className="text-2xl font-bold">
+                    {monthNames[currentMonth]} {currentYear}
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Your appointment schedule overview
+                  </CardDescription>
+                </div>
+
+                {/* Navigation and View Controls */}
+                <div className="flex items-center space-x-3">
+                  {/* View Type Selector */}
+                  <div className="flex items-center space-x-1 bg-muted/50 rounded-lg p-1">
+                    <Button
+                      variant={viewType === "month" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setViewType("month")}
+                      className="h-8 px-3"
+                    >
+                      <Grid3X3 className="w-3 h-3 mr-1" />
+                      Month
+                    </Button>
+                    <Button
+                      variant={viewType === "week" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setViewType("week")}
+                      className="h-8 px-3"
+                    >
+                      <LayoutGrid className="w-3 h-3 mr-1" />
+                      Week
+                    </Button>
+                    <Button
+                      variant={viewType === "day" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setViewType("day")}
+                      className="h-8 px-3"
+                    >
+                      <CalendarDays className="w-3 h-3 mr-1" />
+                      Day
+                    </Button>
+                  </div>
+
+                  {/* Navigation Controls */}
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={goToPreviousMonth}
+                      className="h-8 w-8 p-0"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={goToToday}
+                      className="h-8 px-3"
+                    >
+                      Today
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={goToNextMonth}
+                      className="h-8 w-8 p-0"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              {viewType === "month" && (
+                <div className="space-y-4">
+                  {/* Calendar Header */}
+                  <div className="grid grid-cols-7 gap-px">
+                    {weekDays.map((day) => (
+                      <div
+                        key={day}
+                        className="p-3 text-center text-sm font-semibold text-muted-foreground bg-muted/30 rounded-lg"
+                      >
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-px bg-border rounded-lg overflow-hidden">
+                    {calendarDays.map((day, index) => (
+                      <div
+                        key={index}
+                        className={`min-h-[120px] bg-background p-2 transition-colors hover:bg-muted/20 ${
+                          !day.isCurrentMonth ? "opacity-30" : ""
+                        } ${
+                          day.isToday
+                            ? "bg-primary/5 border-2 border-primary/20"
+                            : ""
+                        }`}
+                      >
+                        <div className="space-y-2">
+                          {/* Date Number */}
+                          <div
+                            className={`text-sm font-medium ${
+                              day.isToday
+                                ? "w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center"
+                                : day.isCurrentMonth
+                                  ? "text-foreground"
+                                  : "text-muted-foreground"
+                            }`}
+                          >
+                            {day.dayNumber}
+                          </div>
+
+                          {/* Appointments */}
+                          <div className="space-y-1">
+                            {day.appointments.slice(0, 2).map((apt) => (
+                              <Link
+                                key={apt.id}
+                                to={`/patients/${apt.patientId}`}
+                                className="block"
+                              >
+                                <div
+                                  className={`p-1 px-2 rounded text-xs font-medium cursor-pointer transition-colors ${
+                                    apt.status === "confirmed"
+                                      ? "bg-success/15 text-success hover:bg-success/25"
+                                      : "bg-warning/15 text-warning hover:bg-warning/25"
+                                  }`}
+                                >
+                                  <div className="truncate">
+                                    {apt.time} {apt.patient}
+                                  </div>
+                                  <div className="truncate text-xs opacity-80">
+                                    {apt.reason}
+                                  </div>
+                                </div>
+                              </Link>
+                            ))}
+                            {day.appointments.length > 2 && (
+                              <div className="text-xs text-muted-foreground px-2">
+                                +{day.appointments.length - 2} more
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Week View Placeholder */}
+              {viewType === "week" && (
+                <div className="text-center py-12">
+                  <Calendar className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    Week View
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Week view will display appointments for the current week
+                  </p>
+                </div>
+              )}
+
+              {/* Day View Placeholder */}
+              {viewType === "day" && (
+                <div className="text-center py-12">
+                  <Clock className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    Day View
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Day view will display detailed schedule for the selected day
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-8">
+          {/* Today's Appointments */}
+          <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-bold flex items-center">
+                <div className="p-2 bg-primary/20 rounded-lg mr-3">
+                  <Calendar className="w-4 h-4 text-primary" />
+                </div>
+                Today's Schedule
+              </CardTitle>
+              <CardDescription>
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                const todayString = new Date().toISOString().split("T")[0];
+                const todayAppointments = mockAppointments.filter(
+                  (apt) => apt.date === todayString,
+                );
+
+                if (todayAppointments.length === 0) {
+                  return (
+                    <div className="text-center py-6">
+                      <Clock className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+                      <p className="text-sm text-muted-foreground">
+                        No appointments today
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-3">
+                    {todayAppointments.map((apt) => (
+                      <Link
+                        key={apt.id}
+                        to={`/patients/${apt.patientId}`}
+                        className="block"
+                      >
+                        <div className="p-3 bg-background/50 border border-border/50 rounded-xl hover:bg-background transition-colors">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-semibold text-foreground text-sm">
+                              {apt.patient}
+                            </h4>
+                            <Badge
+                              variant="outline"
+                              className={`text-xs ${
+                                apt.status === "confirmed"
+                                  ? "bg-success/10 text-success border-success/20"
+                                  : "bg-warning/10 text-warning border-warning/20"
+                              }`}
+                            >
+                              {apt.status}
+                            </Badge>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex items-center text-xs text-muted-foreground">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {apt.time}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {apt.reason}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })()}
+            </CardContent>
+          </Card>
+
+          {/* Quick Stats */}
+          <Card className="shadow-md border-0 bg-gradient-to-br from-primary/5 to-primary/10">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-bold flex items-center">
+                <div className="p-2 bg-primary/20 rounded-lg mr-3">
+                  <User className="w-4 h-4 text-primary" />
+                </div>
+                This Month
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">
+                  Total Appointments
+                </span>
+                <span className="font-semibold">{mockAppointments.length}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Confirmed</span>
+                <span className="font-semibold text-success">
+                  {
+                    mockAppointments.filter((apt) => apt.status === "confirmed")
+                      .length
+                  }
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Pending</span>
+                <span className="font-semibold text-warning">
+                  {
+                    mockAppointments.filter((apt) => apt.status === "pending")
+                      .length
+                  }
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card className="shadow-md border-0 bg-gradient-to-br from-info/5 to-info/10">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-bold">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Link to="/appointments/new" className="block">
+                <Button variant="outline" className="w-full justify-start">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Schedule Appointment
+                </Button>
+              </Link>
+              <Link to="/patients" className="block">
+                <Button variant="outline" className="w-full justify-start">
+                  <User className="w-4 h-4 mr-2" />
+                  View Patients
+                </Button>
+              </Link>
+              <Link to="/appointments" className="block">
+                <Button variant="outline" className="w-full justify-start">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Appointments List
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
