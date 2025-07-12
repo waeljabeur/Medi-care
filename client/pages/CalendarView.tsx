@@ -114,6 +114,12 @@ export default function CalendarView() {
     setCurrentDate(new Date());
   };
 
+  const handleDayClick = (date: Date) => {
+    setSelectedDate(date);
+    setViewType("day");
+    setCurrentDate(date);
+  };
+
   // Get appointments for a specific date
   const getAppointmentsForDate = (date: Date) => {
     const dateString = date.toISOString().split("T")[0];
