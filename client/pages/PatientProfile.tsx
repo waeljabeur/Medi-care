@@ -445,8 +445,9 @@ export default function PatientProfile() {
                         Date of Birth
                       </p>
                       <p className="font-semibold text-foreground">
-                        {new Date(patient.dateOfBirth).toLocaleDateString()} (
-                        {age} years old)
+                        {patient.dob
+                          ? `${new Date(patient.dob).toLocaleDateString()}${age ? ` (${age} years old)` : ""}`
+                          : "Not provided"}
                       </p>
                     </div>
                   </div>
