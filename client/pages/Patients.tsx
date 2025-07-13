@@ -41,33 +41,37 @@ export default function Patients() {
   useEffect(() => {
     const loadPatients = async () => {
       try {
-        if (authHelpers.isDemoMode()) {
-          // Demo mode: use mock data
-          const demoPatients = mockPatients.map((p) => ({
-            id: p.id.toString(),
-            name: p.name,
-            email: p.email,
-            phone: p.phone,
-            dob: "1990-01-01", // Default DOB for demo
-            created_at: new Date().toISOString(),
-          }));
-          setPatients(demoPatients);
-          setLoading(false);
-          return;
-        }
+        setLoading(true);
+        setError(null);
 
-        // Real Supabase implementation
-        const { user } = await authHelpers.getCurrentUser();
+        // Get current user
+        const {
+          data: { user },
+        } = await supabase!.auth.getUser();
         if (!user) {
           setError("You must be logged in to view patients.");
           setLoading(false);
           return;
         }
 
-        const { data, error: fetchError } = await supabase!
+        // Get doctor profile
+        const { data: doctorData } = await supabase
+          .from("doctors")
+          .select("id")
+          .eq("user_id", user.id)
+          .single();
+
+        if (!doctorData) {
+          setError("Doctor profile not found");
+          setLoading(false);
+          return;
+        }
+
+        // Load patients for this doctor
+        const { data, error: fetchError } = await supabase
           .from("patients")
           .select("*")
-          .eq("doctor_id", user.id)
+          .eq("doctor_id", doctorData.id)
           .order("created_at", { ascending: false });
 
         if (fetchError) {
