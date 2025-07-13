@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LogoutButton } from "@/components/ui/logout-button";
-import { useDoctor } from "@/contexts/DoctorContext";
+import { useDoctor } from "@/contexts/DoctorContext-simple";
 import {
   LayoutDashboard,
   Users,
