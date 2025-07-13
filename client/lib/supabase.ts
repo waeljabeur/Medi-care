@@ -30,16 +30,19 @@ export const authHelpers = {
     console.log("🟡 authHelpers.signIn called, isDemoMode:", isDemoMode);
 
     if (isDemoMode) {
+      console.log("🟡 Demo mode - simulating login");
       // Demo mode: accept any email/password combination
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
 
       if (email === "error@test.com") {
+        console.log("🟡 Demo mode - returning error for test email");
         return {
           data: null,
           error: { message: "Invalid email or password" },
         };
       }
 
+      console.log("🟡 Demo mode - returning success");
       return {
         data: {
           user: { ...DEMO_USER, email },
