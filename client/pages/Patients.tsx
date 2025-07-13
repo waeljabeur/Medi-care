@@ -54,7 +54,110 @@ const mockPatients = [
   },
 ];
 
+interface Patient {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  dob: string;
+  created_at: string;
+}
+
 export default function Patients() {
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadPatients = async () => {
+      try {
+        if (authHelpers.isDemoMode()) {
+          // Demo mode: use mock data
+          const demoPatients = mockPatients.map((p) => ({
+            id: p.id.toString(),
+            name: p.name,
+            email: p.email,
+            phone: p.phone,
+            dob: "1990-01-01", // Default DOB for demo
+            created_at: new Date().toISOString(),
+          }));
+          setPatients(demoPatients);
+          setLoading(false);
+          return;
+        }
+
+        // Real Supabase implementation
+        const { user } = await authHelpers.getCurrentUser();
+        if (!user) {
+          setError("You must be logged in to view patients.");
+          setLoading(false);
+          return;
+        }
+
+        const { data, error: fetchError } = await supabase!
+          .from("patients")
+          .select("id, name, email, phone, dob, created_at")
+          .eq("doctor_id", user.id)
+          .order("created_at", { ascending: false });
+
+        if (fetchError) {
+          throw new Error(fetchError.message);
+        }
+
+        setPatients(data || []);
+      } catch (err) {
+        console.error("Error loading patients:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load patients",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPatients();
+  }, []);
+
+  // Calculate age from date of birth
+  const calculateAge = (dob: string) => {
+    if (!dob) return "N/A";
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading patients...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center py-12">
+          <p className="text-destructive mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
