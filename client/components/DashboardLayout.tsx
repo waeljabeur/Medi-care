@@ -93,8 +93,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const isActive =
-                item.href === "/"
-                  ? location.pathname === "/"
+                item.href === "/dashboard"
+                  ? location.pathname === "/dashboard"
                   : location.pathname.startsWith(item.href);
 
               return (
