@@ -34,6 +34,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
   const { doctor, error: doctorError } = useDoctor();
 
+  // Debug logging for doctor info in layout
+  React.useEffect(() => {
+    if (doctor) {
+      console.log("🔷 DashboardLayout - Doctor info loaded:", doctor);
+    }
+  }, [doctor]);
+
   // Show error state if doctor loading failed
   if (doctorError) {
     return (
