@@ -76,7 +76,7 @@ export default function Dashboard() {
           .select("*", { count: "exact", head: true })
           .eq("date", today)
           .eq("doctor_id", doctor.id)
-          .in("status", ["scheduled"]);
+          .in("status", ["confirmed", "pending"]);
 
         // Load this month's new patients
         const startOfMonth = new Date();
