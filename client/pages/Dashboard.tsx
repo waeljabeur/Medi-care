@@ -361,9 +361,8 @@ export default function Dashboard() {
                         <div className="text-sm text-muted-foreground flex items-center mt-1">
                           <Clock className="w-3 h-3 mr-1" />
                           {new Date(
-                            appointment.appointment_date,
-                          ).toLocaleDateString()}{" "}
-                          at {appointment.appointment_time}
+                            appointment.date,
+                          ).toLocaleDateString()} at {appointment.time}
                         </div>
                       </div>
                     </div>
