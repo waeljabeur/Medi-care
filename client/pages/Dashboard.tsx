@@ -85,7 +85,7 @@ export default function Dashboard() {
         const { count: thisMonthPatients } = await supabase
           .from("patients")
           .select("*", { count: "exact", head: true })
-          .eq("doctor_id", doctorId)
+          .eq("doctor_id", doctor.id)
           .gte("created_at", startOfMonth.toISOString());
 
         // Load upcoming appointments with patient names
