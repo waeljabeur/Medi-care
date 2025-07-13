@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,7 +23,9 @@ import {
   CheckCircle,
   AlertCircle,
   History,
+  Loader2,
 } from "lucide-react";
+import { supabase, isDemoMode } from "@/lib/supabase";
 
 // Mock patient data - in real app this would come from API based on patientId
 const mockPatientData = {
