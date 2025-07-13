@@ -116,8 +116,10 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
+      console.log("🔴 DoctorContext: Setting error message:", errorMessage);
       setError(errorMessage);
     } finally {
+      console.log("🟣 DoctorContext: Setting loading to false");
       setLoading(false);
     }
   };
