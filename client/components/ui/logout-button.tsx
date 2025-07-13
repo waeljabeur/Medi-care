@@ -62,8 +62,17 @@ export function LogoutButton({
         localStorage.removeItem("demo-session");
       }
 
-      // Clear any other local storage that might interfere
+      // Clear all auth-related storage
+      console.log("🔴 Clearing all auth storage...");
       localStorage.removeItem("supabase.auth.token");
+      localStorage.removeItem("sb-ywkcdnczxqbqmpvfghdr-auth-token"); // Supabase project-specific token
+
+      // Clear all localStorage items that start with 'sb-' (Supabase)
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("sb-")) {
+          localStorage.removeItem(key);
+        }
+      });
 
       // Force refresh doctor context
       console.log("🔴 Refreshing doctor context...");
