@@ -65,6 +65,10 @@ export function LogoutButton({
       // Clear any other local storage that might interfere
       localStorage.removeItem("supabase.auth.token");
 
+      // Force refresh doctor context
+      console.log("🔴 Refreshing doctor context...");
+      await refreshDoctor();
+
       console.log("🔴 Navigating to login...");
       toast.success("Signed out successfully");
       navigate("/login");
