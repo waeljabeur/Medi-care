@@ -8,7 +8,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { authHelpers } from "@/lib/supabase";
+import { authHelpers, supabase } from "@/lib/supabase";
+import { useEffect } from "react";
 import {
   Users,
   Calendar,
