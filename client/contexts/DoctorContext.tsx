@@ -145,7 +145,13 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         session: !!session,
       });
       if (event === "SIGNED_IN" && session) {
-        await loadDoctor();
+        // Add small delay to let auth session stabilize
+        console.log(
+          "🟣 DoctorContext: SIGNED_IN detected, waiting 500ms for session to stabilize",
+        );
+        setTimeout(async () => {
+          await loadDoctor();
+        }, 500);
       } else if (event === "SIGNED_OUT") {
         console.log("🟣 DoctorContext: User signed out, clearing doctor state");
         setDoctor(null);
