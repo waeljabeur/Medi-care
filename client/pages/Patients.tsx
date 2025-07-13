@@ -117,7 +117,7 @@ export default function Patients() {
     };
 
     loadPatients();
-  }, []);
+  }, [refreshKey]);
 
   // Calculate age from date of birth
   const calculateAge = (dob: string) => {
