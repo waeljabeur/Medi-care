@@ -42,7 +42,7 @@ interface UpcomingAppointment {
 }
 
 export default function Dashboard() {
-  const { doctor, loading: doctorLoading } = useDoctor();
+  const { doctor, loading: doctorLoading, error: doctorError } = useDoctor();
   const [stats, setStats] = useState<DashboardStats>({
     totalPatients: 0,
     todaysAppointments: 0,
