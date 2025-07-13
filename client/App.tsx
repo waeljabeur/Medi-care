@@ -34,12 +34,17 @@ const App = () => (
       <BrowserRouter>
         <DoctorProvider>
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route
               path="/"
               element={
-                <DashboardLayout>
-                  <Dashboard />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Dashboard />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
