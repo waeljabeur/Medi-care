@@ -57,9 +57,9 @@ const mockPatients = [
 interface Patient {
   id: string;
   name: string;
-  email: string;
-  phone: string;
-  dob: string;
+  email?: string;
+  phone?: string;
+  dob?: string;
   created_at: string;
 }
 
