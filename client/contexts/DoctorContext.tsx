@@ -219,7 +219,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         !!user,
       );
 
-      if (window.location.pathname === "/login" && user) {
+      if (user && errorMessage.includes("timeout")) {
         console.log(
           "🟡 DoctorContext: Database error on login - creating fallback doctor profile",
         );
