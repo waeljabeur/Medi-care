@@ -118,7 +118,7 @@ export default function Dashboard() {
         setUpcomingAppointments(
           (appointments || []).map((apt) => ({
             id: apt.id,
-            patient_name: apt.patients?.name || "Unknown Patient",
+            patient_name: (apt.patients as any)?.name || "Unknown Patient",
             patient_id: apt.patient_id,
             appointment_time: apt.appointment_time,
             appointment_date: apt.appointment_date,
