@@ -48,7 +48,9 @@ export default function Signup() {
 
     const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/;
     if (!strongPasswordRegex.test(password)) {
-      setError("Password must include an uppercase letter, a number, and a special character");
+      setError(
+        "Password must include an uppercase letter, a number, and a special character",
+      );
       return false;
     }
 
@@ -85,7 +87,7 @@ export default function Signup() {
       const { data, error: authError } = await authHelpers.signUp(
         email,
         password,
-        { name }
+        { name },
       );
 
       if (authError) {
@@ -94,22 +96,10 @@ export default function Signup() {
       }
 
       if (data.user) {
-        const { error: insertError } = await supabase
-          .from("doctors")
-          .insert({
-            id: data.user.id,
-            name,
-            email,
-          });
-
-        if (insertError) {
-          console.error("Failed to insert doctor profile:", insertError.message);
-          setError("Account created but failed to save profile. Please contact support.");
-          return;
-        }
-
+        // For now, just show success message
+        // Doctor profile will be created on first login/dashboard access
         setSuccess(
-          "Account created successfully! Please check your email to verify your account."
+          "Account created successfully! Please check your email to verify your account.",
         );
       }
     } catch (err) {
@@ -216,7 +206,11 @@ export default function Signup() {
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -243,7 +237,11 @@ export default function Signup() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     disabled={isLoading}
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </Button>
                 </div>
               </div>
