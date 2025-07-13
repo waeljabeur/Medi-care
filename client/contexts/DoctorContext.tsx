@@ -71,9 +71,30 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (err) {
       console.error("Error loading doctor:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to load doctor profile",
-      );
+
+      // Better error handling to avoid "[object Object]" display
+      let errorMessage = "Failed to load doctor profile";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      } else if (err && typeof err === "object") {
+        // Handle Supabase error objects
+        if ("message" in err && typeof err.message === "string") {
+          errorMessage = err.message;
+        } else if (
+          "error_description" in err &&
+          typeof err.error_description === "string"
+        ) {
+          errorMessage = err.error_description;
+        } else {
+          // Last resort: try to extract meaningful info from the error object
+          errorMessage = `Database error: ${JSON.stringify(err)}`;
+        }
+      }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
