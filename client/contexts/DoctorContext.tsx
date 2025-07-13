@@ -46,9 +46,14 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
 
       console.log("🟣 DoctorContext: Current user:", user?.email || "none");
       if (!user) {
+        console.log("🟣 DoctorContext: No user found, setting doctor to null");
         setDoctor(null);
         return;
       }
+
+      console.log(
+        "🟣 DoctorContext: User found, proceeding to fetch doctor profile",
+      );
 
       // Check if doctor profile exists
       console.log(
