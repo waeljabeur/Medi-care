@@ -326,7 +326,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold text-foreground mb-1">
-                  {mockData.stats.pendingTasks}
+                  {stats.pendingTasks}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   Require attention
