@@ -44,7 +44,7 @@ export default function Login() {
         if (authHelpers.isDemoMode()) {
           localStorage.setItem("demo-session", JSON.stringify(data.user));
         }
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
