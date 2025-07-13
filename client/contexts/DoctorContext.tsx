@@ -28,10 +28,17 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
 
+      // Check if supabase client is available
+      if (!supabase) {
+        throw new Error(
+          "Supabase client not initialized. Please check your environment configuration.",
+        );
+      }
+
       // Get current user
       const {
         data: { user },
-      } = await supabase!.auth.getUser();
+      } = await supabase.auth.getUser();
       if (!user) {
         setDoctor(null);
         return;
