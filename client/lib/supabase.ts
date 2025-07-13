@@ -11,12 +11,7 @@ const isDemoMode =
   supabaseUrl.includes("your-project") ||
   supabaseKey.includes("your-anon-key");
 
-console.log("🔧 Supabase configuration:", {
-  isDemoMode,
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseKey,
-  supabaseUrl: supabaseUrl?.substring(0, 30) + "...",
-});
+console.log("🔧 Supabase mode:", isDemoMode ? "DEMO" : "LIVE");
 
 // Create Supabase client (only if we have real credentials)
 export const supabase = isDemoMode
