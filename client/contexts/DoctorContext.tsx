@@ -288,6 +288,29 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log("🟣 DoctorContext: Initializing - checking auth state");
 
+    // Expose fallback function globally for debugging
+    (window as any).forceDashboard = () => {
+      console.log("🟡 Manual fallback triggered from console");
+      // Get user from demo session or create a dummy one
+      const demoSession = localStorage.getItem("demo-session");
+      if (demoSession) {
+        const user = JSON.parse(demoSession);
+        createFallbackDoctor(user);
+      } else {
+        // Create a minimal dummy doctor for testing
+        const dummyDoctor = {
+          id: "fallback-user",
+          name: "Test Doctor",
+          email: "test@doctor.com",
+          created_at: new Date().toISOString(),
+        };
+        setDoctor(dummyDoctor);
+        setError(null);
+        setLoading(false);
+        window.location.href = "/dashboard";
+      }
+    };
+
     // Check if we're in demo mode and have a stored session
     if (authHelpers.isDemoMode()) {
       const demoSession = localStorage.getItem("demo-session");
