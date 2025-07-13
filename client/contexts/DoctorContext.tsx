@@ -41,47 +41,6 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       );
       setLoading(false);
       return;
-
-      console.log(
-        "🟣 DoctorContext: User found, proceeding to fetch doctor profile",
-      );
-
-      // Check if doctor profile exists
-      console.log(
-        "🟣 DoctorContext: Fetching doctor profile for user ID:",
-        user.id,
-      );
-      const { data: existingDoctor, error: fetchError } = await supabase
-        .from("doctors")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-
-      if (fetchError && fetchError.code !== "PGRST116") {
-        throw fetchError;
-      }
-
-      if (existingDoctor) {
-        setDoctor(existingDoctor);
-      } else {
-        // Create doctor profile if it doesn't exist
-        const { data: newDoctor, error: createError } = await supabase
-          .from("doctors")
-          .insert({
-            id: user.id,
-            name:
-              user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
-            email: user.email || "",
-          })
-          .select("*")
-          .single();
-
-        if (createError) {
-          throw createError;
-        }
-
-        setDoctor(newDoctor);
-      }
     } catch (err) {
       console.error("🔴 DoctorContext: Error loading doctor:", err);
 
