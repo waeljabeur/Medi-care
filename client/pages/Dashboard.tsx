@@ -103,7 +103,7 @@ export default function Dashboard() {
             patients!inner(name)
           `,
           )
-          .eq("status", "scheduled")
+          .in("status", ["confirmed", "pending"])
           .eq("doctor_id", doctor.id)
           .gte("date", today)
           .order("date", { ascending: true })
