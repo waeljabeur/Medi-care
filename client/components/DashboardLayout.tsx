@@ -165,7 +165,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="hidden sm:flex items-center space-x-3 px-3 py-2 rounded-xl bg-accent/30">
                 <div className="text-right">
                   <p className="text-sm font-semibold text-foreground">
-                    {doctor.name}
+                    {doctor?.name || "Doctor"}
                   </p>
                   <p className="text-xs text-muted-foreground font-medium">
                     Doctor
