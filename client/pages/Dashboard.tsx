@@ -41,41 +41,140 @@ interface UpcomingAppointment {
 }
 
 export default function Dashboard() {
-  // Ensure doctor profile exists when accessing dashboard
+  const [stats, setStats] = useState<DashboardStats>({
+    totalPatients: 0,
+    todaysAppointments: 0,
+    thisMonthPatients: 0,
+    pendingTasks: 0,
+  });
+  const [upcomingAppointments, setUpcomingAppointments] = useState<
+    UpcomingAppointment[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const ensureDoctorProfile = async () => {
-      if (authHelpers.isDemoMode()) return; // Skip in demo mode
-
+    const loadDashboardData = async () => {
       try {
-        const { user } = await authHelpers.getCurrentUser();
-        if (!user) return;
+        setLoading(true);
+        setError(null);
 
-        // Check if doctor profile exists
-        const { data: existingDoctor } = await supabase!
+        // Get current user
+        const {
+          data: { user },
+        } = await supabase!.auth.getUser();
+        if (!user) {
+          setError("Please log in to view dashboard");
+          return;
+        }
+
+        // Ensure doctor profile exists
+        const { data: existingDoctor } = await supabase
           .from("doctors")
           .select("id")
-          .eq("id", user.id)
+          .eq("user_id", user.id)
           .single();
+
+        let doctorId = existingDoctor?.id;
 
         // If no profile exists, create one
         if (!existingDoctor) {
-          const { error } = await supabase!.from("doctors").insert({
-            id: user.id,
-            name:
-              user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
-            email: user.email || "",
-          });
+          const { data: newDoctor, error: createError } = await supabase
+            .from("doctors")
+            .insert({
+              user_id: user.id,
+              name:
+                user.user_metadata?.name ||
+                user.email?.split("@")[0] ||
+                "Doctor",
+              email: user.email || "",
+            })
+            .select("id")
+            .single();
 
-          if (error) {
-            console.error("Failed to create doctor profile:", error.message);
+          if (createError) {
+            console.error(
+              "Failed to create doctor profile:",
+              createError.message,
+            );
+            setError("Failed to setup doctor profile");
+            return;
           }
+          doctorId = newDoctor.id;
         }
-      } catch (error) {
-        console.error("Error ensuring doctor profile:", error);
+
+        // Load patients count
+        const { count: totalPatients } = await supabase
+          .from("patients")
+          .select("*", { count: "exact", head: true })
+          .eq("doctor_id", doctorId);
+
+        // Load today's appointments
+        const today = new Date().toISOString().split("T")[0];
+        const { count: todaysAppointments } = await supabase
+          .from("appointments")
+          .select("*", { count: "exact", head: true })
+          .eq("appointment_date", today)
+          .in("status", ["scheduled"]);
+
+        // Load this month's new patients
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const { count: thisMonthPatients } = await supabase
+          .from("patients")
+          .select("*", { count: "exact", head: true })
+          .eq("doctor_id", doctorId)
+          .gte("created_at", startOfMonth.toISOString());
+
+        // Load upcoming appointments with patient names
+        const { data: appointments } = await supabase
+          .from("appointments")
+          .select(
+            `
+            id,
+            patient_id,
+            appointment_date,
+            appointment_time,
+            reason,
+            status,
+            patients!inner(name)
+          `,
+          )
+          .eq("status", "scheduled")
+          .gte("appointment_date", today)
+          .order("appointment_date", { ascending: true })
+          .order("appointment_time", { ascending: true })
+          .limit(5);
+
+        setStats({
+          totalPatients: totalPatients || 0,
+          todaysAppointments: todaysAppointments || 0,
+          thisMonthPatients: thisMonthPatients || 0,
+          pendingTasks: 0, // We can calculate this later based on business logic
+        });
+
+        setUpcomingAppointments(
+          (appointments || []).map((apt) => ({
+            id: apt.id,
+            patient_name: apt.patients?.name || "Unknown Patient",
+            patient_id: apt.patient_id,
+            appointment_time: apt.appointment_time,
+            appointment_date: apt.appointment_date,
+            reason: apt.reason,
+            status: apt.status,
+          })),
+        );
+      } catch (err) {
+        console.error("Error loading dashboard:", err);
+        setError("Failed to load dashboard data");
+      } finally {
+        setLoading(false);
       }
     };
 
-    ensureDoctorProfile();
+    loadDashboardData();
   }, []);
 
   return (
