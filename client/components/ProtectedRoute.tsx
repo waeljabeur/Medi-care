@@ -32,15 +32,18 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     checkAuth();
 
     // Listen for auth changes
-    const {
-      data: { subscription },
-      unsubscribe,
-    } = authHelpers.onAuthStateChange((event, session) => {
+    const authResult = authHelpers.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      if ("unsubscribe" in authResult) {
+        authResult.unsubscribe();
+      } else if (authResult.data?.subscription?.unsubscribe) {
+        authResult.data.subscription.unsubscribe();
+      }
+    };
   }, []);
 
   if (loading) {
