@@ -28,8 +28,27 @@ import { DoctorProvider } from "./contexts/DoctorContext";
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Add global bypass functions for debugging
+  // Add global bypass functions and navigation loop detection
   React.useEffect(() => {
+    // Detect navigation loops
+    let navigationCount = 0;
+    const resetNavigationCount = () => {
+      navigationCount = 0;
+    };
+
+    const originalPushState = window.history.pushState;
+    window.history.pushState = function (...args) {
+      navigationCount++;
+      if (navigationCount > 5) {
+        console.log("🚨 Navigation loop detected, clearing auth state");
+        localStorage.clear();
+        window.location.href = "/login";
+        return;
+      }
+      setTimeout(resetNavigationCount, 1000);
+      return originalPushState.apply(this, args);
+    };
+
     (window as any).bypassAuth = () => {
       console.log("🚨 BYPASS: Setting manual auth state");
       localStorage.setItem("last-login-time", Date.now().toString());
