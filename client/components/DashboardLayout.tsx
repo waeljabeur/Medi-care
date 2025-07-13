@@ -143,7 +143,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
               <div className="ml-3 min-w-0 flex-1">
                 <p className="text-sm font-semibold text-sidebar-foreground truncate">
-                  {doctor?.name || "Doctor"}
+                  {doctor?.name || "Loading..."}
                 </p>
                 <p className="text-xs text-sidebar-foreground/60 truncate">
                   {doctor?.email || ""}
