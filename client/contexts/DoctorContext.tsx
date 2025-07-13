@@ -107,15 +107,25 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         "🟣 DoctorContext: Fetching doctor profile for user ID:",
         user.id,
       );
-      const { data: existingDoctor, error: fetchError } = await supabase
-        .from("doctors")
-        .select("*")
-        .eq("id", user.id)
-        .single();
+
+      // Add timeout to prevent hanging
+      const fetchWithTimeout = Promise.race([
+        supabase.from("doctors").select("*").eq("id", user.id).single(),
+        new Promise<never>((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Database query timeout after 5 seconds")),
+            5000,
+          ),
+        ),
+      ]);
+
+      const { data: existingDoctor, error: fetchError } =
+        await fetchWithTimeout;
 
       console.log("🟣 DoctorContext: Fetch result:", {
         existingDoctor: !!existingDoctor,
-        fetchError: !!fetchError,
+        fetchError: fetchError?.code || !!fetchError,
+        errorMessage: fetchError?.message,
       });
 
       if (fetchError && fetchError.code !== "PGRST116") {
