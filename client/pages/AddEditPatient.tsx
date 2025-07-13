@@ -278,16 +278,21 @@ export default function AddEditPatient() {
       }
 
       if (isEditing && patientId) {
-        // Update existing patient
+        // Update existing patient - only include basic fields that exist
+        const updateData: any = {
+          name: formData.name.trim(),
+        };
+
+        // Only add fields if they have values (optional fields)
+        if (formData.email.trim()) updateData.email = formData.email.trim();
+        if (formData.phone.trim()) updateData.phone = formData.phone.trim();
+        if (formData.dateOfBirth) updateData.dob = formData.dateOfBirth;
+        if (formData.medicalHistory.trim())
+          updateData.medical_history = formData.medicalHistory.trim();
+
         const { error } = await supabase!
           .from("patients")
-          .update({
-            name: formData.name.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone.trim(),
-            dob: formData.dateOfBirth,
-            medical_history: formData.medicalHistory.trim(),
-          })
+          .update(updateData)
           .eq("id", patientId)
           .eq("doctor_id", user.id); // Ensure doctor can only update their own patients
 
@@ -304,17 +309,22 @@ export default function AddEditPatient() {
           navigate(`/patients/${patientId}`);
         }, 2000);
       } else {
-        // Create new patient
+        // Create new patient - start with minimal required fields
+        const insertData: any = {
+          doctor_id: user.id,
+          name: formData.name.trim(),
+        };
+
+        // Only add optional fields if they have values
+        if (formData.email.trim()) insertData.email = formData.email.trim();
+        if (formData.phone.trim()) insertData.phone = formData.phone.trim();
+        if (formData.dateOfBirth) insertData.dob = formData.dateOfBirth;
+        if (formData.medicalHistory.trim())
+          insertData.medical_history = formData.medicalHistory.trim();
+
         const { data, error } = await supabase!
           .from("patients")
-          .insert({
-            doctor_id: user.id,
-            name: formData.name.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone.trim(),
-            dob: formData.dateOfBirth,
-            medical_history: formData.medicalHistory.trim(),
-          })
+          .insert(insertData)
           .select()
           .single();
 
