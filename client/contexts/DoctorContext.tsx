@@ -21,6 +21,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loadingAttempts, setLoadingAttempts] = useState(0);
 
   const loadDoctor = async () => {
     try {
