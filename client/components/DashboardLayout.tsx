@@ -108,7 +108,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="flex items-center px-3 py-3 rounded-xl bg-sidebar-accent/30">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-md">
                 <span className="text-sm font-bold text-primary-foreground">
-                  {doctor.name
+                  {(doctor?.name || "Dr")
                     .split(" ")
                     .map((n) => n[0])
                     .join("")}
