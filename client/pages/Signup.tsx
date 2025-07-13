@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { authHelpers } from "@/lib/supabase";
+import { authHelpers, supabase } from "@/lib/supabase";
 import {
   Stethoscope,
   Mail,
@@ -34,20 +34,41 @@ export default function Signup() {
       setError("Please enter your full name");
       return false;
     }
-    if (!email.trim()) {
-      setError("Please enter your email address");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim() || !emailRegex.test(email)) {
+      setError("Please enter a valid email address");
       return false;
     }
+
     if (password.length < 6) {
       setError("Password must be at least 6 characters long");
       return false;
     }
+
+    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/;
+    if (!strongPasswordRegex.test(password)) {
+      setError("Password must include an uppercase letter, a number, and a special character");
+      return false;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return false;
     }
+
     return true;
   };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (success) {
+      timer = setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [success, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +85,7 @@ export default function Signup() {
       const { data, error: authError } = await authHelpers.signUp(
         email,
         password,
-        { name },
+        { name }
       );
 
       if (authError) {
@@ -73,13 +94,23 @@ export default function Signup() {
       }
 
       if (data.user) {
+        const { error: insertError } = await supabase
+          .from("doctors")
+          .insert({
+            id: data.user.id,
+            name,
+            email,
+          });
+
+        if (insertError) {
+          console.error("Failed to insert doctor profile:", insertError.message);
+          setError("Account created but failed to save profile. Please contact support.");
+          return;
+        }
+
         setSuccess(
-          "Account created successfully! Please check your email to verify your account.",
+          "Account created successfully! Please check your email to verify your account."
         );
-        // Redirect to login after a short delay
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -113,7 +144,6 @@ export default function Signup() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Error Alert */}
               {error && (
                 <Alert variant="destructive" className="border-destructive/50">
                   <AlertCircle className="h-4 w-4" />
@@ -121,7 +151,6 @@ export default function Signup() {
                 </Alert>
               )}
 
-              {/* Success Alert */}
               {success && (
                 <Alert className="border-success/50 bg-success/10">
                   <CheckCircle className="h-4 w-4 text-success" />
@@ -131,11 +160,9 @@ export default function Signup() {
                 </Alert>
               )}
 
-              {/* Name Field */}
+              {/* Name */}
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">
-                  Full Name
-                </Label>
+                <Label htmlFor="name">Full Name</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
@@ -144,18 +171,15 @@ export default function Signup() {
                     placeholder="Dr. John Smith"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400 transition-colors"
-                    required
+                    className="pl-10 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400"
                     disabled={isLoading}
                   />
                 </div>
               </div>
 
-              {/* Email Field */}
+              {/* Email */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Email Address
-                </Label>
+                <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
@@ -164,18 +188,15 @@ export default function Signup() {
                     placeholder="doctor@hospital.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400 transition-colors"
-                    required
+                    className="pl-10 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400"
                     disabled={isLoading}
                   />
                 </div>
               </div>
 
-              {/* Password Field */}
+              {/* Password */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">
-                  Password
-                </Label>
+                <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
@@ -184,8 +205,7 @@ export default function Signup() {
                     placeholder="Choose a strong password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-12 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400 transition-colors"
-                    required
+                    className="pl-10 pr-12 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400"
                     disabled={isLoading}
                   />
                   <Button
@@ -196,23 +216,14 @@ export default function Signup() {
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </Button>
                 </div>
               </div>
 
-              {/* Confirm Password Field */}
+              {/* Confirm Password */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="confirmPassword"
-                  className="text-sm font-medium"
-                >
-                  Confirm Password
-                </Label>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
@@ -221,8 +232,7 @@ export default function Signup() {
                     placeholder="Confirm your password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 pr-12 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400 transition-colors"
-                    required
+                    className="pl-10 pr-12 h-12 rounded-xl border-2 border-border/50 focus:border-medical-400"
                     disabled={isLoading}
                   />
                   <Button
@@ -233,28 +243,27 @@ export default function Signup() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     disabled={isLoading}
                   >
-                    {showConfirmPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </Button>
                 </div>
               </div>
 
-              {/* Password Requirements */}
+              {/* Password Notes */}
               <div className="text-xs text-muted-foreground space-y-1">
                 <p>Password requirements:</p>
                 <ul className="list-disc list-inside space-y-0.5">
                   <li>At least 6 characters long</li>
+                  <li>Includes an uppercase letter</li>
+                  <li>Includes a number</li>
+                  <li>Includes a special character</li>
                   <li>Must match confirmation</li>
                 </ul>
               </div>
 
-              {/* Signup Button */}
+              {/* Submit */}
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-semibold rounded-xl bg-gradient-to-r from-medical-500 to-medical-600 hover:from-medical-600 hover:to-medical-700 shadow-lg hover:shadow-xl transition-all duration-200"
+                className="w-full h-12 text-base font-semibold rounded-xl bg-gradient-to-r from-medical-500 to-medical-600 hover:from-medical-600 hover:to-medical-700 shadow-lg hover:shadow-xl"
                 disabled={isLoading || !!success}
               >
                 {isLoading ? (
@@ -267,13 +276,13 @@ export default function Signup() {
                 )}
               </Button>
 
-              {/* Login Link */}
+              {/* Link */}
               <div className="text-center pt-4 border-t border-border/50">
                 <p className="text-sm text-muted-foreground">
                   Already have an account?{" "}
                   <Link
                     to="/login"
-                    className="text-medical-600 hover:text-medical-700 font-semibold transition-colors"
+                    className="text-medical-600 hover:text-medical-700 font-semibold"
                   >
                     Sign in
                   </Link>
