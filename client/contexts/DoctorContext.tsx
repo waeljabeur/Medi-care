@@ -124,6 +124,109 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const loadDoctorWithUser = async (user: any) => {
+    try {
+      console.log(
+        "🟣 DoctorContext: Starting loadDoctorWithUser for user:",
+        user?.email,
+      );
+      setLoading(true);
+      setError(null);
+
+      // Check if supabase client is available
+      if (!supabase) {
+        throw new Error(
+          "Supabase client not initialized. Please check your environment configuration.",
+        );
+      }
+
+      if (!user) {
+        console.log(
+          "🟣 DoctorContext: No user provided, setting doctor to null",
+        );
+        setDoctor(null);
+        return;
+      }
+
+      console.log(
+        "🟣 DoctorContext: User found, proceeding to fetch doctor profile",
+      );
+
+      // Check if doctor profile exists
+      console.log(
+        "🟣 DoctorContext: Fetching doctor profile for user ID:",
+        user.id,
+      );
+      const { data: existingDoctor, error: fetchError } = await supabase
+        .from("doctors")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      console.log("🟣 DoctorContext: Fetch result:", {
+        existingDoctor: !!existingDoctor,
+        fetchError: !!fetchError,
+      });
+
+      if (fetchError && fetchError.code !== "PGRST116") {
+        console.log("🟣 DoctorContext: Fetch error:", fetchError);
+        throw fetchError;
+      }
+
+      if (existingDoctor) {
+        console.log("🟣 DoctorContext: Doctor profile found:", existingDoctor);
+        setDoctor(existingDoctor);
+      } else {
+        // Create doctor profile if it doesn't exist
+        console.log("🟣 DoctorContext: Creating new doctor profile");
+        const { data: newDoctor, error: createError } = await supabase
+          .from("doctors")
+          .insert({
+            id: user.id,
+            name:
+              user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
+            email: user.email || "",
+          })
+          .select("*")
+          .single();
+
+        if (createError) {
+          throw createError;
+        }
+
+        console.log("🟣 DoctorContext: New doctor profile created:", newDoctor);
+        setDoctor(newDoctor);
+      }
+    } catch (err) {
+      console.error("🔴 DoctorContext: Error in loadDoctorWithUser:", err);
+
+      let errorMessage = "Failed to load doctor profile";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      } else if (err && typeof err === "object") {
+        if ("message" in err && typeof err.message === "string") {
+          errorMessage = err.message;
+        } else if (
+          "error_description" in err &&
+          typeof err.error_description === "string"
+        ) {
+          errorMessage = err.error_description;
+        } else {
+          errorMessage = `Database error: ${JSON.stringify(err)}`;
+        }
+      }
+
+      console.log("🔴 DoctorContext: Setting error message:", errorMessage);
+      setError(errorMessage);
+    } finally {
+      console.log("🟣 DoctorContext: Setting loading to false");
+      setLoading(false);
+    }
+  };
+
   const refreshDoctor = async () => {
     await loadDoctor();
   };
