@@ -486,7 +486,7 @@ export default function AddEditPatient() {
                     className="text-sm font-semibold flex items-center"
                   >
                     <Calendar className="w-4 h-4 mr-2 text-primary" />
-                    Date of Birth *
+                    Date of Birth (Optional)
                   </Label>
                   <Input
                     id="dateOfBirth"
