@@ -247,18 +247,6 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       );
       // In real mode, wait for auth state change - don't call loadDoctor
       setLoading(true);
-
-      // Failsafe: if no auth state change happens in 8 seconds, stop loading
-      const timeoutId = setTimeout(() => {
-        console.log(
-          "🔴 DoctorContext: No auth state change - stopping loading",
-        );
-        setLoading(false);
-        setError("Please log in to continue");
-      }, 8000);
-
-      // Store timeoutId to clear it later
-      return () => clearTimeout(timeoutId);
     }
 
     // Listen for auth state changes using authHelpers
