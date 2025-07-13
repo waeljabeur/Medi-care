@@ -27,7 +27,28 @@ import {
 } from "lucide-react";
 import { supabase, isDemoMode } from "@/lib/supabase";
 
-// Mock patient data - in real app this would come from API based on patientId
+interface Patient {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  dob?: string;
+  medical_history?: string;
+  created_at: string;
+  doctor_id: string;
+}
+
+interface Appointment {
+  id: string;
+  patient_id: string;
+  appointment_date: string;
+  appointment_time: string;
+  reason?: string;
+  status: "scheduled" | "completed" | "cancelled";
+  notes?: string;
+}
+
+// Mock patient data - used when in demo mode
 const mockPatientData = {
   1: {
     id: 1,
