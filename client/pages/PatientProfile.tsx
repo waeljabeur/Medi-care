@@ -519,19 +519,6 @@ export default function PatientProfile() {
                   </p>
                 </div>
               </div>
-              {patient.doctorNotes && (
-                <div className="mt-6 pt-6 border-t border-border/50">
-                  <h4 className="font-semibold text-foreground mb-3 flex items-center">
-                    <Activity className="w-4 h-4 mr-2 text-primary" />
-                    Doctor's Notes
-                  </h4>
-                  <div className="bg-primary/5 rounded-xl p-4 border border-primary/20">
-                    <p className="text-foreground text-sm">
-                      {patient.doctorNotes}
-                    </p>
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>
