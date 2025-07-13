@@ -145,13 +145,20 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         session: !!session,
       });
       if (event === "SIGNED_IN" && session) {
-        // Add small delay to let auth session stabilize
         console.log(
-          "🟣 DoctorContext: SIGNED_IN detected, waiting 500ms for session to stabilize",
+          "🟣 DoctorContext: SIGNED_IN detected, using session user directly",
         );
-        setTimeout(async () => {
+        // Use the user from the session directly instead of calling getCurrentUser
+        const user = session.user;
+        if (user) {
+          console.log("🟣 DoctorContext: Session user found:", user.email);
+          await loadDoctorWithUser(user);
+        } else {
+          console.log(
+            "🟣 DoctorContext: No user in session, falling back to loadDoctor",
+          );
           await loadDoctor();
-        }, 500);
+        }
       } else if (event === "SIGNED_OUT") {
         console.log("🟣 DoctorContext: User signed out, clearing doctor state");
         setDoctor(null);
