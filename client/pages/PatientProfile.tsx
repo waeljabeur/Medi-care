@@ -186,17 +186,139 @@ const mockAppointments = {
 
 export default function PatientProfile() {
   const { patientId } = useParams<{ patientId: string }>();
+  const [patient, setPatient] = useState<Patient | null>(null);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // In real app, fetch patient data based on patientId and verify doctor ownership
-  const patient = patientId
-    ? mockPatientData[parseInt(patientId) as keyof typeof mockPatientData]
-    : null;
-  const appointments = patientId
-    ? mockAppointments[parseInt(patientId) as keyof typeof mockAppointments] ||
-      []
-    : [];
+  useEffect(() => {
+    async function loadPatientData() {
+      if (!patientId) {
+        setLoading(false);
+        return;
+      }
 
-  if (!patient) {
+      try {
+        setLoading(true);
+        setError(null);
+
+        if (isDemoMode()) {
+          // Use mock data in demo mode
+          const mockPatient =
+            mockPatientData[
+              parseInt(patientId) as keyof typeof mockPatientData
+            ];
+          if (mockPatient) {
+            // Convert mock data to match Patient interface
+            setPatient({
+              id: patientId,
+              name: mockPatient.name,
+              email: mockPatient.email,
+              phone: mockPatient.phone,
+              dob: mockPatient.dateOfBirth,
+              medical_history: mockPatient.medicalHistory,
+              created_at: mockPatient.createdAt,
+              doctor_id: "demo-doctor",
+            });
+
+            // Convert mock appointments
+            const mockAppts =
+              mockAppointments[
+                parseInt(patientId) as keyof typeof mockAppointments
+              ] || [];
+            setAppointments(
+              mockAppts.map((apt) => ({
+                id: apt.id.toString(),
+                patient_id: patientId,
+                appointment_date: apt.date,
+                appointment_time: apt.time,
+                reason: apt.reason,
+                status: apt.status === "upcoming" ? "scheduled" : "completed",
+                notes: apt.notes,
+              })),
+            );
+          }
+        } else {
+          // Load from Supabase
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          if (!user) {
+            setError("Please log in to view patient profiles");
+            return;
+          }
+
+          // First get the doctor profile
+          const { data: doctorData } = await supabase
+            .from("doctors")
+            .select("id")
+            .eq("user_id", user.id)
+            .single();
+
+          if (!doctorData) {
+            setError("Doctor profile not found");
+            return;
+          }
+
+          // Load patient data
+          const { data: patientData, error: patientError } = await supabase
+            .from("patients")
+            .select("*")
+            .eq("id", patientId)
+            .eq("doctor_id", doctorData.id)
+            .single();
+
+          if (patientError) {
+            console.error("Error loading patient:", patientError);
+            if (patientError.code === "PGRST116") {
+              setError(
+                "Patient not found or you don't have access to view this patient",
+              );
+            } else {
+              setError("Failed to load patient data");
+            }
+            return;
+          }
+
+          setPatient(patientData);
+
+          // Load appointments
+          const { data: appointmentsData, error: appointmentsError } =
+            await supabase
+              .from("appointments")
+              .select("*")
+              .eq("patient_id", patientId)
+              .order("appointment_date", { ascending: false });
+
+          if (appointmentsError) {
+            console.error("Error loading appointments:", appointmentsError);
+            // Don't fail if appointments can't be loaded
+            setAppointments([]);
+          } else {
+            setAppointments(appointmentsData || []);
+          }
+        }
+      } catch (err) {
+        console.error("Error in loadPatientData:", err);
+        setError("An unexpected error occurred");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadPatientData();
+  }, [patientId]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <span className="ml-2 text-muted-foreground">Loading patient...</span>
+      </div>
+    );
+  }
+
+  if (error || !patient) {
     return (
       <div className="space-y-8">
         <div className="text-center py-12">
