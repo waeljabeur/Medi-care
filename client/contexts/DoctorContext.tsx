@@ -35,21 +35,12 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      // Get current user using authHelpers (which handles demo mode and null cases)
-      console.log("🟣 DoctorContext: Getting current user via authHelpers");
-      const { user, error: userError } = await authHelpers.getCurrentUser();
-
-      if (userError) {
-        console.log("🟣 DoctorContext: Error getting user:", userError);
-        throw new Error(`Failed to get current user: ${userError.message}`);
-      }
-
-      console.log("🟣 DoctorContext: Current user:", user?.email || "none");
-      if (!user) {
-        console.log("🟣 DoctorContext: No user found, setting doctor to null");
-        setDoctor(null);
-        return;
-      }
+      // Skip the problematic getCurrentUser call - let auth state change handle this
+      console.log(
+        "🟣 DoctorContext: Skipping getCurrentUser - waiting for auth state change",
+      );
+      setLoading(false);
+      return;
 
       console.log(
         "🟣 DoctorContext: User found, proceeding to fetch doctor profile",
