@@ -279,7 +279,6 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => {
-      clearTimeout(timeoutId);
       if ("unsubscribe" in authResult) {
         authResult.unsubscribe();
       } else if (authResult.data?.subscription?.unsubscribe) {
