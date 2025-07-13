@@ -115,7 +115,7 @@ export default function PatientProfile() {
             .from("appointments")
             .select("*")
             .eq("patient_id", patientId)
-            .order("appointment_date", { ascending: false });
+            .order("date", { ascending: false });
 
         if (appointmentsError) {
           console.error("Error loading appointments:", appointmentsError);
