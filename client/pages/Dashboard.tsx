@@ -401,12 +401,12 @@ export default function Dashboard() {
                             : "secondary"
                         }
                         className={
-                          appointment.status === "confirmed"
+                          appointment.status === "scheduled"
                             ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
                             : "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
                         }
                       >
-                        {appointment.status === "confirmed" ? (
+                        {appointment.status === "scheduled" ? (
                           <CheckCircle className="w-3 h-3 mr-1" />
                         ) : (
                           <AlertCircle className="w-3 h-3 mr-1" />
