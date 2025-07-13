@@ -139,9 +139,6 @@ const App = () => (
             />
             <Route path="/demo/view-toggle" element={<ViewToggleDemo />} />
             <Route path="/demo/print-export" element={<PrintExportDemo />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </DoctorProvider>
