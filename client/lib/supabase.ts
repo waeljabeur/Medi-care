@@ -56,16 +56,19 @@ export const authHelpers = {
     }
 
     if (!supabase) {
+      console.log("🟡 Supabase client not initialized");
       return {
         data: null,
         error: { message: "Supabase client not initialized" },
       };
     }
 
+    console.log("🟡 Calling supabase.auth.signInWithPassword");
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    console.log("🟡 Supabase signIn result:", { data: !!data, error: !!error });
     return { data, error };
   },
 
