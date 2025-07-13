@@ -242,7 +242,7 @@ export default function Patients() {
                 </tr>
               </thead>
               <tbody>
-                {mockPatients.map((patient) => (
+                {patients.map((patient) => (
                   <tr
                     key={patient.id}
                     className="border-b border-border/30 hover:bg-background/50 transition-all duration-200 group cursor-pointer"
