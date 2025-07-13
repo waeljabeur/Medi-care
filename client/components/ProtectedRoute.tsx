@@ -48,6 +48,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
     // Listen for auth changes
     const authResult = authHelpers.onAuthStateChange((event, session) => {
+      console.log("🔷 ProtectedRoute: Auth state change", {
+        event,
+        session: !!session,
+      });
       setIsAuthenticated(!!session);
       setLoading(false);
     });
