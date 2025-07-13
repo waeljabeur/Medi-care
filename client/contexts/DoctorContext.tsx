@@ -24,6 +24,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
 
   const loadDoctor = async () => {
     try {
+      console.log("🟣 DoctorContext: Starting loadDoctor");
       setLoading(true);
       setError(null);
 
@@ -35,9 +36,11 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Get current user
+      console.log("🟣 DoctorContext: Getting current user");
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      console.log("🟣 DoctorContext: Current user:", user?.email || "none");
       if (!user) {
         setDoctor(null);
         return;
