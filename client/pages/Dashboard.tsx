@@ -135,7 +135,7 @@ export default function Dashboard() {
     };
 
     loadDashboardData();
-  }, []);
+  }, [doctor]);
 
   if (loading || doctorLoading) {
     return (
