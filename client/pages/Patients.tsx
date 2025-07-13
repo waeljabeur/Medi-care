@@ -97,7 +97,7 @@ export default function Patients() {
 
         const { data, error: fetchError } = await supabase!
           .from("patients")
-          .select("id, name, email, phone, dob, created_at")
+          .select("*")
           .eq("doctor_id", user.id)
           .order("created_at", { ascending: false });
 
