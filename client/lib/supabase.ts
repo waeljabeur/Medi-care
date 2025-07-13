@@ -5,11 +5,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Determine if we're in demo mode (no real Supabase credentials)
-const isDemoMode =
-  !supabaseUrl ||
-  !supabaseKey ||
-  supabaseUrl.includes("your-project") ||
-  supabaseKey.includes("your-anon-key");
+// TEMPORARILY DISABLED: Force demo mode off for testing
+const isDemoMode = false;
 
 // Create Supabase client (only if we have real credentials)
 export const supabase = isDemoMode
