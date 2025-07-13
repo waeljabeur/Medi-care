@@ -100,19 +100,66 @@ export default function AddEditPatient() {
 
   // Load patient data for editing
   useEffect(() => {
-    if (isEditing && patientId) {
-      const patient =
-        mockPatientData[parseInt(patientId) as keyof typeof mockPatientData];
-      if (patient) {
-        setFormData({
-          name: patient.name,
-          email: patient.email,
-          phone: patient.phone,
-          dateOfBirth: patient.dateOfBirth,
-          medicalHistory: patient.medicalHistory,
+    const loadPatientData = async () => {
+      if (!isEditing || !patientId) return;
+
+      if (authHelpers.isDemoMode()) {
+        // Demo mode: use mock data
+        const patient =
+          mockPatientData[parseInt(patientId) as keyof typeof mockPatientData];
+        if (patient) {
+          setFormData({
+            name: patient.name,
+            email: patient.email,
+            phone: patient.phone,
+            dateOfBirth: patient.dateOfBirth,
+            medicalHistory: patient.medicalHistory,
+          });
+        }
+        return;
+      }
+
+      // Real Supabase implementation
+      try {
+        const { user } = await authHelpers.getCurrentUser();
+        if (!user) return;
+
+        const { data: patient, error } = await supabase!
+          .from("patients")
+          .select("*")
+          .eq("id", patientId)
+          .eq("doctor_id", user.id) // Ensure doctor can only edit their own patients
+          .single();
+
+        if (error) {
+          console.error("Error loading patient:", error.message);
+          setSubmitStatus({
+            type: "error",
+            message:
+              "Failed to load patient data. Patient may not exist or you don't have access.",
+          });
+          return;
+        }
+
+        if (patient) {
+          setFormData({
+            name: patient.name || "",
+            email: patient.email || "",
+            phone: patient.phone || "",
+            dateOfBirth: patient.dob || "",
+            medicalHistory: patient.medical_history || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error loading patient data:", error);
+        setSubmitStatus({
+          type: "error",
+          message: "Failed to load patient data. Please try again.",
         });
       }
-    }
+    };
+
+    loadPatientData();
   }, [isEditing, patientId]);
 
   const validateForm = (): boolean => {
