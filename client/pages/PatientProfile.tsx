@@ -167,7 +167,7 @@ export default function PatientProfile() {
   }
 
   const upcomingAppointments = appointments.filter(
-    (apt) => apt.status === "scheduled",
+    (apt) => apt.status === "confirmed" || apt.status === "pending",
   );
   const pastAppointments = appointments.filter(
     (apt) => apt.status === "completed",
