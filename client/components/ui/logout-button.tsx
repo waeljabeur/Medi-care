@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./button";
+import { useDoctor } from "@/contexts/DoctorContext";
 import {
   AlertDialog,
   AlertDialogAction,
