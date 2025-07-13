@@ -159,10 +159,17 @@ export const authHelpers = {
       return { user: null, error: null };
     }
 
+    if (!supabase) {
+      return {
+        user: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
     const {
       data: { user },
       error,
-    } = await supabase!.auth.getUser();
+    } = await supabase.auth.getUser();
     return { user, error };
   },
 
