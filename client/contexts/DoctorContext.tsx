@@ -48,7 +48,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       const { data: existingDoctor, error: fetchError } = await supabase
         .from("doctors")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("id", user.id)
         .single();
 
       if (fetchError && fetchError.code !== "PGRST116") {
