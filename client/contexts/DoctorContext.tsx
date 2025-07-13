@@ -136,6 +136,14 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       if (existingDoctor) {
         console.log("🟣 DoctorContext: Doctor profile found:", existingDoctor);
         setDoctor(existingDoctor);
+
+        // Force navigation to dashboard if we're still on login page
+        if (window.location.pathname === "/login") {
+          console.log(
+            "🟣 DoctorContext: Still on login page, forcing navigation to dashboard",
+          );
+          window.location.href = "/dashboard";
+        }
       } else {
         // Create doctor profile if it doesn't exist
         console.log("🟣 DoctorContext: Creating new doctor profile");
