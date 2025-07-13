@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDoctor } from "@/contexts/DoctorContext";
 import {
   Users,
