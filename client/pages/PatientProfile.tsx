@@ -617,23 +617,25 @@ export default function PatientProfile() {
                     >
                       <div className="flex justify-between items-start mb-2">
                         <h4 className="font-semibold text-foreground text-sm">
-                          {appointment.reason}
+                          {appointment.reason || "Appointment"}
                         </h4>
                         <Badge
                           variant="outline"
                           className="text-xs bg-success/10 text-success border-success/20"
                         >
-                          completed
+                          {appointment.status}
                         </Badge>
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3 mr-1" />
-                          {new Date(appointment.date).toLocaleDateString()}
+                          {new Date(
+                            appointment.appointment_date,
+                          ).toLocaleDateString()}
                         </div>
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Clock className="w-3 h-3 mr-1" />
-                          {appointment.time}
+                          {appointment.appointment_time}
                         </div>
                       </div>
                       {appointment.notes && (
