@@ -44,18 +44,17 @@ export default function Login() {
 
       if (data.user) {
         console.log("🟢 Login successful, user:", data.user.email);
+
+        // Store login timestamp for auth fallback
+        localStorage.setItem("last-login-time", Date.now().toString());
+
         // Store demo session for demo mode
         if (authHelpers.isDemoMode()) {
           localStorage.setItem("demo-session", JSON.stringify(data.user));
         }
+
         console.log("🔵 Navigating to dashboard...");
         navigate("/dashboard");
-
-        // Give a small delay then trigger a manual doctor refresh
-        setTimeout(() => {
-          console.log("🔵 Triggering manual doctor context refresh...");
-          // The DoctorContext should pick this up via auth state change
-        }, 1000);
       }
     } catch (err) {
       console.error("🔴 Login exception:", err);
