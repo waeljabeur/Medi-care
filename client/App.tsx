@@ -23,7 +23,7 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import { DoctorProvider } from "./contexts/DoctorContext";
+import { DoctorProvider } from "./contexts/DoctorContext-simple";
 
 const queryClient = new QueryClient();
 
