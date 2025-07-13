@@ -50,73 +50,91 @@ const App = () => (
             <Route
               path="/patients"
               element={
-                <DashboardLayout>
-                  <Patients />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Patients />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/patients/new"
               element={
-                <DashboardLayout>
-                  <AddEditPatient />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AddEditPatient />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/patients/:patientId"
               element={
-                <DashboardLayout>
-                  <PatientProfile />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <PatientProfile />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/patients/:patientId/edit"
               element={
-                <DashboardLayout>
-                  <AddEditPatient />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AddEditPatient />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/appointments"
               element={
-                <DashboardLayout>
-                  <Appointments />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Appointments />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/calendar"
               element={
-                <DashboardLayout>
-                  <CalendarView />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <CalendarView />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/appointments/new"
               element={
-                <DashboardLayout>
-                  <AddEditAppointment />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AddEditAppointment />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/appointments/:appointmentId/edit"
               element={
-                <DashboardLayout>
-                  <AddEditAppointment />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AddEditAppointment />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/settings"
               element={
-                <DashboardLayout>
-                  <Settings />
-                </DashboardLayout>
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Settings />
+                  </DashboardLayout>
+                </ProtectedRoute>
               }
             />
             <Route path="/demo/view-toggle" element={<ViewToggleDemo />} />
