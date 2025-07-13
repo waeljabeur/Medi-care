@@ -131,6 +131,13 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadDoctor();
 
+    // Failsafe: if loading takes more than 10 seconds, force it to complete
+    const timeoutId = setTimeout(() => {
+      console.log("🔴 DoctorContext: Timeout - forcing loading to false");
+      setLoading(false);
+      setError("Loading timeout - please refresh the page");
+    }, 10000);
+
     // Listen for auth state changes using authHelpers
     const authResult = authHelpers.onAuthStateChange(async (event, session) => {
       console.log("🟣 DoctorContext auth state change:", {
