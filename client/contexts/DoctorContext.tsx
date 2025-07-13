@@ -139,16 +139,30 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       } else {
         // Create doctor profile if it doesn't exist
         console.log("🟣 DoctorContext: Creating new doctor profile");
-        const { data: newDoctor, error: createError } = await supabase
-          .from("doctors")
-          .insert({
-            id: user.id,
-            name:
-              user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
-            email: user.email || "",
-          })
-          .select("*")
-          .single();
+
+        const createWithTimeout = Promise.race([
+          supabase
+            .from("doctors")
+            .insert({
+              id: user.id,
+              name:
+                user.user_metadata?.name ||
+                user.email?.split("@")[0] ||
+                "Doctor",
+              email: user.email || "",
+            })
+            .select("*")
+            .single(),
+          new Promise<never>((_, reject) =>
+            setTimeout(
+              () =>
+                reject(new Error("Database insert timeout after 5 seconds")),
+              5000,
+            ),
+          ),
+        ]);
+
+        const { data: newDoctor, error: createError } = await createWithTimeout;
 
         if (createError) {
           throw createError;
