@@ -99,7 +99,11 @@ export const authHelpers = {
       return { error: null };
     }
 
-    const { error } = await supabase!.auth.signOut();
+    if (!supabase) {
+      return { error: { message: "Supabase client not initialized" } };
+    }
+
+    const { error } = await supabase.auth.signOut();
     return { error };
   },
 
