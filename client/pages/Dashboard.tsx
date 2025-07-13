@@ -146,6 +146,17 @@ export default function Dashboard() {
     );
   }
 
+  if (doctorError) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-destructive mb-4">
+          Error loading doctor: {doctorError}
+        </p>
+        <Button onClick={() => window.location.reload()}>Try Again</Button>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="text-center py-12">
