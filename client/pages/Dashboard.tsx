@@ -109,8 +109,6 @@ const mockData = {
 };
 
 export default function Dashboard() {
-  console.log("Demo mode?", authHelpers.isDemoMode());
-
   return (
     <div className="space-y-8">
       {/* Page Header */}
