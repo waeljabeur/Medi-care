@@ -202,7 +202,7 @@ export default function PatientProfile() {
         setLoading(true);
         setError(null);
 
-        if (isDemoMode()) {
+        if (authHelpers.isDemoMode()) {
           // Use mock data in demo mode
           const mockPatient =
             mockPatientData[
