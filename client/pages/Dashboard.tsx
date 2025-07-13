@@ -96,17 +96,18 @@ export default function Dashboard() {
             `
             id,
             patient_id,
-            appointment_date,
-            appointment_time,
+            date,
+            time,
             reason,
             status,
             patients!inner(name)
           `,
           )
           .eq("status", "scheduled")
-          .gte("appointment_date", today)
-          .order("appointment_date", { ascending: true })
-          .order("appointment_time", { ascending: true })
+          .eq("doctor_id", doctor.id)
+          .gte("date", today)
+          .order("date", { ascending: true })
+          .order("time", { ascending: true })
           .limit(5);
 
         setStats({
