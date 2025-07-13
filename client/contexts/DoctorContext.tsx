@@ -114,7 +114,11 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadDoctor();
 
-    // Listen for auth state changes
+    // Listen for auth state changes (only if supabase is available)
+    if (!supabase) {
+      return;
+    }
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
