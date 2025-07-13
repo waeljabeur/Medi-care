@@ -223,14 +223,43 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    loadDoctor();
+    console.log("🟣 DoctorContext: Initializing - checking auth state");
 
-    // Failsafe: if loading takes more than 10 seconds, force it to complete
-    const timeoutId = setTimeout(() => {
-      console.log("🔴 DoctorContext: Timeout - forcing loading to false");
-      setLoading(false);
-      setError("Loading timeout - please refresh the page");
-    }, 10000);
+    // Check if we're in demo mode and have a stored session
+    if (authHelpers.isDemoMode()) {
+      const demoSession = localStorage.getItem("demo-session");
+      if (demoSession) {
+        console.log("🟣 DoctorContext: Demo mode - found stored session");
+        try {
+          const user = JSON.parse(demoSession);
+          loadDoctorWithUser(user);
+        } catch (err) {
+          console.error("🔴 DoctorContext: Error parsing demo session:", err);
+          setLoading(false);
+        }
+      } else {
+        console.log("🟣 DoctorContext: Demo mode - no stored session");
+        setLoading(false);
+      }
+    } else {
+      console.log(
+        "🟣 DoctorContext: Real mode - waiting for auth state change",
+      );
+      // In real mode, wait for auth state change - don't call loadDoctor
+      setLoading(true);
+
+      // Failsafe: if no auth state change happens in 8 seconds, stop loading
+      const timeoutId = setTimeout(() => {
+        console.log(
+          "🔴 DoctorContext: No auth state change - stopping loading",
+        );
+        setLoading(false);
+        setError("Please log in to continue");
+      }, 8000);
+
+      // Store timeoutId to clear it later
+      return () => clearTimeout(timeoutId);
+    }
 
     // Listen for auth state changes using authHelpers
     const authResult = authHelpers.onAuthStateChange(async (event, session) => {
