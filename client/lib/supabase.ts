@@ -182,7 +182,14 @@ export const authHelpers = {
       };
     }
 
-    return supabase!.auth.onAuthStateChange(callback);
+    if (!supabase) {
+      return {
+        data: { subscription: null },
+        unsubscribe: () => {},
+      };
+    }
+
+    return supabase.auth.onAuthStateChange(callback);
   },
 
   // Helper to check if we're in demo mode
