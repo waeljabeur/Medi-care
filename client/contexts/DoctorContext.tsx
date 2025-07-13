@@ -257,6 +257,30 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const createFallbackDoctor = (user: any) => {
+    console.log(
+      "🟡 DoctorContext: Creating fallback doctor - bypassing database",
+    );
+    const fallbackDoctor = {
+      id: user.id,
+      name: user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
+      email: user.email || "",
+      created_at: new Date().toISOString(),
+    };
+
+    setDoctor(fallbackDoctor);
+    setError(null);
+    setLoading(false);
+
+    // Navigate to dashboard
+    console.log("🟡 DoctorContext: Fallback complete, navigating to dashboard");
+    if (window.location.pathname === "/login") {
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 100);
+    }
+  };
+
   const refreshDoctor = async () => {
     await loadDoctor();
   };
