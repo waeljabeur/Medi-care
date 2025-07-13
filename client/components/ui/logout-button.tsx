@@ -66,6 +66,7 @@ export function LogoutButton({
       console.log("🔴 Clearing all auth storage...");
       localStorage.removeItem("supabase.auth.token");
       localStorage.removeItem("sb-ywkcdnczxqbqmpvfghdr-auth-token"); // Supabase project-specific token
+      localStorage.removeItem("last-login-time"); // Clear login timestamp
 
       // Clear all localStorage items that start with 'sb-' (Supabase)
       Object.keys(localStorage).forEach((key) => {
