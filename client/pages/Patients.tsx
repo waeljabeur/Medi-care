@@ -284,26 +284,20 @@ export default function Patients() {
                       </div>
                     </td>
                     <td className="py-5 px-3 text-foreground font-semibold">
-                      {patient.age} years
+                      {calculateAge(patient.dob)} years
                     </td>
                     <td className="py-5 px-3">
                       <div className="flex items-center text-sm font-medium">
                         <Calendar className="w-4 h-4 mr-2 text-muted-foreground" />
-                        {new Date(patient.lastVisit).toLocaleDateString()}
+                        {new Date(patient.created_at).toLocaleDateString()}
                       </div>
                     </td>
                     <td className="py-5 px-3">
                       <Badge
-                        variant={
-                          patient.status === "active" ? "default" : "secondary"
-                        }
-                        className={
-                          patient.status === "active"
-                            ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
-                            : "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
-                        }
+                        variant="default"
+                        className="bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
                       >
-                        {patient.status}
+                        Active
                       </Badge>
                     </td>
                     <td className="py-5 px-3">
