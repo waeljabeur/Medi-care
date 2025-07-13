@@ -341,13 +341,14 @@ export default function PatientProfile() {
   }
 
   const upcomingAppointments = appointments.filter(
-    (apt) => apt.status === "upcoming",
+    (apt) => apt.status === "scheduled",
   );
   const pastAppointments = appointments.filter(
     (apt) => apt.status === "completed",
   );
-  const age =
-    new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
+  const age = patient.dob
+    ? new Date().getFullYear() - new Date(patient.dob).getFullYear()
+    : null;
 
   return (
     <div className="space-y-8">
