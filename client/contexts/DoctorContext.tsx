@@ -326,7 +326,14 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         const user = session.user;
         if (user) {
           console.log("🟣 DoctorContext: Session user found:", user.email);
-          await loadDoctorWithUser(user);
+          try {
+            await loadDoctorWithUser(user);
+          } catch (err) {
+            console.log(
+              "🔴 DoctorContext: loadDoctorWithUser failed, using fallback",
+            );
+            createFallbackDoctor(user);
+          }
         } else {
           console.log(
             "🟣 DoctorContext: No user in session, setting loading to false",
