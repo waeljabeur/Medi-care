@@ -386,13 +386,11 @@ export default function PatientProfile() {
                       <div className="space-y-1">
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3 mr-1" />
-                          {new Date(
-                            appointment.appointment_date,
-                          ).toLocaleDateString()}
+                          {new Date(appointment.date).toLocaleDateString()}
                         </div>
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Clock className="w-3 h-3 mr-1" />
-                          {appointment.appointment_time}
+                          {appointment.time}
                         </div>
                       </div>
                       {appointment.notes && (
@@ -455,13 +453,11 @@ export default function PatientProfile() {
                       <div className="space-y-1">
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3 mr-1" />
-                          {new Date(
-                            appointment.appointment_date,
-                          ).toLocaleDateString()}
+                          {new Date(appointment.date).toLocaleDateString()}
                         </div>
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Clock className="w-3 h-3 mr-1" />
-                          {appointment.appointment_time}
+                          {appointment.time}
                         </div>
                       </div>
                       {appointment.notes && (
