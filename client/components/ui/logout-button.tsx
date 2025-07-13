@@ -35,32 +35,39 @@ export function LogoutButton({
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    console.log("🔴 Logout initiated");
     setIsLoading(true);
 
     try {
+      console.log("🔴 Calling authHelpers.signOut()");
       const { error } = await authHelpers.signOut();
+      console.log("🔴 Sign out result:", { error });
 
       if (error) {
+        console.error("🔴 Logout error:", error);
         toast.error(
           `Failed to sign out: ${error.message || "Please try again."}`,
         );
-        console.error("Logout error:", error);
         setIsLoading(false);
         return;
       }
 
+      console.log("🔴 Sign out successful, cleaning up...");
+
       // Clean up demo session if in demo mode
       if (authHelpers.isDemoMode()) {
+        console.log("🔴 Demo mode - removing demo session");
         localStorage.removeItem("demo-session");
       }
 
       // Clear any other local storage that might interfere
       localStorage.removeItem("supabase.auth.token");
 
+      console.log("🔴 Navigating to login...");
       toast.success("Signed out successfully");
       navigate("/login");
     } catch (err) {
-      console.error("Unexpected logout error:", err);
+      console.error("🔴 Unexpected logout error:", err);
       toast.error("An unexpected error occurred during logout");
       setIsLoading(false);
     }
