@@ -212,6 +212,13 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       console.log("🔴 DoctorContext: Setting error message:", errorMessage);
 
       // If we're on login page and there's a database error, create a minimal fallback doctor
+      console.log(
+        "🟡 DoctorContext: Checking fallback conditions - pathname:",
+        window.location.pathname,
+        "user:",
+        !!user,
+      );
+
       if (window.location.pathname === "/login" && user) {
         console.log(
           "🟡 DoctorContext: Database error on login - creating fallback doctor profile",
@@ -223,6 +230,11 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
           email: user.email || "",
           created_at: new Date().toISOString(),
         };
+
+        console.log(
+          "🟡 DoctorContext: Fallback doctor created:",
+          fallbackDoctor,
+        );
         setDoctor(fallbackDoctor);
         setError(null); // Clear the error since we have a fallback
 
@@ -230,8 +242,13 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         console.log(
           "🟡 DoctorContext: Navigating to dashboard with fallback profile",
         );
-        window.location.href = "/dashboard";
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 100); // Small delay to ensure state is set
       } else {
+        console.log(
+          "🔴 DoctorContext: Not on login page or no user, setting error",
+        );
         setError(errorMessage);
       }
     } finally {
