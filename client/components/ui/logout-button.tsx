@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./button";
+import { useDoctor } from "@/contexts/DoctorContext-simple";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,33 +34,68 @@ export function LogoutButton({
 }: LogoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { refreshDoctor } = useDoctor();
 
   const handleLogout = async () => {
+    console.log("🔴 Logout initiated");
     setIsLoading(true);
 
     try {
+      console.log("🔴 Calling authHelpers.signOut()");
       const { error } = await authHelpers.signOut();
+      console.log("🔴 Sign out result:", { error });
 
       if (error) {
-        toast.error("Failed to sign out. Please try again.");
-        console.error("Logout error:", error);
+        console.error("🔴 Logout error:", error);
+        toast.error(
+          `Failed to sign out: ${error.message || "Please try again."}`,
+        );
+        setIsLoading(false);
         return;
       }
 
+      console.log("🔴 Sign out successful, cleaning up...");
+
       // Clean up demo session if in demo mode
       if (authHelpers.isDemoMode()) {
+        console.log("🔴 Demo mode - removing demo session");
         localStorage.removeItem("demo-session");
       }
 
+      // Clear all auth-related storage
+      console.log("🔴 Clearing all auth storage...");
+      localStorage.removeItem("supabase.auth.token");
+      localStorage.removeItem("sb-ywkcdnczxqbqmpvfghdr-auth-token"); // Supabase project-specific token
+      localStorage.removeItem("last-login-time"); // Clear login timestamp
+
+      // Clear all localStorage items that start with 'sb-' (Supabase)
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("sb-")) {
+          localStorage.removeItem(key);
+        }
+      });
+
+      // Force refresh doctor context
+      console.log("🔴 Refreshing doctor context...");
+      await refreshDoctor();
+
+      console.log("🔴 Navigating to login...");
       toast.success("Signed out successfully");
       navigate("/login");
     } catch (err) {
-      console.error("Unexpected logout error:", err);
-      toast.error("An unexpected error occurred");
-    } finally {
+      console.error("🔴 Unexpected logout error:", err);
+      toast.error("An unexpected error occurred during logout");
       setIsLoading(false);
     }
   };
+
+  // Expose logout function globally for debugging
+  React.useEffect(() => {
+    (window as any).forceLogout = handleLogout;
+    return () => {
+      delete (window as any).forceLogout;
+    };
+  }, []);
 
   return (
     <AlertDialog>

@@ -9,8 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { useEffect, useState } from "react";
-import { useDoctor } from "@/contexts/DoctorContext";
+import React, { useEffect, useState } from "react";
+import { useDoctor } from "@/contexts/DoctorContext-simple";
 import {
   Users,
   Calendar,
@@ -35,14 +35,14 @@ interface UpcomingAppointment {
   id: string;
   patient_name: string;
   patient_id: string;
-  appointment_time: string;
-  appointment_date: string;
+  time: string;
+  date: string;
   reason?: string;
-  status: "scheduled" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "completed" | "cancelled";
 }
 
 export default function Dashboard() {
-  const { doctor, loading: doctorLoading } = useDoctor();
+  const { doctor, loading: doctorLoading, error: doctorError } = useDoctor();
   const [stats, setStats] = useState<DashboardStats>({
     totalPatients: 0,
     todaysAppointments: 0,
@@ -74,8 +74,9 @@ export default function Dashboard() {
         const { count: todaysAppointments } = await supabase
           .from("appointments")
           .select("*", { count: "exact", head: true })
-          .eq("appointment_date", today)
-          .in("status", ["scheduled"]);
+          .eq("date", today)
+          .eq("doctor_id", doctor.id)
+          .in("status", ["confirmed", "pending"]);
 
         // Load this month's new patients
         const startOfMonth = new Date();
@@ -95,17 +96,18 @@ export default function Dashboard() {
             `
             id,
             patient_id,
-            appointment_date,
-            appointment_time,
+            date,
+            time,
             reason,
             status,
             patients!inner(name)
           `,
           )
-          .eq("status", "scheduled")
-          .gte("appointment_date", today)
-          .order("appointment_date", { ascending: true })
-          .order("appointment_time", { ascending: true })
+          .in("status", ["confirmed", "pending"])
+          .eq("doctor_id", doctor.id)
+          .gte("date", today)
+          .order("date", { ascending: true })
+          .order("time", { ascending: true })
           .limit(5);
 
         setStats({
@@ -118,10 +120,10 @@ export default function Dashboard() {
         setUpcomingAppointments(
           (appointments || []).map((apt) => ({
             id: apt.id,
-            patient_name: apt.patients?.name || "Unknown Patient",
+            patient_name: (apt.patients as any)?.name || "Unknown Patient",
             patient_id: apt.patient_id,
-            appointment_time: apt.appointment_time,
-            appointment_date: apt.appointment_date,
+            time: apt.time,
+            date: apt.date,
             reason: apt.reason,
             status: apt.status,
           })),
@@ -141,7 +143,20 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">Loading dashboard...</span>
+        <span className="ml-2 text-muted-foreground">
+          {doctorLoading ? "Loading doctor profile..." : "Loading dashboard..."}
+        </span>
+      </div>
+    );
+  }
+
+  if (doctorError) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-destructive mb-4">
+          Error loading doctor: {doctorError}
+        </p>
+        <Button onClick={() => window.location.reload()}>Try Again</Button>
       </div>
     );
   }
@@ -167,8 +182,8 @@ export default function Dashboard() {
             </h1>
           </div>
           <p className="text-muted-foreground text-lg">
-            Welcome back, {doctor?.name || "Doctor"}. Here's what's happening
-            today.
+            Welcome back, {doctor?.name ? `Dr. ${doctor.name}` : "Doctor"}.
+            Here's what's happening today.
           </p>
           <div className="text-sm text-muted-foreground">
             {new Date().toLocaleDateString("en-US", {
@@ -348,26 +363,25 @@ export default function Dashboard() {
                         <div className="text-sm text-muted-foreground flex items-center mt-1">
                           <Clock className="w-3 h-3 mr-1" />
                           {new Date(
-                            appointment.appointment_date,
-                          ).toLocaleDateString()}{" "}
-                          at {appointment.appointment_time}
+                            appointment.date,
+                          ).toLocaleDateString()} at {appointment.time}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <Badge
                         variant={
-                          appointment.status === "scheduled"
+                          appointment.status === "confirmed"
                             ? "default"
                             : "secondary"
                         }
                         className={
-                          appointment.status === "scheduled"
+                          appointment.status === "confirmed"
                             ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
                             : "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
                         }
                       >
-                        {appointment.status === "scheduled" ? (
+                        {appointment.status === "confirmed" ? (
                           <CheckCircle className="w-3 h-3 mr-1" />
                         ) : (
                           <AlertCircle className="w-3 h-3 mr-1" />

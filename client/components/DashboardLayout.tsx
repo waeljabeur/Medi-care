@@ -1,9 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LogoutButton } from "@/components/ui/logout-button";
-import { useDoctor } from "@/contexts/DoctorContext";
+import { useDoctor } from "@/contexts/DoctorContext-simple";
 import {
   LayoutDashboard,
   Users,
@@ -22,7 +22,7 @@ interface DashboardLayoutProps {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Patients", href: "/patients", icon: Users },
   { name: "Calendar", href: "/calendar", icon: CalendarDays },
   { name: "Appointments", href: "/appointments", icon: Calendar },
@@ -32,7 +32,27 @@ const navigation = [
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const { doctor } = useDoctor();
+  const { doctor, error: doctorError } = useDoctor();
+
+  // Show error state if doctor loading failed
+  if (doctorError) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold text-destructive mb-4">
+            Error Loading Doctor Profile
+          </h2>
+          <p className="text-muted-foreground mb-6">{doctorError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -73,8 +93,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const isActive =
-                item.href === "/"
-                  ? location.pathname === "/"
+                item.href === "/dashboard"
+                  ? location.pathname === "/dashboard"
                   : location.pathname.startsWith(item.href);
 
               return (
@@ -116,7 +136,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
               <div className="ml-3 min-w-0 flex-1">
                 <p className="text-sm font-semibold text-sidebar-foreground truncate">
-                  {doctor?.name || "Doctor"}
+                  {doctor?.name || "Loading..."}
                 </p>
                 <p className="text-xs text-sidebar-foreground/60 truncate">
                   {doctor?.email || ""}
@@ -165,7 +185,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="hidden sm:flex items-center space-x-3 px-3 py-2 rounded-xl bg-accent/30">
                 <div className="text-right">
                   <p className="text-sm font-semibold text-foreground">
-                    {doctor?.name || "Doctor"}
+                    {doctor?.name || "Loading..."}
                   </p>
                   <p className="text-xs text-muted-foreground font-medium">
                     Doctor

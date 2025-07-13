@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
+import { authHelpers } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
@@ -12,31 +12,71 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase!.auth.getUser();
-        setIsAuthenticated(!!user);
-      } catch (error) {
-        console.error("Auth check error:", error);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+    console.log("🔷 ProtectedRoute: Checking auth state");
 
-    checkAuth();
+    // Don't call getCurrentUser - just wait for auth state changes
+    // In demo mode, check localStorage
+    if (authHelpers.isDemoMode()) {
+      const demoSession = localStorage.getItem("demo-session");
+      if (demoSession) {
+        console.log("🔷 ProtectedRoute: Demo session found");
+        setIsAuthenticated(true);
+      } else {
+        console.log("🔷 ProtectedRoute: No demo session");
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    } else {
+      console.log(
+        "🔷 ProtectedRoute: Live mode - waiting for auth state change",
+      );
+      // In live mode, start as not authenticated and wait for auth state change
+      setIsAuthenticated(false);
+      setLoading(true);
+
+      // Timeout after 3 seconds if no auth state change
+      setTimeout(() => {
+        if (loading) {
+          console.log("🔷 ProtectedRoute: No auth state change detected");
+
+          // Check if we have any indication of successful login
+          const lastLoginTime = localStorage.getItem("last-login-time");
+          const now = Date.now();
+          const fiveMinutesAgo = now - 5 * 60 * 1000;
+
+          if (lastLoginTime && parseInt(lastLoginTime) > fiveMinutesAgo) {
+            console.log(
+              "🔷 ProtectedRoute: Recent login detected, assuming authenticated",
+            );
+            setIsAuthenticated(true);
+          } else {
+            console.log(
+              "🔷 ProtectedRoute: No recent login, redirecting to login",
+            );
+            setIsAuthenticated(false);
+          }
+          setLoading(false);
+        }
+      }, 3000);
+    }
 
     // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase!.auth.onAuthStateChange((event, session) => {
+    const authResult = authHelpers.onAuthStateChange((event, session) => {
+      console.log("🔷 ProtectedRoute: Auth state change", {
+        event,
+        session: !!session,
+      });
       setIsAuthenticated(!!session);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if ("unsubscribe" in authResult) {
+        authResult.unsubscribe();
+      } else if (authResult.data?.subscription?.unsubscribe) {
+        authResult.data.subscription.unsubscribe();
+      }
+    };
   }, []);
 
   if (loading) {

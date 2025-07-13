@@ -11,6 +11,8 @@ const isDemoMode =
   supabaseUrl.includes("your-project") ||
   supabaseKey.includes("your-anon-key");
 
+console.log("🔧 Supabase mode:", isDemoMode ? "DEMO" : "LIVE");
+
 // Create Supabase client (only if we have real credentials)
 export const supabase = isDemoMode
   ? null
@@ -27,17 +29,22 @@ const DEMO_USER = {
 // Auth helper functions with demo mode fallback
 export const authHelpers = {
   async signIn(email: string, password: string) {
+    console.log("🟡 authHelpers.signIn called, isDemoMode:", isDemoMode);
+
     if (isDemoMode) {
+      console.log("🟡 Demo mode - simulating login");
       // Demo mode: accept any email/password combination
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
 
       if (email === "error@test.com") {
+        console.log("🟡 Demo mode - returning error for test email");
         return {
           data: null,
           error: { message: "Invalid email or password" },
         };
       }
 
+      console.log("🟡 Demo mode - returning success");
       return {
         data: {
           user: { ...DEMO_USER, email },
@@ -50,10 +57,20 @@ export const authHelpers = {
       };
     }
 
-    const { data, error } = await supabase!.auth.signInWithPassword({
+    if (!supabase) {
+      console.log("🟡 Supabase client not initialized");
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    console.log("🟡 Calling supabase.auth.signInWithPassword");
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    console.log("🟡 Supabase signIn result:", { data: !!data, error: !!error });
     return { data, error };
   },
 
@@ -82,7 +99,14 @@ export const authHelpers = {
       };
     }
 
-    const { data, error } = await supabase!.auth.signUp({
+    if (!supabase) {
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -93,13 +117,24 @@ export const authHelpers = {
   },
 
   async signOut() {
+    console.log("🟡 authHelpers.signOut called, isDemoMode:", isDemoMode);
+
     if (isDemoMode) {
+      console.log("🟡 Demo mode - simulating signout");
       // Demo mode: simulate successful signout
       await new Promise((resolve) => setTimeout(resolve, 500));
+      console.log("🟡 Demo mode signout complete");
       return { error: null };
     }
 
-    const { error } = await supabase!.auth.signOut();
+    if (!supabase) {
+      console.log("🟡 Supabase client not initialized");
+      return { error: { message: "Supabase client not initialized" } };
+    }
+
+    console.log("🟡 Calling supabase.auth.signOut()");
+    const { error } = await supabase.auth.signOut();
+    console.log("🟡 Supabase signOut result:", { error });
     return { error };
   },
 
@@ -118,27 +153,80 @@ export const authHelpers = {
       return { data: {}, error: null };
     }
 
-    const { data, error } = await supabase!.auth.resetPasswordForEmail(email, {
+    if (!supabase) {
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     return { data, error };
   },
 
   async getCurrentUser() {
+    console.log(
+      "🟡 authHelpers.getCurrentUser called, isDemoMode:",
+      isDemoMode,
+    );
+
     if (isDemoMode) {
       // Demo mode: return demo user if logged in (check localStorage)
       const demoSession = localStorage.getItem("demo-session");
       if (demoSession) {
+        console.log("🟡 Demo mode - returning stored session");
         return { user: JSON.parse(demoSession), error: null };
       }
+      console.log("🟡 Demo mode - no session found");
       return { user: null, error: null };
     }
 
-    const {
-      data: { user },
-      error,
-    } = await supabase!.auth.getUser();
-    return { user, error };
+    if (!supabase) {
+      console.log("🟡 getCurrentUser - Supabase client not initialized");
+      return {
+        user: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    console.log(
+      "🟡 getCurrentUser - calling supabase.auth.getUser with timeout",
+    );
+
+    try {
+      // Add timeout to prevent hanging
+      const getUserWithTimeout = Promise.race([
+        supabase.auth.getUser(),
+        new Promise<never>((_, reject) =>
+          setTimeout(
+            () => reject(new Error("getCurrentUser timeout after 3 seconds")),
+            3000,
+          ),
+        ),
+      ]);
+
+      const {
+        data: { user },
+        error,
+      } = await getUserWithTimeout;
+
+      console.log("🟡 getCurrentUser result:", {
+        user: !!user,
+        error: !!error,
+      });
+      return { user, error };
+    } catch (err) {
+      console.error("🟡 getCurrentUser error:", err);
+      return {
+        user: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Failed to get current user",
+        },
+      };
+    }
   },
 
   onAuthStateChange(callback: (event: string, session: any) => void) {
@@ -150,7 +238,14 @@ export const authHelpers = {
       };
     }
 
-    return supabase!.auth.onAuthStateChange(callback);
+    if (!supabase) {
+      return {
+        data: { subscription: null },
+        unsubscribe: () => {},
+      };
+    }
+
+    return supabase.auth.onAuthStateChange(callback);
   },
 
   // Helper to check if we're in demo mode

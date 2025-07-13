@@ -58,7 +58,7 @@ export default function Patients() {
         const { data: doctorData } = await supabase
           .from("doctors")
           .select("id")
-          .eq("user_id", user.id)
+          .eq("id", user.id)
           .single();
 
         if (!doctorData) {

@@ -41,10 +41,10 @@ interface Patient {
 interface Appointment {
   id: string;
   patient_id: string;
-  appointment_date: string;
-  appointment_time: string;
+  date: string;
+  time: string;
   reason?: string;
-  status: "scheduled" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "completed" | "cancelled";
   notes?: string;
 }
 
@@ -79,7 +79,7 @@ export default function PatientProfile() {
         const { data: doctorData } = await supabase
           .from("doctors")
           .select("id")
-          .eq("user_id", user.id)
+          .eq("id", user.id)
           .single();
 
         if (!doctorData) {
@@ -115,7 +115,7 @@ export default function PatientProfile() {
             .from("appointments")
             .select("*")
             .eq("patient_id", patientId)
-            .order("appointment_date", { ascending: false });
+            .order("date", { ascending: false });
 
         if (appointmentsError) {
           console.error("Error loading appointments:", appointmentsError);
@@ -167,7 +167,7 @@ export default function PatientProfile() {
   }
 
   const upcomingAppointments = appointments.filter(
-    (apt) => apt.status === "scheduled",
+    (apt) => apt.status === "confirmed" || apt.status === "pending",
   );
   const pastAppointments = appointments.filter(
     (apt) => apt.status === "completed",
@@ -386,13 +386,11 @@ export default function PatientProfile() {
                       <div className="space-y-1">
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3 mr-1" />
-                          {new Date(
-                            appointment.appointment_date,
-                          ).toLocaleDateString()}
+                          {new Date(appointment.date).toLocaleDateString()}
                         </div>
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Clock className="w-3 h-3 mr-1" />
-                          {appointment.appointment_time}
+                          {appointment.time}
                         </div>
                       </div>
                       {appointment.notes && (
@@ -455,13 +453,11 @@ export default function PatientProfile() {
                       <div className="space-y-1">
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3 mr-1" />
-                          {new Date(
-                            appointment.appointment_date,
-                          ).toLocaleDateString()}
+                          {new Date(appointment.date).toLocaleDateString()}
                         </div>
                         <div className="flex items-center text-xs text-muted-foreground">
                           <Clock className="w-3 h-3 mr-1" />
-                          {appointment.appointment_time}
+                          {appointment.time}
                         </div>
                       </div>
                       {appointment.notes && (
