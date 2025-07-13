@@ -67,7 +67,7 @@ export default function Dashboard() {
         const { count: totalPatients } = await supabase
           .from("patients")
           .select("*", { count: "exact", head: true })
-          .eq("doctor_id", doctorId);
+          .eq("doctor_id", doctor.id);
 
         // Load today's appointments
         const today = new Date().toISOString().split("T")[0];
