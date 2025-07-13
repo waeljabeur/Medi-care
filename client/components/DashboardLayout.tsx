@@ -32,7 +32,7 @@ const navigation = [
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const { doctor } = useDoctor();
+  const { doctor, error: doctorError } = useDoctor();
 
   return (
     <div className="min-h-screen bg-background flex">
