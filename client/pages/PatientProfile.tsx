@@ -25,7 +25,7 @@ import {
   History,
   Loader2,
 } from "lucide-react";
-import { supabase, authHelpers } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface Patient {
   id: string;
