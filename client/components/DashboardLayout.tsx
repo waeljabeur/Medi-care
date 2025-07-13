@@ -34,6 +34,26 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
   const { doctor, error: doctorError } = useDoctor();
 
+  // Show error state if doctor loading failed
+  if (doctorError) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold text-destructive mb-4">
+            Error Loading Doctor Profile
+          </h2>
+          <p className="text-muted-foreground mb-6">{doctorError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex">
       {/* Mobile sidebar overlay */}
