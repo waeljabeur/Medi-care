@@ -75,7 +75,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-    const loadDoctorWithUser = async (user: any) => {
+      const loadDoctorWithUser = async (user: any) => {
     // Immediately create fallback to prevent loading loops and DOM issues
     console.log("🟣 DoctorContext: Creating immediate fallback for user:", user?.email);
 
@@ -91,10 +91,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
 
     console.log("🟣 DoctorContext: Fallback doctor set, DOM stable");
-    return;
-
-    // OLD DATABASE CODE - disabled to prevent issues
-    /*
+  };
     try {
       console.log(
         "🟣 DoctorContext: Starting loadDoctorWithUser for user:",
