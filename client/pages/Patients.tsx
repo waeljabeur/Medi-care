@@ -266,8 +266,7 @@ export default function Patients() {
                             <ExternalLink className="w-3 h-3 ml-2 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                           <div className="text-sm text-muted-foreground font-medium">
-                            Patient ID: #
-                            {patient.id.toString().padStart(4, "0")}
+                            Patient ID: #{patient.id.slice(-8).toUpperCase()}
                           </div>
                         </div>
                       </Link>
