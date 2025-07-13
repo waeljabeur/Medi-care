@@ -102,7 +102,14 @@ export default function Login() {
         }
 
         console.log("🔵 Navigating to dashboard...");
-        navigate("/dashboard");
+
+        // Clear refresh count on successful login
+        localStorage.removeItem("login-refresh-count");
+
+        // Use setTimeout to avoid potential navigation conflicts
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 100);
       }
     } catch (err) {
       console.error("🔴 Login exception:", err);
