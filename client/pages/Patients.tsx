@@ -276,11 +276,11 @@ export default function Patients() {
                       <div className="space-y-2">
                         <div className="flex items-center text-sm font-medium">
                           <Mail className="w-4 h-4 mr-2 text-muted-foreground" />
-                          {patient.email}
+                          {patient.email || "No email"}
                         </div>
                         <div className="flex items-center text-sm font-medium">
                           <Phone className="w-4 h-4 mr-2 text-muted-foreground" />
-                          {patient.phone}
+                          {patient.phone || "No phone"}
                         </div>
                       </div>
                     </td>
