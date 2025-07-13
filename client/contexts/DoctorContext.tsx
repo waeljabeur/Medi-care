@@ -47,6 +47,10 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Check if doctor profile exists
+      console.log(
+        "🟣 DoctorContext: Fetching doctor profile for user ID:",
+        user.id,
+      );
       const { data: existingDoctor, error: fetchError } = await supabase
         .from("doctors")
         .select("*")
