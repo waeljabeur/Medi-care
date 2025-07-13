@@ -73,7 +73,6 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
           throw createError;
         }
 
-        console.log("🟢 New doctor profile created:", newDoctor);
         setDoctor(newDoctor);
       }
     } catch (err) {
