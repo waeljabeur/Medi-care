@@ -34,6 +34,7 @@ export function LogoutButton({
 }: LogoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { refreshDoctor } = useDoctor();
 
   const handleLogout = async () => {
     console.log("🔴 Logout initiated");
