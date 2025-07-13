@@ -170,6 +170,14 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
 
         console.log("🟣 DoctorContext: New doctor profile created:", newDoctor);
         setDoctor(newDoctor);
+
+        // Force navigation to dashboard if we're still on login page
+        if (window.location.pathname === "/login") {
+          console.log(
+            "🟣 DoctorContext: Still on login page, forcing navigation to dashboard",
+          );
+          window.location.href = "/dashboard";
+        }
       }
     } catch (err) {
       console.error("🔴 DoctorContext: Error in loadDoctorWithUser:", err);
