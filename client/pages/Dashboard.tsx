@@ -369,7 +369,7 @@ export default function Dashboard() {
               {upcomingAppointments.map((appointment) => (
                 <Link
                   key={appointment.id}
-                  to={`/patients/${appointment.patientId}`}
+                  to={`/patients/${appointment.patient_id}`}
                   className="block"
                 >
                   <div className="flex items-center justify-between p-5 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group cursor-pointer">
@@ -379,21 +379,24 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <div className="font-semibold text-foreground text-base">
-                          {appointment.patient}
+                          {appointment.patient_name}
                         </div>
                         <div className="text-sm text-muted-foreground font-medium">
-                          {appointment.reason}
+                          {appointment.reason || "Appointment"}
                         </div>
                         <div className="text-sm text-muted-foreground flex items-center mt-1">
                           <Clock className="w-3 h-3 mr-1" />
-                          {appointment.date} at {appointment.time}
+                          {new Date(
+                            appointment.appointment_date,
+                          ).toLocaleDateString()}{" "}
+                          at {appointment.appointment_time}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <Badge
                         variant={
-                          appointment.status === "confirmed"
+                          appointment.status === "scheduled"
                             ? "default"
                             : "secondary"
                         }
