@@ -113,23 +113,29 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadDoctor();
 
-    // Listen for auth state changes (only if supabase is available)
-    if (!supabase) {
-      return;
-    }
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    // Listen for auth state changes using authHelpers
+    const authResult = authHelpers.onAuthStateChange(async (event, session) => {
+      console.log("🟣 DoctorContext auth state change:", {
+        event,
+        session: !!session,
+      });
       if (event === "SIGNED_IN" && session) {
         await loadDoctor();
       } else if (event === "SIGNED_OUT") {
+        console.log("🟣 DoctorContext: User signed out, clearing doctor state");
         setDoctor(null);
         setLoading(false);
+        setError(null);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if ("unsubscribe" in authResult) {
+        authResult.unsubscribe();
+      } else if (authResult.data?.subscription?.unsubscribe) {
+        authResult.data.subscription.unsubscribe();
+      }
+    };
   }, []);
 
   return (
