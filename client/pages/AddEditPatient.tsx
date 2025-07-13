@@ -547,7 +547,7 @@ export default function AddEditPatient() {
                     className="text-sm font-semibold flex items-center"
                   >
                     <Phone className="w-4 h-4 mr-2 text-primary" />
-                    Phone Number *
+                    Phone Number (Optional)
                   </Label>
                   <Input
                     id="phone"
