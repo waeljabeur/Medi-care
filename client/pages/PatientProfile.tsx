@@ -41,10 +41,10 @@ interface Patient {
 interface Appointment {
   id: string;
   patient_id: string;
-  appointment_date: string;
-  appointment_time: string;
+  date: string;
+  time: string;
   reason?: string;
-  status: "scheduled" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "completed" | "cancelled";
   notes?: string;
 }
 
