@@ -221,7 +221,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
 
       if (user && errorMessage.includes("timeout")) {
         console.log(
-          "🟡 DoctorContext: Database error on login - creating fallback doctor profile",
+          "🟡 DoctorContext: Database timeout detected - creating fallback doctor profile",
         );
         const fallbackDoctor = {
           id: user.id,
