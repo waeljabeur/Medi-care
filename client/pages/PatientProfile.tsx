@@ -326,8 +326,8 @@ export default function PatientProfile() {
             Patient Not Found
           </h1>
           <p className="text-muted-foreground mb-6">
-            The patient you're looking for doesn't exist or you don't have
-            access to view their profile.
+            {error ||
+              "The patient you're looking for doesn't exist or you don't have access to view their profile."}
           </p>
           <Link to="/patients">
             <Button>
