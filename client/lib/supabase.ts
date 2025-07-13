@@ -172,27 +172,66 @@ export const authHelpers = {
   },
 
   async getCurrentUser() {
+    console.log(
+      "🟡 authHelpers.getCurrentUser called, isDemoMode:",
+      isDemoMode,
+    );
+
     if (isDemoMode) {
       // Demo mode: return demo user if logged in (check localStorage)
       const demoSession = localStorage.getItem("demo-session");
       if (demoSession) {
+        console.log("🟡 Demo mode - returning stored session");
         return { user: JSON.parse(demoSession), error: null };
       }
+      console.log("🟡 Demo mode - no session found");
       return { user: null, error: null };
     }
 
     if (!supabase) {
+      console.log("🟡 getCurrentUser - Supabase client not initialized");
       return {
         user: null,
         error: { message: "Supabase client not initialized" },
       };
     }
 
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-    return { user, error };
+    console.log(
+      "🟡 getCurrentUser - calling supabase.auth.getUser with timeout",
+    );
+
+    try {
+      // Add timeout to prevent hanging
+      const getUserWithTimeout = Promise.race([
+        supabase.auth.getUser(),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("getCurrentUser timeout after 3 seconds")),
+            3000,
+          ),
+        ),
+      ]);
+
+      const {
+        data: { user },
+        error,
+      } = await getUserWithTimeout;
+
+      console.log("🟡 getCurrentUser result:", {
+        user: !!user,
+        error: !!error,
+      });
+      return { user, error };
+    } catch (err) {
+      console.error("🟡 getCurrentUser error:", err);
+      return {
+        user: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Failed to get current user",
+        },
+      };
+    }
   },
 
   onAuthStateChange(callback: (event: string, session: any) => void) {
