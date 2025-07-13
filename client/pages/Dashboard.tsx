@@ -152,7 +152,9 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">Loading dashboard...</span>
+        <span className="ml-2 text-muted-foreground">
+          {doctorLoading ? "Loading doctor profile..." : "Loading dashboard..."}
+        </span>
       </div>
     );
   }
