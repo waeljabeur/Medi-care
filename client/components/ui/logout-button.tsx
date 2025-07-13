@@ -41,8 +41,11 @@ export function LogoutButton({
       const { error } = await authHelpers.signOut();
 
       if (error) {
-        toast.error("Failed to sign out. Please try again.");
+        toast.error(
+          `Failed to sign out: ${error.message || "Please try again."}`,
+        );
         console.error("Logout error:", error);
+        setIsLoading(false);
         return;
       }
 
@@ -51,12 +54,14 @@ export function LogoutButton({
         localStorage.removeItem("demo-session");
       }
 
+      // Clear any other local storage that might interfere
+      localStorage.removeItem("supabase.auth.token");
+
       toast.success("Signed out successfully");
       navigate("/login");
     } catch (err) {
       console.error("Unexpected logout error:", err);
-      toast.error("An unexpected error occurred");
-    } finally {
+      toast.error("An unexpected error occurred during logout");
       setIsLoading(false);
     }
   };
