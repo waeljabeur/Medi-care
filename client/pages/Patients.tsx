@@ -285,7 +285,9 @@ export default function Patients() {
                       </div>
                     </td>
                     <td className="py-5 px-3 text-foreground font-semibold">
-                      {calculateAge(patient.dob)} years
+                      {patient.dob
+                        ? `${calculateAge(patient.dob)} years`
+                        : "N/A"}
                     </td>
                     <td className="py-5 px-3">
                       <div className="flex items-center text-sm font-medium">
