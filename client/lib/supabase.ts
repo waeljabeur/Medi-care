@@ -89,7 +89,14 @@ export const authHelpers = {
       };
     }
 
-    const { data, error } = await supabase!.auth.signUp({
+    if (!supabase) {
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
