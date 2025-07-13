@@ -278,7 +278,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold text-foreground mb-1">
-                  {mockData.stats.todaysAppointments}
+                  {stats.todaysAppointments}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   3 confirmed, 1 pending
