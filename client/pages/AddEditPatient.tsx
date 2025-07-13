@@ -517,7 +517,7 @@ export default function AddEditPatient() {
                     className="text-sm font-semibold flex items-center"
                   >
                     <Mail className="w-4 h-4 mr-2 text-primary" />
-                    Email Address *
+                    Email Address (Optional)
                   </Label>
                   <Input
                     id="email"
