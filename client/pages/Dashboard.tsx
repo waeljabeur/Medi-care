@@ -110,6 +110,43 @@ const mockData = {
 };
 
 export default function Dashboard() {
+  // Ensure doctor profile exists when accessing dashboard
+  useEffect(() => {
+    const ensureDoctorProfile = async () => {
+      if (authHelpers.isDemoMode()) return; // Skip in demo mode
+
+      try {
+        const { user } = await authHelpers.getCurrentUser();
+        if (!user) return;
+
+        // Check if doctor profile exists
+        const { data: existingDoctor } = await supabase!
+          .from("doctors")
+          .select("id")
+          .eq("id", user.id)
+          .single();
+
+        // If no profile exists, create one
+        if (!existingDoctor) {
+          const { error } = await supabase!.from("doctors").insert({
+            id: user.id,
+            name:
+              user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
+            email: user.email || "",
+          });
+
+          if (error) {
+            console.error("Failed to create doctor profile:", error.message);
+          }
+        }
+      } catch (error) {
+        console.error("Error ensuring doctor profile:", error);
+      }
+    };
+
+    ensureDoctorProfile();
+  }, []);
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
