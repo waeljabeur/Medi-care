@@ -630,10 +630,11 @@ export default function AddEditPatient() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="text-sm text-muted-foreground space-y-2">
-                  <p>• All fields marked with * are required</p>
-                  <p>• Use a valid email format (e.g., name@domain.com)</p>
-                  <p>• Phone number should include area code</p>
-                  <p>• Medical history should be detailed and accurate</p>
+                  <p>• Only patient name is required</p>
+                  <p>• Other fields are optional but recommended</p>
+                  <p>• Use valid email format if provided</p>
+                  <p>• Include area code for phone numbers</p>
+                  <p>• Medical history helps with patient care</p>
                 </div>
               </CardContent>
             </Card>
