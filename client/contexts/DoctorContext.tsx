@@ -92,7 +92,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         setDoctor(newDoctor);
       }
     } catch (err) {
-      console.error("Error loading doctor:", err);
+      console.error("🔴 DoctorContext: Error loading doctor:", err);
 
       // Better error handling to avoid "[object Object]" display
       let errorMessage = "Failed to load doctor profile";
