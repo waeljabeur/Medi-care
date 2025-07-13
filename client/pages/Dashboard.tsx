@@ -182,8 +182,8 @@ export default function Dashboard() {
             </h1>
           </div>
           <p className="text-muted-foreground text-lg">
-            Welcome back, {doctor?.name || "Doctor"}. Here's what's happening
-            today.
+            Welcome back, {doctor?.name ? `Dr. ${doctor.name}` : "Doctor"}.
+            Here's what's happening today.
           </p>
           <div className="text-sm text-muted-foreground">
             {new Date().toLocaleDateString("en-US", {
