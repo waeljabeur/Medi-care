@@ -514,7 +514,8 @@ export default function PatientProfile() {
               <div className="prose max-w-none">
                 <div className="bg-background/50 rounded-xl p-6 border border-border/50">
                   <p className="text-foreground leading-relaxed whitespace-pre-line">
-                    {patient.medicalHistory}
+                    {patient.medical_history ||
+                      "No medical history recorded yet."}
                   </p>
                 </div>
               </div>
