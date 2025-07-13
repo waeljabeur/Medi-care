@@ -107,17 +107,24 @@ export const authHelpers = {
   },
 
   async signOut() {
+    console.log("🟡 authHelpers.signOut called, isDemoMode:", isDemoMode);
+
     if (isDemoMode) {
+      console.log("🟡 Demo mode - simulating signout");
       // Demo mode: simulate successful signout
       await new Promise((resolve) => setTimeout(resolve, 500));
+      console.log("🟡 Demo mode signout complete");
       return { error: null };
     }
 
     if (!supabase) {
+      console.log("🟡 Supabase client not initialized");
       return { error: { message: "Supabase client not initialized" } };
     }
 
+    console.log("🟡 Calling supabase.auth.signOut()");
     const { error } = await supabase.auth.signOut();
+    console.log("🟡 Supabase signOut result:", { error });
     return { error };
   },
 
