@@ -253,11 +253,11 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold text-foreground mb-1">
-                  {mockData.stats.totalPatients}
+                  {stats.totalPatients}
                 </div>
                 <div className="flex items-center text-success text-sm">
                   <TrendingUp className="w-3 h-3 mr-1" />+
-                  {mockData.stats.thisMonthPatients} this month
+                  {stats.thisMonthPatients} this month
                 </div>
               </div>
               <div className="p-4 bg-primary/20 rounded-2xl group-hover:scale-110 transition-transform duration-200">
