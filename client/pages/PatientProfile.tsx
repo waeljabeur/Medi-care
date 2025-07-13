@@ -461,7 +461,7 @@ export default function PatientProfile() {
                         Email
                       </p>
                       <p className="font-semibold text-foreground">
-                        {patient.email}
+                        {patient.email || "Not provided"}
                       </p>
                     </div>
                   </div>
