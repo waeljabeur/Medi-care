@@ -43,15 +43,6 @@ interface UpcomingAppointment {
 
 export default function Dashboard() {
   const { doctor, loading: doctorLoading, error: doctorError } = useDoctor();
-
-  // Debug logging for doctor information
-  React.useEffect(() => {
-    console.log("🔵 Dashboard doctor state:", {
-      doctor,
-      doctorLoading,
-      doctorError,
-    });
-  }, [doctor, doctorLoading, doctorError]);
   const [stats, setStats] = useState<DashboardStats>({
     totalPatients: 0,
     todaysAppointments: 0,
