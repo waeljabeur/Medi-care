@@ -35,8 +35,8 @@ interface UpcomingAppointment {
   id: string;
   patient_name: string;
   patient_id: string;
-  appointment_time: string;
-  appointment_date: string;
+  time: string;
+  date: string;
   reason?: string;
   status: "scheduled" | "completed" | "cancelled";
 }
