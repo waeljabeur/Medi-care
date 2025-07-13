@@ -204,7 +204,7 @@ export const authHelpers = {
       // Add timeout to prevent hanging
       const getUserWithTimeout = Promise.race([
         supabase.auth.getUser(),
-        new Promise((_, reject) =>
+        new Promise<never>((_, reject) =>
           setTimeout(
             () => reject(new Error("getCurrentUser timeout after 3 seconds")),
             3000,
