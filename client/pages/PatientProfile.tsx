@@ -485,23 +485,13 @@ export default function PatientProfile() {
               </div>
 
               <div className="pt-4 border-t border-border/50">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Insurance
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      {patient.insurance}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Patient ID
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      #P{patient.id.toString().padStart(4, "0")}
-                    </p>
-                  </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Patient ID
+                  </p>
+                  <p className="font-semibold text-foreground text-xs">
+                    {patient.id}
+                  </p>
                 </div>
               </div>
             </CardContent>
