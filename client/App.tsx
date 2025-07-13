@@ -26,18 +26,45 @@ import { DoctorProvider } from "./contexts/DoctorContext";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+const App = () => {
+  // Add global bypass functions for debugging
+  React.useEffect(() => {
+    (window as any).bypassAuth = () => {
+      console.log("🚨 BYPASS: Setting manual auth state");
+      localStorage.setItem("last-login-time", Date.now().toString());
+      localStorage.setItem("demo-session", JSON.stringify({
+        id: "bypass-user",
+        email: "bypass@test.com",
+        user_metadata: { name: "Bypass User" }
+      }));
+      window.location.href = '/dashboard';
+    };
+
+    (window as any).clearAuth = () => {
+      console.log("🚨 BYPASS: Clearing all auth state");
+      localStorage.removeItem("last-login-time");
+      localStorage.removeItem("demo-session");
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
+      window.location.href = '/login';
+    };
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
         <DoctorProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/" element={<Navigate to="/login" replace />} />
+                        <Route path="/" element={<Navigate to="/login" replace />} />
             <Route
               path="/dashboard"
               element={
