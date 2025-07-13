@@ -62,7 +62,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         const { data: newDoctor, error: createError } = await supabase
           .from("doctors")
           .insert({
-            user_id: user.id,
+            id: user.id,
             name:
               user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
             email: user.email || "",
