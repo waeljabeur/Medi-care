@@ -29,24 +29,30 @@ export default function Login() {
     setError("");
 
     try {
+      console.log("🔵 Starting login process...");
       const { data, error: authError } = await authHelpers.signIn(
         email,
         password,
       );
+      console.log("🔵 Login result:", { data: !!data, error: !!authError });
 
       if (authError) {
+        console.log("🔴 Login error:", authError);
         setError(authError.message);
         return;
       }
 
       if (data.user) {
+        console.log("🟢 Login successful, user:", data.user.email);
         // Store demo session for demo mode
         if (authHelpers.isDemoMode()) {
           localStorage.setItem("demo-session", JSON.stringify(data.user));
         }
+        console.log("🔵 Navigating to dashboard...");
         navigate("/dashboard");
       }
     } catch (err) {
+      console.error("🔴 Login exception:", err);
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
