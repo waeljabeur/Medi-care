@@ -366,7 +366,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {mockData.upcomingAppointments.map((appointment) => (
+              {upcomingAppointments.map((appointment) => (
                 <Link
                   key={appointment.id}
                   to={`/patients/${appointment.patientId}`}
