@@ -37,11 +37,25 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       // Timeout after 3 seconds if no auth state change
       setTimeout(() => {
         if (loading) {
-          console.log(
-            "🔷 ProtectedRoute: No auth state change, assuming not authenticated",
-          );
+          console.log("🔷 ProtectedRoute: No auth state change detected");
+
+          // Check if we have any indication of successful login
+          const lastLoginTime = localStorage.getItem("last-login-time");
+          const now = Date.now();
+          const fiveMinutesAgo = now - 5 * 60 * 1000;
+
+          if (lastLoginTime && parseInt(lastLoginTime) > fiveMinutesAgo) {
+            console.log(
+              "🔷 ProtectedRoute: Recent login detected, assuming authenticated",
+            );
+            setIsAuthenticated(true);
+          } else {
+            console.log(
+              "🔷 ProtectedRoute: No recent login, redirecting to login",
+            );
+            setIsAuthenticated(false);
+          }
           setLoading(false);
-          setIsAuthenticated(false);
         }
       }, 3000);
     }
