@@ -266,9 +266,10 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
           await loadDoctorWithUser(user);
         } else {
           console.log(
-            "🟣 DoctorContext: No user in session, falling back to loadDoctor",
+            "🟣 DoctorContext: No user in session, setting loading to false",
           );
-          await loadDoctor();
+          setLoading(false);
+          setError("No user session found");
         }
       } else if (event === "SIGNED_OUT") {
         console.log("🟣 DoctorContext: User signed out, clearing doctor state");
