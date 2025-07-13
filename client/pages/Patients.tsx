@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { authHelpers, supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import {
   Users,
   Search,
@@ -22,37 +22,6 @@ import {
   MoreHorizontal,
   ExternalLink,
 } from "lucide-react";
-
-// Mock patients data
-const mockPatients = [
-  {
-    id: 1,
-    name: "Emma Wilson",
-    email: "emma.wilson@email.com",
-    phone: "(555) 123-4567",
-    age: 34,
-    lastVisit: "2024-01-15",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    email: "michael.chen@email.com",
-    phone: "(555) 234-5678",
-    age: 42,
-    lastVisit: "2024-01-12",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Sarah Davis",
-    email: "sarah.davis@email.com",
-    phone: "(555) 345-6789",
-    age: 28,
-    lastVisit: "2024-01-10",
-    status: "pending",
-  },
-];
 
 interface Patient {
   id: string;
