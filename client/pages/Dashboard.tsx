@@ -8,8 +8,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { authHelpers, supabase } from "@/lib/supabase";
-import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { useEffect, useState } from "react";
 import {
   Users,
   Calendar,
@@ -20,94 +20,25 @@ import {
   ArrowRight,
   CheckCircle,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 
-// Mock data - in real app this would come from API
-const mockData = {
-  stats: {
-    totalPatients: 147,
-    todaysAppointments: 8,
-    thisMonthPatients: 12,
-    pendingTasks: 3,
-  },
-  upcomingAppointments: [
-    {
-      id: 1,
-      patient: "Emma Wilson",
-      patientId: 1,
-      time: "9:00 AM",
-      date: "Today",
-      reason: "Annual Checkup",
-      status: "confirmed",
-    },
-    {
-      id: 2,
-      patient: "Michael Chen",
-      patientId: 2,
-      time: "10:30 AM",
-      date: "Today",
-      reason: "Follow-up",
-      status: "confirmed",
-    },
-    {
-      id: 3,
-      patient: "Sarah Davis",
-      patientId: 3,
-      time: "2:00 PM",
-      date: "Today",
-      reason: "Consultation",
-      status: "pending",
-    },
-    {
-      id: 4,
-      patient: "Robert Johnson",
-      patientId: 4,
-      time: "9:00 AM",
-      date: "Tomorrow",
-      reason: "Blood Test Review",
-      status: "confirmed",
-    },
-    {
-      id: 5,
-      patient: "Lisa Anderson",
-      patientId: 5,
-      time: "11:00 AM",
-      date: "Tomorrow",
-      reason: "Physical Exam",
-      status: "confirmed",
-    },
-  ],
-  recentActivity: [
-    {
-      id: 1,
-      action: "Added new patient",
-      subject: "John Smith",
-      time: "2 hours ago",
-      type: "patient",
-    },
-    {
-      id: 2,
-      action: "Completed appointment",
-      subject: "Maria Garcia",
-      time: "4 hours ago",
-      type: "appointment",
-    },
-    {
-      id: 3,
-      action: "Updated medical history",
-      subject: "David Wilson",
-      time: "6 hours ago",
-      type: "update",
-    },
-    {
-      id: 4,
-      action: "Scheduled appointment",
-      subject: "Anna Thompson",
-      time: "1 day ago",
-      type: "appointment",
-    },
-  ],
-};
+interface DashboardStats {
+  totalPatients: number;
+  todaysAppointments: number;
+  thisMonthPatients: number;
+  pendingTasks: number;
+}
+
+interface UpcomingAppointment {
+  id: string;
+  patient_name: string;
+  patient_id: string;
+  appointment_time: string;
+  appointment_date: string;
+  reason?: string;
+  status: "scheduled" | "completed" | "cancelled";
+}
 
 export default function Dashboard() {
   // Ensure doctor profile exists when accessing dashboard
