@@ -197,33 +197,99 @@ export default function AddEditPatient() {
     setSubmitStatus({ type: null, message: "" });
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (authHelpers.isDemoMode()) {
+        // Demo mode: simulate API call
+        await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Mock success/error based on email (for demo purposes)
-      if (formData.email.includes("error")) {
-        throw new Error(
-          "Failed to save patient information. Please try again.",
-        );
+        if (formData.email.includes("error")) {
+          throw new Error(
+            "Failed to save patient information. Please try again.",
+          );
+        }
+
+        setSubmitStatus({
+          type: "success",
+          message: isEditing
+            ? "Patient information updated successfully!"
+            : "New patient added successfully!",
+        });
+
+        setTimeout(() => {
+          if (isEditing) {
+            navigate(`/patients/${patientId}`);
+          } else {
+            navigate("/patients");
+          }
+        }, 2000);
+        return;
       }
 
-      setSubmitStatus({
-        type: "success",
-        message: isEditing
-          ? "Patient information updated successfully!"
-          : "New patient added successfully!",
-      });
+      // Real Supabase implementation
+      const { user } = await authHelpers.getCurrentUser();
+      if (!user) {
+        throw new Error("You must be logged in to save patients.");
+      }
 
-      // Redirect to patient profile after success
-      setTimeout(() => {
-        if (isEditing) {
-          navigate(`/patients/${patientId}`);
-        } else {
-          // For new patients, we'd get the ID from the API response
-          navigate("/patients");
+      if (isEditing && patientId) {
+        // Update existing patient
+        const { error } = await supabase!
+          .from("patients")
+          .update({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            dob: formData.dateOfBirth,
+            medical_history: formData.medicalHistory.trim(),
+          })
+          .eq("id", patientId)
+          .eq("doctor_id", user.id); // Ensure doctor can only update their own patients
+
+        if (error) {
+          throw new Error(`Failed to update patient: ${error.message}`);
         }
-      }, 2000);
+
+        setSubmitStatus({
+          type: "success",
+          message: "Patient information updated successfully!",
+        });
+
+        setTimeout(() => {
+          navigate(`/patients/${patientId}`);
+        }, 2000);
+      } else {
+        // Create new patient
+        const { data, error } = await supabase!
+          .from("patients")
+          .insert({
+            doctor_id: user.id,
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            dob: formData.dateOfBirth,
+            medical_history: formData.medicalHistory.trim(),
+          })
+          .select()
+          .single();
+
+        if (error) {
+          throw new Error(`Failed to create patient: ${error.message}`);
+        }
+
+        setSubmitStatus({
+          type: "success",
+          message: "New patient added successfully!",
+        });
+
+        setTimeout(() => {
+          if (data?.id) {
+            navigate(`/patients/${data.id}`);
+          } else {
+            navigate("/patients");
+          }
+        }, 2000);
+      }
     } catch (error) {
+      console.error("Error saving patient:", error);
       setSubmitStatus({
         type: "error",
         message:
