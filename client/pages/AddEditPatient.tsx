@@ -172,20 +172,16 @@ export default function AddEditPatient() {
       newErrors.name = "Name must be at least 2 characters long";
     }
 
-    // Email validation
-    if (!formData.email.trim()) {
-      newErrors.email = "Email address is required";
-    } else {
+    // Email validation (optional but must be valid if provided)
+    if (formData.email.trim()) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         newErrors.email = "Please enter a valid email address";
       }
     }
 
-    // Phone validation
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else {
+    // Phone validation (optional but must be valid if provided)
+    if (formData.phone.trim()) {
       const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
       const cleanPhone = formData.phone.replace(/[\s\-\(\)]/g, "");
       if (cleanPhone.length < 10) {
@@ -193,10 +189,8 @@ export default function AddEditPatient() {
       }
     }
 
-    // Date of birth validation
-    if (!formData.dateOfBirth) {
-      newErrors.dateOfBirth = "Date of birth is required";
-    } else {
+    // Date of birth validation (optional but must be valid if provided)
+    if (formData.dateOfBirth) {
       const birthDate = new Date(formData.dateOfBirth);
       const today = new Date();
       const age = today.getFullYear() - birthDate.getFullYear();
@@ -205,10 +199,11 @@ export default function AddEditPatient() {
       }
     }
 
-    // Medical history validation
-    if (!formData.medicalHistory.trim()) {
-      newErrors.medicalHistory = "Medical history is required";
-    } else if (formData.medicalHistory.trim().length < 10) {
+    // Medical history validation (optional but must be meaningful if provided)
+    if (
+      formData.medicalHistory.trim() &&
+      formData.medicalHistory.trim().length < 10
+    ) {
       newErrors.medicalHistory =
         "Medical history must be at least 10 characters long";
     }
