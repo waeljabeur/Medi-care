@@ -27,6 +27,8 @@ const DEMO_USER = {
 // Auth helper functions with demo mode fallback
 export const authHelpers = {
   async signIn(email: string, password: string) {
+    console.log("🟡 authHelpers.signIn called, isDemoMode:", isDemoMode);
+
     if (isDemoMode) {
       // Demo mode: accept any email/password combination
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
