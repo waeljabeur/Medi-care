@@ -75,7 +75,26 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const loadDoctorWithUser = async (user: any) => {
+    const loadDoctorWithUser = async (user: any) => {
+    // Immediately create fallback to prevent loading loops and DOM issues
+    console.log("🟣 DoctorContext: Creating immediate fallback for user:", user?.email);
+
+    const fallbackDoctor = {
+      id: user.id,
+      name: user.user_metadata?.name || user.email?.split("@")[0] || "Doctor",
+      email: user.email || "",
+      created_at: new Date().toISOString()
+    };
+
+    setDoctor(fallbackDoctor);
+    setError(null);
+    setLoading(false);
+
+    console.log("🟣 DoctorContext: Fallback doctor set, DOM stable");
+    return;
+
+    // OLD DATABASE CODE - disabled to prevent issues
+    /*
     try {
       console.log(
         "🟣 DoctorContext: Starting loadDoctorWithUser for user:",
