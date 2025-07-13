@@ -370,22 +370,14 @@ export default function PatientProfile() {
           </div>
           <div className="flex items-center space-x-4">
             <Badge
-              variant={patient.status === "active" ? "default" : "secondary"}
-              className={
-                patient.status === "active"
-                  ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
-                  : "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
-              }
+              variant="default"
+              className="bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
             >
-              {patient.status === "active" ? (
-                <CheckCircle className="w-3 h-3 mr-1" />
-              ) : (
-                <AlertCircle className="w-3 h-3 mr-1" />
-              )}
-              {patient.status}
+              <CheckCircle className="w-3 h-3 mr-1" />
+              Active
             </Badge>
             <span className="text-muted-foreground text-sm">
-              Patient since {new Date(patient.createdAt).toLocaleDateString()}
+              Patient since {new Date(patient.created_at).toLocaleDateString()}
             </span>
           </div>
         </div>
