@@ -35,11 +35,24 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      // Get current user
+      // Get current user with timeout
       console.log("🟣 DoctorContext: Getting current user");
+
+      const getUserWithTimeout = () => {
+        return Promise.race([
+          supabase.auth.getUser(),
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(new Error("getUser timeout after 5 seconds")),
+              5000,
+            ),
+          ),
+        ]);
+      };
+
       const {
         data: { user },
-      } = await supabase.auth.getUser();
+      } = await getUserWithTimeout();
       console.log("🟣 DoctorContext: Current user:", user?.email || "none");
       if (!user) {
         setDoctor(null);
