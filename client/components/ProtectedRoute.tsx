@@ -14,10 +14,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const {
-          data: { user },
-        } = await supabase!.auth.getUser();
-        setIsAuthenticated(!!user);
+        const { user, error } = await authHelpers.getCurrentUser();
+        if (error) {
+          console.error("Auth check error:", error);
+          setIsAuthenticated(false);
+        } else {
+          setIsAuthenticated(!!user);
+        }
       } catch (error) {
         console.error("Auth check error:", error);
         setIsAuthenticated(false);
@@ -31,12 +34,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase!.auth.onAuthStateChange((event, session) => {
+      unsubscribe,
+    } = authHelpers.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
