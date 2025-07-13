@@ -12,24 +12,39 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { user, error } = await authHelpers.getCurrentUser();
-        if (error) {
-          console.error("Auth check error:", error);
-          setIsAuthenticated(false);
-        } else {
-          setIsAuthenticated(!!user);
-        }
-      } catch (error) {
-        console.error("Auth check error:", error);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+    console.log("🔷 ProtectedRoute: Checking auth state");
 
-    checkAuth();
+    // Don't call getCurrentUser - just wait for auth state changes
+    // In demo mode, check localStorage
+    if (authHelpers.isDemoMode()) {
+      const demoSession = localStorage.getItem("demo-session");
+      if (demoSession) {
+        console.log("🔷 ProtectedRoute: Demo session found");
+        setIsAuthenticated(true);
+      } else {
+        console.log("🔷 ProtectedRoute: No demo session");
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    } else {
+      console.log(
+        "🔷 ProtectedRoute: Live mode - waiting for auth state change",
+      );
+      // In live mode, start as not authenticated and wait for auth state change
+      setIsAuthenticated(false);
+      setLoading(true);
+
+      // Timeout after 3 seconds if no auth state change
+      setTimeout(() => {
+        if (loading) {
+          console.log(
+            "🔷 ProtectedRoute: No auth state change, assuming not authenticated",
+          );
+          setLoading(false);
+          setIsAuthenticated(false);
+        }
+      }, 3000);
+    }
 
     // Listen for auth changes
     const authResult = authHelpers.onAuthStateChange((event, session) => {
