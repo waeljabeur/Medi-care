@@ -136,7 +136,14 @@ export const authHelpers = {
       return { data: {}, error: null };
     }
 
-    const { data, error } = await supabase!.auth.resetPasswordForEmail(email, {
+    if (!supabase) {
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     return { data, error };
