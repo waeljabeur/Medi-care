@@ -50,6 +50,12 @@ export default function Login() {
         }
         console.log("🔵 Navigating to dashboard...");
         navigate("/dashboard");
+
+        // Give a small delay then trigger a manual doctor refresh
+        setTimeout(() => {
+          console.log("🔵 Triggering manual doctor context refresh...");
+          // The DoctorContext should pick this up via auth state change
+        }, 1000);
       }
     } catch (err) {
       console.error("🔴 Login exception:", err);
