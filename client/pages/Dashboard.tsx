@@ -421,52 +421,36 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
+        {/* Quick Actions */}
         <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl font-bold text-foreground">
-              Recent Activity
+              Quick Actions
             </CardTitle>
             <CardDescription className="text-base">
-              Latest updates and actions
+              Common tasks and shortcuts
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {mockData.recentActivity.map((activity, index) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start space-x-4 group"
-                >
-                  <div className="relative">
-                    <div className="w-10 h-10 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      {activity.type === "patient" && (
-                        <Users className="w-5 h-5 text-primary" />
-                      )}
-                      {activity.type === "appointment" && (
-                        <Calendar className="w-5 h-5 text-primary" />
-                      )}
-                      {activity.type === "update" && (
-                        <Activity className="w-5 h-5 text-primary" />
-                      )}
-                    </div>
-                    {index < mockData.recentActivity.length - 1 && (
-                      <div className="absolute top-10 left-1/2 w-px h-6 bg-border -translate-x-1/2"></div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 pb-4">
-                    <div className="text-sm text-foreground font-medium">
-                      {activity.action}{" "}
-                      <span className="font-semibold text-primary">
-                        {activity.subject}
-                      </span>
-                    </div>
-                    <div className="text-xs text-muted-foreground font-medium mt-1">
-                      {activity.time}
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="space-y-3">
+              <Link to="/patients/new">
+                <Button className="w-full justify-start" variant="outline">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Patient
+                </Button>
+              </Link>
+              <Link to="/appointments/new">
+                <Button className="w-full justify-start" variant="outline">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Schedule Appointment
+                </Button>
+              </Link>
+              <Link to="/calendar">
+                <Button className="w-full justify-start" variant="outline">
+                  <Clock className="w-4 h-4 mr-2" />
+                  View Calendar
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
