@@ -50,7 +50,14 @@ export const authHelpers = {
       };
     }
 
-    const { data, error } = await supabase!.auth.signInWithPassword({
+    if (!supabase) {
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
