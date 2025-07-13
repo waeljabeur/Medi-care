@@ -32,94 +32,95 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <DoctorProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <DashboardLayout>
-                <Dashboard />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/patients"
-            element={
-              <DashboardLayout>
-                <Patients />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/patients/new"
-            element={
-              <DashboardLayout>
-                <AddEditPatient />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/patients/:patientId"
-            element={
-              <DashboardLayout>
-                <PatientProfile />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/patients/:patientId/edit"
-            element={
-              <DashboardLayout>
-                <AddEditPatient />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/appointments"
-            element={
-              <DashboardLayout>
-                <Appointments />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/calendar"
-            element={
-              <DashboardLayout>
-                <CalendarView />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/appointments/new"
-            element={
-              <DashboardLayout>
-                <AddEditAppointment />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/appointments/:appointmentId/edit"
-            element={
-              <DashboardLayout>
-                <AddEditAppointment />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <DashboardLayout>
-                <Settings />
-              </DashboardLayout>
-            }
-          />
-          <Route path="/demo/view-toggle" element={<ViewToggleDemo />} />
-          <Route path="/demo/print-export" element={<PrintExportDemo />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/patients"
+              element={
+                <DashboardLayout>
+                  <Patients />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/patients/new"
+              element={
+                <DashboardLayout>
+                  <AddEditPatient />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/patients/:patientId"
+              element={
+                <DashboardLayout>
+                  <PatientProfile />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/patients/:patientId/edit"
+              element={
+                <DashboardLayout>
+                  <AddEditPatient />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/appointments"
+              element={
+                <DashboardLayout>
+                  <Appointments />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/calendar"
+              element={
+                <DashboardLayout>
+                  <CalendarView />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/appointments/new"
+              element={
+                <DashboardLayout>
+                  <AddEditAppointment />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/appointments/:appointmentId/edit"
+              element={
+                <DashboardLayout>
+                  <AddEditAppointment />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <DashboardLayout>
+                  <Settings />
+                </DashboardLayout>
+              }
+            />
+            <Route path="/demo/view-toggle" element={<ViewToggleDemo />} />
+            <Route path="/demo/print-export" element={<PrintExportDemo />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </DoctorProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
