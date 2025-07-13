@@ -38,7 +38,7 @@ interface UpcomingAppointment {
   time: string;
   date: string;
   reason?: string;
-  status: "scheduled" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "completed" | "cancelled";
 }
 
 export default function Dashboard() {
