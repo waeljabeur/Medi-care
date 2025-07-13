@@ -35,24 +35,15 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      // Get current user with timeout
-      console.log("🟣 DoctorContext: Getting current user");
+      // Get current user using authHelpers (which handles demo mode and null cases)
+      console.log("🟣 DoctorContext: Getting current user via authHelpers");
+      const { user, error: userError } = await authHelpers.getCurrentUser();
 
-      const getUserWithTimeout = () => {
-        return Promise.race([
-          supabase.auth.getUser(),
-          new Promise((_, reject) =>
-            setTimeout(
-              () => reject(new Error("getUser timeout after 5 seconds")),
-              5000,
-            ),
-          ),
-        ]);
-      };
+      if (userError) {
+        console.log("🟣 DoctorContext: Error getting user:", userError);
+        throw new Error(`Failed to get current user: ${userError.message}`);
+      }
 
-      const {
-        data: { user },
-      } = await getUserWithTimeout();
       console.log("🟣 DoctorContext: Current user:", user?.email || "none");
       if (!user) {
         setDoctor(null);
