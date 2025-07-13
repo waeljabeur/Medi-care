@@ -57,53 +57,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loadDashboardData = async () => {
+      if (!doctor) return; // Wait for doctor to be loaded
+
       try {
         setLoading(true);
         setError(null);
-
-        // Get current user
-        const {
-          data: { user },
-        } = await supabase!.auth.getUser();
-        if (!user) {
-          setError("Please log in to view dashboard");
-          return;
-        }
-
-        // Ensure doctor profile exists
-        const { data: existingDoctor } = await supabase
-          .from("doctors")
-          .select("id")
-          .eq("user_id", user.id)
-          .single();
-
-        let doctorId = existingDoctor?.id;
-
-        // If no profile exists, create one
-        if (!existingDoctor) {
-          const { data: newDoctor, error: createError } = await supabase
-            .from("doctors")
-            .insert({
-              user_id: user.id,
-              name:
-                user.user_metadata?.name ||
-                user.email?.split("@")[0] ||
-                "Doctor",
-              email: user.email || "",
-            })
-            .select("id")
-            .single();
-
-          if (createError) {
-            console.error(
-              "Failed to create doctor profile:",
-              createError.message,
-            );
-            setError("Failed to setup doctor profile");
-            return;
-          }
-          doctorId = newDoctor.id;
-        }
 
         // Load patients count
         const { count: totalPatients } = await supabase
