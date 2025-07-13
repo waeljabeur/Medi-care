@@ -231,7 +231,7 @@ export default function Patients() {
                     Age
                   </th>
                   <th className="text-left py-4 px-3 font-semibold text-muted-foreground uppercase tracking-wide text-xs">
-                    Last Visit
+                    Date Added
                   </th>
                   <th className="text-left py-4 px-3 font-semibold text-muted-foreground uppercase tracking-wide text-xs">
                     Status
