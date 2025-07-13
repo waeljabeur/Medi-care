@@ -34,12 +34,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
   const { doctor } = useDoctor();
 
-  // Mock doctor data - in real app this would come from auth context
-  const doctor = {
-    name: "Dr. Sarah Johnson",
-    email: "sarah.johnson@medicalpractice.com",
-  };
-
   return (
     <div className="min-h-screen bg-background flex">
       {/* Mobile sidebar overlay */}
