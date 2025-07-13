@@ -55,6 +55,7 @@ export function DoctorProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (existingDoctor) {
+        console.log("🟢 Doctor profile loaded from database:", existingDoctor);
         setDoctor(existingDoctor);
       } else {
         // Create doctor profile if it doesn't exist
