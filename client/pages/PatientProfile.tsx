@@ -477,7 +477,7 @@ export default function PatientProfile() {
                         Phone
                       </p>
                       <p className="font-semibold text-foreground">
-                        {patient.phone}
+                        {patient.phone || "Not provided"}
                       </p>
                     </div>
                   </div>
