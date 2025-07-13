@@ -193,7 +193,7 @@ export default function Patients() {
                 <Users className="w-5 h-5 text-primary" />
               </div>
               <span className="text-sm font-semibold">
-                {mockPatients.length} Total Patients
+                {patients.length} Total Patients
               </span>
             </div>
           </Card>
