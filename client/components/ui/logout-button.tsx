@@ -88,6 +88,14 @@ export function LogoutButton({
     }
   };
 
+  // Expose logout function globally for debugging
+  React.useEffect(() => {
+    (window as any).forceLogout = handleLogout;
+    return () => {
+      delete (window as any).forceLogout;
+    };
+  }, []);
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
