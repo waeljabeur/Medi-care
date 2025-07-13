@@ -32,6 +32,7 @@ const navigation = [
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const { doctor } = useDoctor();
 
   // Mock doctor data - in real app this would come from auth context
   const doctor = {
