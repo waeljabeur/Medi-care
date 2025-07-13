@@ -66,101 +66,63 @@ export default function PatientProfile() {
         setLoading(true);
         setError(null);
 
-        if (authHelpers.isDemoMode()) {
-          // Use mock data in demo mode
-          const mockPatient =
-            mockPatientData[
-              parseInt(patientId) as keyof typeof mockPatientData
-            ];
-          if (mockPatient) {
-            // Convert mock data to match Patient interface
-            setPatient({
-              id: patientId,
-              name: mockPatient.name,
-              email: mockPatient.email,
-              phone: mockPatient.phone,
-              dob: mockPatient.dateOfBirth,
-              medical_history: mockPatient.medicalHistory,
-              created_at: mockPatient.createdAt,
-              doctor_id: "demo-doctor",
-            });
+        // Load from Supabase
+        const {
+          data: { user },
+        } = await supabase!.auth.getUser();
+        if (!user) {
+          setError("Please log in to view patient profiles");
+          return;
+        }
 
-            // Convert mock appointments
-            const mockAppts =
-              mockAppointments[
-                parseInt(patientId) as keyof typeof mockAppointments
-              ] || [];
-            setAppointments(
-              mockAppts.map((apt) => ({
-                id: apt.id.toString(),
-                patient_id: patientId,
-                appointment_date: apt.date,
-                appointment_time: apt.time,
-                reason: apt.reason,
-                status: apt.status === "upcoming" ? "scheduled" : "completed",
-                notes: apt.notes,
-              })),
+        // First get the doctor profile
+        const { data: doctorData } = await supabase
+          .from("doctors")
+          .select("id")
+          .eq("user_id", user.id)
+          .single();
+
+        if (!doctorData) {
+          setError("Doctor profile not found");
+          return;
+        }
+
+        // Load patient data
+        const { data: patientData, error: patientError } = await supabase
+          .from("patients")
+          .select("*")
+          .eq("id", patientId)
+          .eq("doctor_id", doctorData.id)
+          .single();
+
+        if (patientError) {
+          console.error("Error loading patient:", patientError);
+          if (patientError.code === "PGRST116") {
+            setError(
+              "Patient not found or you don't have access to view this patient",
             );
-          }
-        } else {
-          // Load from Supabase
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-          if (!user) {
-            setError("Please log in to view patient profiles");
-            return;
-          }
-
-          // First get the doctor profile
-          const { data: doctorData } = await supabase
-            .from("doctors")
-            .select("id")
-            .eq("user_id", user.id)
-            .single();
-
-          if (!doctorData) {
-            setError("Doctor profile not found");
-            return;
-          }
-
-          // Load patient data
-          const { data: patientData, error: patientError } = await supabase
-            .from("patients")
-            .select("*")
-            .eq("id", patientId)
-            .eq("doctor_id", doctorData.id)
-            .single();
-
-          if (patientError) {
-            console.error("Error loading patient:", patientError);
-            if (patientError.code === "PGRST116") {
-              setError(
-                "Patient not found or you don't have access to view this patient",
-              );
-            } else {
-              setError("Failed to load patient data");
-            }
-            return;
-          }
-
-          setPatient(patientData);
-
-          // Load appointments
-          const { data: appointmentsData, error: appointmentsError } =
-            await supabase
-              .from("appointments")
-              .select("*")
-              .eq("patient_id", patientId)
-              .order("appointment_date", { ascending: false });
-
-          if (appointmentsError) {
-            console.error("Error loading appointments:", appointmentsError);
-            // Don't fail if appointments can't be loaded
-            setAppointments([]);
           } else {
-            setAppointments(appointmentsData || []);
+            setError("Failed to load patient data");
           }
+          return;
+        }
+
+        setPatient(patientData);
+
+        // Load appointments
+        const { data: appointmentsData, error: appointmentsError } =
+          await supabase
+            .from("appointments")
+            .select("*")
+            .eq("patient_id", patientId)
+            .order("appointment_date", { ascending: false });
+
+        if (appointmentsError) {
+          console.error("Error loading appointments:", appointmentsError);
+          // Don't fail if appointments can't be loaded
+          setAppointments([]);
+        } else {
+          setAppointments(appointmentsData || []);
         }
       } catch (err) {
         console.error("Error in loadPatientData:", err);
