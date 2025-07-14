@@ -48,10 +48,25 @@ export default function CalendarView() {
         });
 
         if (error) {
-          console.error("Error loading appointments:", error);
-          setError(
-            `Failed to load appointments: ${error.message || "Unknown error"}`,
+          console.error("🔍 CalendarView Error loading appointments:", error);
+          console.error("🔍 CalendarView Error type:", typeof error);
+          console.error(
+            "🔍 CalendarView Error stringified:",
+            JSON.stringify(error, null, 2),
           );
+
+          let errorMessage = "Unknown error";
+          if (error && typeof error === "object") {
+            if (error.message) {
+              errorMessage = error.message;
+            } else if (typeof error === "string") {
+              errorMessage = error;
+            } else {
+              errorMessage = `Error details: ${JSON.stringify(error)}`;
+            }
+          }
+
+          setError(`Failed to load appointments: ${errorMessage}`);
           setAppointments([]);
         } else {
           setAppointments(data || []);
