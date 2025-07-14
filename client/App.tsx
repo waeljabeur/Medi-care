@@ -91,6 +91,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/fix-demo-profile" element={<FixDemoProfile />} />
+                <Route path="/supabase-setup" element={<SupabaseSetup />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route
