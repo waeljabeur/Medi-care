@@ -43,58 +43,17 @@ import {
   type AppointmentFormData,
 } from "@/lib/database";
 
-// Mock patients data - in real app this would come from API filtered by doctor_id
-const mockPatients = [
-  { id: 1, name: "Emma Wilson", email: "emma.wilson@email.com" },
-  { id: 2, name: "Michael Chen", email: "michael.chen@email.com" },
-  { id: 3, name: "Sarah Davis", email: "sarah.davis@email.com" },
-  { id: 4, name: "Robert Johnson", email: "robert.johnson@email.com" },
-  { id: 5, name: "Lisa Anderson", email: "lisa.anderson@email.com" },
-  { id: 6, name: "David Wilson", email: "david.wilson@email.com" },
-  { id: 7, name: "Maria Garcia", email: "maria.garcia@email.com" },
-  { id: 8, name: "John Smith", email: "john.smith@email.com" },
-];
-
-// Mock appointment data for editing
-const mockAppointmentData = {
-  1: {
-    id: 1,
-    patientId: 1,
-    date: "2024-01-25",
-    time: "09:00",
-    reason: "Annual Checkup",
-    notes:
-      "Complete physical examination. Review lab results from previous visit.",
-  },
-  2: {
-    id: 2,
-    patientId: 2,
-    date: "2024-01-28",
-    time: "11:00",
-    reason: "Blood Pressure Check",
-    notes:
-      "Follow-up on hypertension management. Check medication effectiveness.",
-  },
-  3: {
-    id: 3,
-    patientId: 3,
-    date: "2024-02-01",
-    time: "14:00",
-    reason: "Initial Consultation",
-    notes: "New patient intake and assessment. Discuss treatment options.",
-  },
-};
-
 interface FormData {
-  patientId: string;
+  patient_id: string;
   date: string;
   time: string;
   reason: string;
   notes: string;
+  status: "pending" | "confirmed" | "completed" | "cancelled";
 }
 
 interface FormErrors {
-  patientId?: string;
+  patient_id?: string;
   date?: string;
   time?: string;
   reason?: string;
