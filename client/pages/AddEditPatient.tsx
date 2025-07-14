@@ -246,12 +246,25 @@ export default function AddEditPatient() {
 
     try {
       if (authHelpers.isDemoMode()) {
-        // Demo mode: simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // Demo mode: use database service
+        const patientData: PatientFormData = {
+          name: formData.name,
+          email: formData.email || undefined,
+          phone: formData.phone || undefined,
+          dob: formData.dateOfBirth || undefined,
+          medical_history: formData.medicalHistory || undefined,
+        };
 
-        if (formData.email.includes("error")) {
+        let result;
+        if (isEditing && patientId) {
+          result = await db.updatePatient(patientId, patientData);
+        } else {
+          result = await db.createPatient(patientData);
+        }
+
+        if (result.error) {
           throw new Error(
-            "Failed to save patient information. Please try again.",
+            result.error.message || "Failed to save patient information",
           );
         }
 
