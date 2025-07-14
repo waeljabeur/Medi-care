@@ -44,9 +44,8 @@ export default function CalendarView() {
 
         if (error) {
           console.error("Error loading appointments:", error);
-          console.error("Error details:", JSON.stringify(error, null, 2));
           setError(
-            `Failed to load appointments: ${error.message || JSON.stringify(error)}`,
+            `Failed to load appointments: ${error.message || "Unknown error"}`,
           );
           setAppointments([]);
         } else {
