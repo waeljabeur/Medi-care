@@ -36,6 +36,12 @@ import {
   Stethoscope,
   Loader2,
 } from "lucide-react";
+import {
+  db,
+  type Patient,
+  type AppointmentWithPatient,
+  type AppointmentFormData,
+} from "@/lib/database";
 
 // Mock patients data - in real app this would come from API filtered by doctor_id
 const mockPatients = [
