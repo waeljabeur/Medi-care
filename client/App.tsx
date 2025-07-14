@@ -24,6 +24,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import FixDemoProfile from "./pages/FixDemoProfile";
+import SupabaseSetup from "./pages/SupabaseSetup";
 import { DoctorProvider } from "./contexts/DoctorContext-simple";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
