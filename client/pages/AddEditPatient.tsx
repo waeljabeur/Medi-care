@@ -105,16 +105,21 @@ export default function AddEditPatient() {
       if (!isEditing || !patientId) return;
 
       if (authHelpers.isDemoMode()) {
-        // Demo mode: use mock data
-        const patient =
-          mockPatientData[parseInt(patientId) as keyof typeof mockPatientData];
-        if (patient) {
+        // Demo mode: use database service
+        const { data: patient, error } = await db.getPatient(patientId);
+        if (error) {
+          console.error("Error loading patient:", error);
+          setSubmitStatus({
+            type: "error",
+            message: "Failed to load patient data",
+          });
+        } else if (patient) {
           setFormData({
             name: patient.name,
-            email: patient.email,
-            phone: patient.phone,
-            dateOfBirth: patient.dateOfBirth,
-            medicalHistory: patient.medicalHistory,
+            email: patient.email || "",
+            phone: patient.phone || "",
+            dateOfBirth: patient.dob || "",
+            medicalHistory: patient.medical_history || "",
           });
         }
         return;
