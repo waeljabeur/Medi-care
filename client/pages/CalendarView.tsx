@@ -297,7 +297,7 @@ export default function CalendarView() {
                                   }`}
                                 >
                                   <div className="truncate">
-                                    {apt.time} {apt.patient}
+                                    {apt.time} {apt.patient.name}
                                   </div>
                                   <div className="truncate text-xs opacity-80">
                                     {apt.reason}
