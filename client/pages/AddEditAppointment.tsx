@@ -314,8 +314,16 @@ export default function AddEditAppointment() {
         </div>
       </div>
 
-      {/* Status Messages */}
-      {submitStatus.type && (
+            {/* Loading State */}
+      {loading ? (
+        <div className="text-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      ) : (
+        <>
+          {/* Status Messages */}
+          {submitStatus.type && (
         <Alert
           className={`border-0 ${
             submitStatus.type === "success"
