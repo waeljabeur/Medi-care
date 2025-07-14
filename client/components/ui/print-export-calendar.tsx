@@ -75,7 +75,7 @@ export function PrintExportCalendar({
           // Time and Patient
           doc.setFontSize(12);
           doc.setTextColor(0, 0, 0);
-          doc.text(`${apt.time} - ${apt.patient}`, 20, yPosition + 10);
+          doc.text(`${apt.time} - ${apt.patient.name}`, 20, yPosition + 10);
 
           // Reason
           doc.setFontSize(10);
