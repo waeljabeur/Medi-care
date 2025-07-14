@@ -329,27 +329,60 @@ export class DatabaseService {
       console.log("🔍 DEMO_APPOINTMENTS:", DEMO_APPOINTMENTS);
       console.log("🔍 DEMO_PATIENTS:", DEMO_PATIENTS);
 
-      const appointmentsWithPatients = DEMO_APPOINTMENTS.map((appointment) => {
-        const patient = DEMO_PATIENTS.find(
-          (p) => p.id === appointment.patient_id,
+      try {
+        const appointmentsWithPatients = DEMO_APPOINTMENTS.map(
+          (appointment) => {
+            console.log(
+              "🔍 Processing appointment:",
+              appointment.id,
+              "patient_id:",
+              appointment.patient_id,
+            );
+            const patient = DEMO_PATIENTS.find(
+              (p) => p.id === appointment.patient_id,
+            );
+            if (!patient) {
+              console.error(
+                "🔍 Patient not found for appointment:",
+                appointment.patient_id,
+              );
+              console.error(
+                "🔍 Available patients:",
+                DEMO_PATIENTS.map((p) => p.id),
+              );
+              throw new Error(
+                `Patient not found for appointment: ${appointment.patient_id}`,
+              );
+            }
+            console.log(
+              "🔍 Found patient:",
+              patient.name,
+              "for appointment:",
+              appointment.id,
+            );
+            return {
+              ...appointment,
+              patient,
+            };
+          },
         );
-        if (!patient) {
-          console.error(
-            "🔍 Patient not found for appointment:",
-            appointment.patient_id,
-          );
-          throw new Error(
-            `Patient not found for appointment: ${appointment.patient_id}`,
-          );
-        }
-        return {
-          ...appointment,
-          patient,
-        };
-      });
 
-      console.log("🔍 appointmentsWithPatients:", appointmentsWithPatients);
-      return { data: appointmentsWithPatients, error: null };
+        console.log(
+          "🔍 appointmentsWithPatients successfully created:",
+          appointmentsWithPatients,
+        );
+        return { data: appointmentsWithPatients, error: null };
+      } catch (err) {
+        console.error("🔍 Error creating appointmentsWithPatients:", err);
+        return {
+          data: null,
+          error: {
+            message:
+              err instanceof Error ? err.message : "Unknown error in demo mode",
+            originalError: err,
+          },
+        };
+      }
     }
 
     if (!supabase) {
