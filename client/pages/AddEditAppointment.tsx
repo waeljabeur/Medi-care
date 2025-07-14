@@ -370,7 +370,7 @@ export default function AddEditAppointment() {
                   >
                     <SelectTrigger
                       className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
-                        errors.patientId
+                        errors.patient_id
                           ? "border-destructive focus:border-destructive"
                           : ""
                       }`}
@@ -378,10 +378,10 @@ export default function AddEditAppointment() {
                       <SelectValue placeholder="Select a patient" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockPatients.map((patient) => (
+                      {patients.map((patient) => (
                         <SelectItem
                           key={patient.id}
-                          value={patient.id.toString()}
+                          value={patient.id}
                           className="cursor-pointer"
                         >
                           <div className="flex items-center space-x-3">
