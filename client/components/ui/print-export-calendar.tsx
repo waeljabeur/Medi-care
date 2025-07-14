@@ -164,7 +164,7 @@ export function PrintExportCalendar({
           `"${apt.reason}"`,
           apt.status,
           `"${apt.notes.replace(/"/g, '""')}"`,
-          apt.patientId,
+          apt.patient_id,
         ].join(","),
       ),
     ];
