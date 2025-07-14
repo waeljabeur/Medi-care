@@ -2,20 +2,10 @@ import React from "react";
 import { Button } from "./button";
 import { Printer, Download, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-interface Appointment {
-  id: number;
-  patientId: number;
-  patient: string;
-  date: string;
-  time: string;
-  reason: string;
-  status: string;
-  notes: string;
-}
+import { type AppointmentWithPatient } from "@/lib/database";
 
 interface PrintExportCalendarProps {
-  appointments: Appointment[];
+  appointments: AppointmentWithPatient[];
   currentDate: Date;
   viewType: "day" | "week" | "month";
   className?: string;
