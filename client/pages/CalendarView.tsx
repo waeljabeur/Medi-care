@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -23,75 +23,17 @@ import {
   Stethoscope,
   FileText,
 } from "lucide-react";
-
-// Mock appointments data - in real app this would come from API filtered by doctor_id
-const mockAppointments = [
-  {
-    id: 1,
-    patientId: 1,
-    patient: "Emma Wilson",
-    date: "2024-01-20",
-    time: "09:00",
-    reason: "Annual Checkup",
-    status: "confirmed",
-    notes: "Complete physical examination",
-  },
-  {
-    id: 2,
-    patientId: 2,
-    patient: "Michael Chen",
-    date: "2024-01-20",
-    time: "11:00",
-    reason: "Blood Pressure Check",
-    status: "confirmed",
-    notes: "Follow-up on hypertension",
-  },
-  {
-    id: 3,
-    patientId: 3,
-    patient: "Sarah Davis",
-    date: "2024-01-22",
-    time: "14:00",
-    reason: "Consultation",
-    status: "pending",
-    notes: "New patient consultation",
-  },
-  {
-    id: 4,
-    patientId: 1,
-    patient: "Emma Wilson",
-    date: "2024-01-25",
-    time: "10:30",
-    reason: "Follow-up",
-    status: "confirmed",
-    notes: "Review test results",
-  },
-  {
-    id: 5,
-    patientId: 4,
-    patient: "Robert Johnson",
-    date: "2024-01-25",
-    time: "15:00",
-    reason: "Physical Exam",
-    status: "confirmed",
-    notes: "Annual physical examination",
-  },
-  {
-    id: 6,
-    patientId: 2,
-    patient: "Michael Chen",
-    date: "2024-01-28",
-    time: "09:30",
-    reason: "Medication Review",
-    status: "confirmed",
-    notes: "Review current medications",
-  },
-];
+import { db, type AppointmentWithPatient } from "@/lib/database";
 
 export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewType, setViewType] = useState<ViewType>("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [appointments, setAppointments] = useState<AppointmentWithPatient[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Get current month/year for display
   const currentMonth = currentDate.getMonth();
