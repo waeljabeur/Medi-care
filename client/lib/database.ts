@@ -326,10 +326,29 @@ export class DatabaseService {
 
     if (this.isDemoMode) {
       console.log("🔍 Using demo mode, returning demo appointments");
-      const appointmentsWithPatients = DEMO_APPOINTMENTS.map((appointment) => ({
-        ...appointment,
-        patient: DEMO_PATIENTS.find((p) => p.id === appointment.patient_id)!,
-      }));
+      console.log("🔍 DEMO_APPOINTMENTS:", DEMO_APPOINTMENTS);
+      console.log("🔍 DEMO_PATIENTS:", DEMO_PATIENTS);
+
+      const appointmentsWithPatients = DEMO_APPOINTMENTS.map((appointment) => {
+        const patient = DEMO_PATIENTS.find(
+          (p) => p.id === appointment.patient_id,
+        );
+        if (!patient) {
+          console.error(
+            "🔍 Patient not found for appointment:",
+            appointment.patient_id,
+          );
+          throw new Error(
+            `Patient not found for appointment: ${appointment.patient_id}`,
+          );
+        }
+        return {
+          ...appointment,
+          patient,
+        };
+      });
+
+      console.log("🔍 appointmentsWithPatients:", appointmentsWithPatients);
       return { data: appointmentsWithPatients, error: null };
     }
 
