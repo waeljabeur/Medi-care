@@ -580,30 +580,48 @@ export default function CalendarView() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Total Appointments
-                </span>
-                <span className="font-semibold">{mockAppointments.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Confirmed</span>
-                <span className="font-semibold text-success">
-                  {
-                    mockAppointments.filter((apt) => apt.status === "confirmed")
-                      .length
-                  }
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Pending</span>
-                <span className="font-semibold text-warning">
-                  {
-                    mockAppointments.filter((apt) => apt.status === "pending")
-                      .length
-                  }
-                </span>
-              </div>
+              {loading ? (
+                <div className="text-center py-4">
+                  <div className="text-sm text-muted-foreground">
+                    Loading...
+                  </div>
+                </div>
+              ) : error ? (
+                <div className="text-center py-4">
+                  <div className="text-sm text-destructive">{error}</div>
+                </div>
+              ) : (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Total Appointments
+                    </span>
+                    <span className="font-semibold">{appointments.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Confirmed
+                    </span>
+                    <span className="font-semibold text-success">
+                      {
+                        appointments.filter((apt) => apt.status === "confirmed")
+                          .length
+                      }
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Pending
+                    </span>
+                    <span className="font-semibold text-warning">
+                      {
+                        appointments.filter((apt) => apt.status === "pending")
+                          .length
+                      }
+                    </span>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
