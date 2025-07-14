@@ -262,9 +262,7 @@ export default function AddEditAppointment() {
     }
   };
 
-  const selectedPatient = mockPatients.find(
-    (p) => p.id.toString() === formData.patientId,
-  );
+  const selectedPatient = patients.find((p) => p.id === formData.patient_id);
 
   // Generate time slots (every 30 minutes from 8:00 AM to 6:00 PM)
   const timeSlots = [];
