@@ -208,16 +208,30 @@ export default function AddEditAppointment() {
     setSubmitStatus({ type: null, message: "" });
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const appointmentData: AppointmentFormData = {
+        patient_id: formData.patient_id,
+        date: formData.date,
+        time: formData.time,
+        reason: formData.reason,
+        notes: formData.notes || undefined,
+        status: formData.status,
+      };
 
-      // Mock success/error based on reason (for demo purposes)
-      if (formData.reason.toLowerCase().includes("error")) {
-        throw new Error("Failed to save appointment. Please try again later.");
+      let result;
+      if (isEditing && appointmentId) {
+        // Update existing appointment
+        result = await db.updateAppointment(appointmentId, appointmentData);
+      } else {
+        // Create new appointment
+        result = await db.createAppointment(appointmentData);
       }
 
-      const selectedPatient = mockPatients.find(
-        (p) => p.id.toString() === formData.patientId,
+      if (result.error) {
+        throw new Error(result.error.message || "Failed to save appointment");
+      }
+
+      const selectedPatient = patients.find(
+        (p) => p.id === formData.patient_id,
       );
 
       setSubmitStatus({
