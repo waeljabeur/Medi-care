@@ -160,7 +160,7 @@ export function PrintExportCalendar({
         [
           apt.date,
           apt.time,
-          `"${apt.patient}"`,
+          `"${apt.patient.name}"`,
           `"${apt.reason}"`,
           apt.status,
           `"${apt.notes.replace(/"/g, '""')}"`,
