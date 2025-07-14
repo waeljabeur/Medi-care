@@ -417,7 +417,7 @@ export default function CalendarView() {
                                       <div className="flex-1">
                                         <div className="flex items-center space-x-3 mb-2">
                                           <h4 className="font-bold text-foreground text-lg">
-                                            {apt.patient}
+                                            {apt.patient.name}
                                           </h4>
                                           <Badge
                                             variant="outline"
