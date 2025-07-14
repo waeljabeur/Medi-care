@@ -286,7 +286,7 @@ export default function CalendarView() {
                             {day.appointments.slice(0, 2).map((apt) => (
                               <Link
                                 key={apt.id}
-                                to={`/patients/${apt.patientId}`}
+                                to={`/patients/${apt.patient_id}`}
                                 className="block"
                               >
                                 <div
