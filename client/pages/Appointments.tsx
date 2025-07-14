@@ -22,50 +22,6 @@ import {
 } from "lucide-react";
 import { db, type AppointmentWithPatient } from "@/lib/database";
 
-// Mock appointments data
-const mockAppointments = [
-  {
-    id: 1,
-    patient: "Emma Wilson",
-    date: "2024-01-20",
-    time: "9:00 AM",
-    duration: "30 min",
-    reason: "Annual Checkup",
-    status: "confirmed",
-    type: "routine",
-  },
-  {
-    id: 2,
-    patient: "Michael Chen",
-    date: "2024-01-20",
-    time: "10:30 AM",
-    duration: "45 min",
-    reason: "Follow-up Consultation",
-    status: "confirmed",
-    type: "follow-up",
-  },
-  {
-    id: 3,
-    patient: "Sarah Davis",
-    date: "2024-01-20",
-    time: "2:00 PM",
-    duration: "30 min",
-    reason: "Blood Test Review",
-    status: "pending",
-    type: "consultation",
-  },
-  {
-    id: 4,
-    patient: "Robert Johnson",
-    date: "2024-01-21",
-    time: "9:00 AM",
-    duration: "60 min",
-    reason: "Physical Examination",
-    status: "confirmed",
-    type: "examination",
-  },
-];
-
 export default function Appointments() {
   return (
     <div className="space-y-8">
