@@ -326,37 +326,23 @@ export class DatabaseService {
 
     if (this.isDemoMode) {
       console.log("🔍 Using demo mode, returning demo appointments");
-      console.log("🔍 DEMO_APPOINTMENTS:", DEMO_APPOINTMENTS);
-      console.log("🔍 DEMO_PATIENTS:", DEMO_PATIENTS);
+      console.log("🔍 DEMO_APPOINTMENTS length:", DEMO_APPOINTMENTS.length);
+      console.log("🔍 DEMO_PATIENTS length:", DEMO_PATIENTS.length);
 
-      // TEMPORARY TEST: Return hardcoded simple data
-      console.log("🔍 TEMPORARY: Returning hardcoded simple data");
-      return {
-        data: [
-          {
-            id: "test-1",
-            doctor_id: "test-doc",
-            patient_id: "test-patient",
-            date: "2024-12-20",
-            time: "09:00:00",
-            reason: "Test appointment",
-            notes: "Test notes",
-            status: "confirmed" as const,
-            created_at: "2024-01-01T00:00:00Z",
-            patient: {
-              id: "test-patient",
-              doctor_id: "test-doc",
-              name: "Test Patient",
-              dob: "1990-01-01",
-              phone: "(555) 123-4567",
-              email: "test@example.com",
-              medical_history: "Test history",
-              created_at: "2024-01-01T00:00:00Z",
-            },
-          },
-        ],
-        error: null,
-      };
+      // Verify data integrity first
+      const patientIds = DEMO_PATIENTS.map((p) => p.id);
+      console.log("🔍 Available patient IDs:", patientIds);
+
+      for (const appointment of DEMO_APPOINTMENTS) {
+        console.log(
+          `🔍 Checking appointment ${appointment.id} references patient ${appointment.patient_id}`,
+        );
+        if (!patientIds.includes(appointment.patient_id)) {
+          const errorMsg = `Patient ID ${appointment.patient_id} not found in demo patients`;
+          console.error("🔍 ERROR:", errorMsg);
+          return { data: null, error: { message: errorMsg } };
+        }
+      }
 
       try {
         // First, let's test with just an empty array to see if the error is in the mapping
