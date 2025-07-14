@@ -618,16 +618,5 @@ export class DatabaseService {
   }
 }
 
-// Test demo data integrity
-console.log("🔍 Demo data integrity check:");
-console.log("🔍 DEMO_PATIENTS count:", DEMO_PATIENTS.length);
-console.log("🔍 DEMO_APPOINTMENTS count:", DEMO_APPOINTMENTS.length);
-DEMO_APPOINTMENTS.forEach((apt) => {
-  const patient = DEMO_PATIENTS.find((p) => p.id === apt.patient_id);
-  console.log(
-    `🔍 Appointment ${apt.id} -> Patient ${apt.patient_id}: ${patient ? "Found" : "NOT FOUND"}`,
-  );
-});
-
 // Export singleton instance
 export const db = new DatabaseService();
