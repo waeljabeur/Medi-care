@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { authHelpers, supabase } from "@/lib/supabase";
+import { db, type Patient, type PatientFormData } from "@/lib/database";
 import {
   Card,
   CardContent,
