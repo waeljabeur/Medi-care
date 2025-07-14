@@ -314,7 +314,7 @@ export default function AddEditAppointment() {
         </div>
       </div>
 
-            {/* Loading State */}
+      {/* Loading State */}
       {loading ? (
         <div className="text-center py-12">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
@@ -324,398 +324,406 @@ export default function AddEditAppointment() {
         <>
           {/* Status Messages */}
           {submitStatus.type && (
-        <Alert
-          className={`border-0 ${
-            submitStatus.type === "success"
-              ? "bg-success/15 text-success border-success/20"
-              : "bg-destructive/15 text-destructive border-destructive/20"
-          }`}
-        >
-          {submitStatus.type === "success" ? (
-            <CheckCircle className="h-4 w-4" />
-          ) : (
-            <AlertCircle className="h-4 w-4" />
+            <Alert
+              className={`border-0 ${
+                submitStatus.type === "success"
+                  ? "bg-success/15 text-success border-success/20"
+                  : "bg-destructive/15 text-destructive border-destructive/20"
+              }`}
+            >
+              {submitStatus.type === "success" ? (
+                <CheckCircle className="h-4 w-4" />
+              ) : (
+                <AlertCircle className="h-4 w-4" />
+              )}
+              <AlertDescription className="font-medium">
+                {submitStatus.message}
+              </AlertDescription>
+            </Alert>
           )}
-          <AlertDescription className="font-medium">
-            {submitStatus.message}
-          </AlertDescription>
-        </Alert>
-      )}
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Appointment Details */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-6">
-                <CardTitle className="flex items-center text-xl font-bold">
-                  <div className="p-2 bg-primary/20 rounded-lg mr-3">
-                    <Calendar className="w-5 h-5 text-primary" />
-                  </div>
-                  Appointment Details
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Select patient, date, time, and appointment details
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Patient Selection */}
-                <div className="space-y-3">
-                  <Label
-                    htmlFor="patient"
-                    className="text-sm font-semibold flex items-center"
-                  >
-                    <User className="w-4 h-4 mr-2 text-primary" />
-                    Patient *
-                  </Label>
-                  <Select
-                    value={formData.patient_id}
-                    onValueChange={(value) =>
-                      handleInputChange("patient_id", value)
-                    }
-                    disabled={isSubmitting}
-                  >
-                    <SelectTrigger
-                      className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
-                        errors.patient_id
-                          ? "border-destructive focus:border-destructive"
-                          : ""
-                      }`}
-                    >
-                      <SelectValue placeholder="Select a patient" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {patients.map((patient) => (
-                        <SelectItem
-                          key={patient.id}
-                          value={patient.id}
-                          className="cursor-pointer"
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Appointment Details */}
+              <div className="lg:col-span-2">
+                <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
+                  <CardHeader className="pb-6">
+                    <CardTitle className="flex items-center text-xl font-bold">
+                      <div className="p-2 bg-primary/20 rounded-lg mr-3">
+                        <Calendar className="w-5 h-5 text-primary" />
+                      </div>
+                      Appointment Details
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      Select patient, date, time, and appointment details
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Patient Selection */}
+                    <div className="space-y-3">
+                      <Label
+                        htmlFor="patient"
+                        className="text-sm font-semibold flex items-center"
+                      >
+                        <User className="w-4 h-4 mr-2 text-primary" />
+                        Patient *
+                      </Label>
+                      <Select
+                        value={formData.patient_id}
+                        onValueChange={(value) =>
+                          handleInputChange("patient_id", value)
+                        }
+                        disabled={isSubmitting}
+                      >
+                        <SelectTrigger
+                          className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
+                            errors.patient_id
+                              ? "border-destructive focus:border-destructive"
+                              : ""
+                          }`}
                         >
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                              <span className="text-xs font-bold text-primary">
-                                {patient.name
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </span>
-                            </div>
-                            <div>
-                              <div className="font-medium">{patient.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {patient.email}
+                          <SelectValue placeholder="Select a patient" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {patients.map((patient) => (
+                            <SelectItem
+                              key={patient.id}
+                              value={patient.id}
+                              className="cursor-pointer"
+                            >
+                              <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                  <span className="text-xs font-bold text-primary">
+                                    {patient.name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")}
+                                  </span>
+                                </div>
+                                <div>
+                                  <div className="font-medium">
+                                    {patient.name}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {patient.email}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.patient_id && (
-                    <p className="text-sm text-destructive flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      {errors.patient_id}
-                    </p>
-                  )}
-                </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.patient_id && (
+                        <p className="text-sm text-destructive flex items-center">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          {errors.patient_id}
+                        </p>
+                      )}
+                    </div>
 
-                {/* Date and Time */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor="date"
-                      className="text-sm font-semibold flex items-center"
-                    >
-                      <Calendar className="w-4 h-4 mr-2 text-primary" />
-                      Date *
-                    </Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) =>
-                        handleInputChange("date", e.target.value)
-                      }
-                      min={new Date().toISOString().split("T")[0]}
-                      className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
-                        errors.date
-                          ? "border-destructive focus:border-destructive"
-                          : ""
-                      }`}
-                      disabled={isSubmitting}
-                    />
-                    {errors.date && (
-                      <p className="text-sm text-destructive flex items-center">
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                        {errors.date}
-                      </p>
-                    )}
-                  </div>
+                    {/* Date and Time */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <Label
+                          htmlFor="date"
+                          className="text-sm font-semibold flex items-center"
+                        >
+                          <Calendar className="w-4 h-4 mr-2 text-primary" />
+                          Date *
+                        </Label>
+                        <Input
+                          id="date"
+                          type="date"
+                          value={formData.date}
+                          onChange={(e) =>
+                            handleInputChange("date", e.target.value)
+                          }
+                          min={new Date().toISOString().split("T")[0]}
+                          className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
+                            errors.date
+                              ? "border-destructive focus:border-destructive"
+                              : ""
+                          }`}
+                          disabled={isSubmitting}
+                        />
+                        {errors.date && (
+                          <p className="text-sm text-destructive flex items-center">
+                            <AlertCircle className="w-3 h-3 mr-1" />
+                            {errors.date}
+                          </p>
+                        )}
+                      </div>
 
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor="time"
-                      className="text-sm font-semibold flex items-center"
-                    >
-                      <Clock className="w-4 h-4 mr-2 text-primary" />
-                      Time *
-                    </Label>
-                    <Select
-                      value={formData.time}
-                      onValueChange={(value) =>
-                        handleInputChange("time", value)
-                      }
-                      disabled={isSubmitting}
-                    >
-                      <SelectTrigger
+                      <div className="space-y-3">
+                        <Label
+                          htmlFor="time"
+                          className="text-sm font-semibold flex items-center"
+                        >
+                          <Clock className="w-4 h-4 mr-2 text-primary" />
+                          Time *
+                        </Label>
+                        <Select
+                          value={formData.time}
+                          onValueChange={(value) =>
+                            handleInputChange("time", value)
+                          }
+                          disabled={isSubmitting}
+                        >
+                          <SelectTrigger
+                            className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
+                              errors.time
+                                ? "border-destructive focus:border-destructive"
+                                : ""
+                            }`}
+                          >
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {timeSlots.map((slot) => (
+                              <SelectItem
+                                key={slot.value}
+                                value={slot.value}
+                                className="cursor-pointer"
+                              >
+                                {slot.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {errors.time && (
+                          <p className="text-sm text-destructive flex items-center">
+                            <AlertCircle className="w-3 h-3 mr-1" />
+                            {errors.time}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Reason */}
+                    <div className="space-y-3">
+                      <Label
+                        htmlFor="reason"
+                        className="text-sm font-semibold flex items-center"
+                      >
+                        <Stethoscope className="w-4 h-4 mr-2 text-primary" />
+                        Reason for Visit *
+                      </Label>
+                      <Input
+                        id="reason"
+                        type="text"
+                        placeholder="e.g., Annual Checkup, Follow-up, Consultation"
+                        value={formData.reason}
+                        onChange={(e) =>
+                          handleInputChange("reason", e.target.value)
+                        }
                         className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
-                          errors.time
+                          errors.reason
                             ? "border-destructive focus:border-destructive"
                             : ""
                         }`}
+                        disabled={isSubmitting}
+                      />
+                      {errors.reason && (
+                        <p className="text-sm text-destructive flex items-center">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          {errors.reason}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Notes */}
+                    <div className="space-y-3">
+                      <Label
+                        htmlFor="notes"
+                        className="text-sm font-semibold flex items-center"
                       >
-                        <SelectValue placeholder="Select time" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeSlots.map((slot) => (
-                          <SelectItem
-                            key={slot.value}
-                            value={slot.value}
-                            className="cursor-pointer"
-                          >
-                            {slot.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.time && (
-                      <p className="text-sm text-destructive flex items-center">
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                        {errors.time}
+                        <FileText className="w-4 h-4 mr-2 text-primary" />
+                        Notes (Optional)
+                      </Label>
+                      <Textarea
+                        id="notes"
+                        placeholder="Additional notes, instructions, or special requirements for this appointment..."
+                        value={formData.notes}
+                        onChange={(e) =>
+                          handleInputChange("notes", e.target.value)
+                        }
+                        className="min-h-[120px] rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all resize-none"
+                        disabled={isSubmitting}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Optional additional information about the appointment
                       </p>
-                    )}
-                  </div>
-                </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-                {/* Reason */}
-                <div className="space-y-3">
-                  <Label
-                    htmlFor="reason"
-                    className="text-sm font-semibold flex items-center"
-                  >
-                    <Stethoscope className="w-4 h-4 mr-2 text-primary" />
-                    Reason for Visit *
-                  </Label>
-                  <Input
-                    id="reason"
-                    type="text"
-                    placeholder="e.g., Annual Checkup, Follow-up, Consultation"
-                    value={formData.reason}
-                    onChange={(e) =>
-                      handleInputChange("reason", e.target.value)
-                    }
-                    className={`rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all ${
-                      errors.reason
-                        ? "border-destructive focus:border-destructive"
-                        : ""
-                    }`}
-                    disabled={isSubmitting}
-                  />
-                  {errors.reason && (
-                    <p className="text-sm text-destructive flex items-center">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      {errors.reason}
-                    </p>
-                  )}
-                </div>
-
-                {/* Notes */}
-                <div className="space-y-3">
-                  <Label
-                    htmlFor="notes"
-                    className="text-sm font-semibold flex items-center"
-                  >
-                    <FileText className="w-4 h-4 mr-2 text-primary" />
-                    Notes (Optional)
-                  </Label>
-                  <Textarea
-                    id="notes"
-                    placeholder="Additional notes, instructions, or special requirements for this appointment..."
-                    value={formData.notes}
-                    onChange={(e) => handleInputChange("notes", e.target.value)}
-                    className="min-h-[120px] rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all resize-none"
-                    disabled={isSubmitting}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Optional additional information about the appointment
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-8">
-            {/* Form Actions */}
-            <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-bold">Actions</CardTitle>
-                <CardDescription>
-                  {isEditing
-                    ? "Update appointment details"
-                    : "Schedule new appointment"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full shadow-sm hover:shadow-md transition-shadow"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      {isEditing ? "Updating..." : "Scheduling..."}
-                    </>
-                  ) : (
-                    <>
-                      <Save className="w-4 h-4 mr-2" />
+              {/* Sidebar */}
+              <div className="space-y-8">
+                {/* Form Actions */}
+                <Card className="shadow-md border-0 bg-card/50 backdrop-blur-sm">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg font-bold">Actions</CardTitle>
+                    <CardDescription>
                       {isEditing
-                        ? "Update Appointment"
-                        : "Schedule Appointment"}
-                    </>
-                  )}
-                </Button>
-                <Link
-                  to={
-                    preSelectedPatientId
-                      ? `/patients/${preSelectedPatientId}`
-                      : "/appointments"
-                  }
-                  className="block"
-                >
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isSubmitting}
-                    className="w-full shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    Cancel
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* Selected Patient Info */}
-            {selectedPatient && (
-              <Card className="shadow-md border-0 bg-gradient-to-br from-primary/5 to-primary/10">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-bold flex items-center">
-                    <div className="p-2 bg-primary/20 rounded-lg mr-3">
-                      <User className="w-4 h-4 text-primary" />
-                    </div>
-                    Selected Patient
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
-                      <span className="text-sm font-bold text-primary">
-                        {selectedPatient.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </span>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-foreground">
-                        {selectedPatient.name}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {selectedPatient.email}
-                      </div>
-                      <Link
-                        to={`/patients/${selectedPatient.id}`}
-                        className="text-xs text-primary hover:underline"
+                        ? "Update appointment details"
+                        : "Schedule new appointment"}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          {isEditing ? "Updating..." : "Scheduling..."}
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4 mr-2" />
+                          {isEditing
+                            ? "Update Appointment"
+                            : "Schedule Appointment"}
+                        </>
+                      )}
+                    </Button>
+                    <Link
+                      to={
+                        preSelectedPatientId
+                          ? `/patients/${preSelectedPatientId}`
+                          : "/appointments"
+                      }
+                      className="block"
+                    >
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isSubmitting}
+                        className="w-full shadow-sm hover:shadow-md transition-shadow"
                       >
-                        View patient profile
-                      </Link>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                        Cancel
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
 
-            {/* Appointment Summary */}
-            {formData.date && formData.time && (
-              <Card className="shadow-md border-0 bg-gradient-to-br from-success/5 to-success/10">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-bold flex items-center">
-                    <div className="p-2 bg-success/20 rounded-lg mr-3">
-                      <Calendar className="w-4 h-4 text-success" />
-                    </div>
-                    Appointment Summary
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Date:</span>
-                    <span className="font-medium">
-                      {new Date(formData.date).toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Time:</span>
-                    <span className="font-medium">
-                      {new Date(
-                        `2000-01-01T${formData.time}`,
-                      ).toLocaleTimeString("en-US", {
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}
-                    </span>
-                  </div>
-                  {formData.reason && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Reason:</span>
-                      <span className="font-medium text-right max-w-32">
-                        {formData.reason}
-                      </span>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                {/* Selected Patient Info */}
+                {selectedPatient && (
+                  <Card className="shadow-md border-0 bg-gradient-to-br from-primary/5 to-primary/10">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-lg font-bold flex items-center">
+                        <div className="p-2 bg-primary/20 rounded-lg mr-3">
+                          <User className="w-4 h-4 text-primary" />
+                        </div>
+                        Selected Patient
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+                          <span className="text-sm font-bold text-primary">
+                            {selectedPatient.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="font-semibold text-foreground">
+                            {selectedPatient.name}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {selectedPatient.email}
+                          </div>
+                          <Link
+                            to={`/patients/${selectedPatient.id}`}
+                            className="text-xs text-primary hover:underline"
+                          >
+                            View patient profile
+                          </Link>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
-            {/* Tips */}
-            <Card className="shadow-md border-0 bg-gradient-to-br from-info/5 to-info/10">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-bold flex items-center">
-                  <div className="p-2 bg-info/20 rounded-lg mr-3">
-                    <AlertCircle className="w-4 h-4 text-info" />
-                  </div>
-                  Tips
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="text-sm text-muted-foreground space-y-2">
-                  <p>• Select patients from your active patient list</p>
-                  <p>• Choose appropriate time slots during office hours</p>
-                  <p>• Be specific about the reason for the visit</p>
-                  <p>• Use notes for special instructions or preparations</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </form>
+                {/* Appointment Summary */}
+                {formData.date && formData.time && (
+                  <Card className="shadow-md border-0 bg-gradient-to-br from-success/5 to-success/10">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-lg font-bold flex items-center">
+                        <div className="p-2 bg-success/20 rounded-lg mr-3">
+                          <Calendar className="w-4 h-4 text-success" />
+                        </div>
+                        Appointment Summary
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Date:</span>
+                        <span className="font-medium">
+                          {new Date(formData.date).toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Time:</span>
+                        <span className="font-medium">
+                          {new Date(
+                            `2000-01-01T${formData.time}`,
+                          ).toLocaleTimeString("en-US", {
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </span>
+                      </div>
+                      {formData.reason && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Reason:</span>
+                          <span className="font-medium text-right max-w-32">
+                            {formData.reason}
+                          </span>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Tips */}
+                <Card className="shadow-md border-0 bg-gradient-to-br from-info/5 to-info/10">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg font-bold flex items-center">
+                      <div className="p-2 bg-info/20 rounded-lg mr-3">
+                        <AlertCircle className="w-4 h-4 text-info" />
+                      </div>
+                      Tips
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p>• Select patients from your active patient list</p>
+                      <p>• Choose appropriate time slots during office hours</p>
+                      <p>• Be specific about the reason for the visit</p>
+                      <p>
+                        • Use notes for special instructions or preparations
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 }
