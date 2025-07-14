@@ -167,6 +167,12 @@ export class DatabaseService {
 
   constructor() {
     this.isDemoMode = authHelpers.isDemoMode();
+
+    if (!this.isDemoMode) {
+      console.log("🔧 Database Service initialized in LIVE mode");
+    } else {
+      console.log("🔧 Database Service initialized in DEMO mode");
+    }
   }
 
   // Doctor methods
