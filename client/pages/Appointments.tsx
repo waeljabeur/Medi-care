@@ -261,8 +261,8 @@ export default function Appointments() {
                     <Calendar className="w-7 h-7 text-primary" />
                   </div>
                   <div>
-                    <div className="font-bold text-foreground text-lg">
-                      {appointment.patient}
+                                        <div className="font-bold text-foreground text-lg">
+                      {appointment.patient.name}
                     </div>
                     <div className="text-sm text-muted-foreground font-medium mb-2">
                       {appointment.reason}
