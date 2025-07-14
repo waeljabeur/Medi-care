@@ -538,7 +538,7 @@ export default function CalendarView() {
                         <div className="p-3 bg-background/50 border border-border/50 rounded-xl hover:bg-background transition-colors">
                           <div className="flex justify-between items-start mb-2">
                             <h4 className="font-semibold text-foreground text-sm">
-                              {apt.patient}
+                              {apt.patient.name}
                             </h4>
                             <Badge
                               variant="outline"
