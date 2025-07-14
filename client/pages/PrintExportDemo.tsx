@@ -4,18 +4,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
+import { type AppointmentWithPatient } from "@/lib/database";
 
 // Sample appointments data for demo
-const demoAppointments = [
+const demoAppointments: AppointmentWithPatient[] = [
   {
-    id: 1,
-    patientId: 1,
-    patient: "Emma Wilson",
+    id: "demo-1",
+    doctor_id: "demo-doc",
+    patient_id: "demo-patient-1",
     date: "2024-01-20",
     time: "09:00",
     reason: "Annual Checkup",
     status: "confirmed",
     notes: "Complete physical examination including blood work",
+    created_at: "2024-01-01T00:00:00Z",
+    patient: {
+      id: "demo-patient-1",
+      doctor_id: "demo-doc",
+      name: "Emma Wilson",
+      dob: "1990-01-01",
+      phone: "(555) 123-4567",
+      email: "emma@example.com",
+      medical_history: "No significant history",
+      created_at: "2024-01-01T00:00:00Z",
+    },
   },
   {
     id: 2,
