@@ -362,9 +362,9 @@ export default function AddEditAppointment() {
                     Patient *
                   </Label>
                   <Select
-                    value={formData.patientId}
+                    value={formData.patient_id}
                     onValueChange={(value) =>
-                      handleInputChange("patientId", value)
+                      handleInputChange("patient_id", value)
                     }
                     disabled={isSubmitting}
                   >
