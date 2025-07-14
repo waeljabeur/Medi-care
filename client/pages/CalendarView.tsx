@@ -485,7 +485,7 @@ export default function CalendarView() {
             </CardHeader>
             <CardContent>
               <PrintExportCalendar
-                appointments={mockAppointments}
+                appointments={appointments}
                 currentDate={currentDate}
                 viewType={viewType}
               />
