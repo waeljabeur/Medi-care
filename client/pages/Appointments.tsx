@@ -22,10 +22,10 @@ import {
 } from "lucide-react";
 import { db, type AppointmentWithPatient } from "@/lib/database";
 
-
-
 export default function Appointments() {
-  const [appointments, setAppointments] = useState<AppointmentWithPatient[]>([]);
+  const [appointments, setAppointments] = useState<AppointmentWithPatient[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,16 +37,16 @@ export default function Appointments() {
         const { data, error } = await db.getAppointments();
 
         if (error) {
-          console.error('Error loading appointments:', error);
-          setError('Failed to load appointments');
+          console.error("Error loading appointments:", error);
+          setError("Failed to load appointments");
           setAppointments([]);
         } else {
           setAppointments(data || []);
           setError(null);
         }
       } catch (err) {
-        console.error('Error loading appointments:', err);
-        setError('Failed to load appointments');
+        console.error("Error loading appointments:", err);
+        setError("Failed to load appointments");
         setAppointments([]);
       } finally {
         setLoading(false);
@@ -58,27 +58,31 @@ export default function Appointments() {
 
   // Helper function to format time from 24h to 12h format
   const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(':');
+    const [hours, minutes] = time.split(":");
     const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const ampm = hour >= 12 ? "PM" : "AM";
     const hour12 = hour % 12 || 12;
     return `${hour12}:${minutes} ${ampm}`;
   };
 
   // Calculate stats from appointments
-  const today = new Date().toISOString().split('T')[0];
-  const todayAppointments = appointments.filter(apt => apt.date === today);
-  const pendingAppointments = appointments.filter(apt => apt.status === 'pending');
-  const completedAppointments = appointments.filter(apt => apt.status === 'completed');
+  const today = new Date().toISOString().split("T")[0];
+  const todayAppointments = appointments.filter((apt) => apt.date === today);
+  const pendingAppointments = appointments.filter(
+    (apt) => apt.status === "pending",
+  );
+  const completedAppointments = appointments.filter(
+    (apt) => apt.status === "completed",
+  );
 
   // Get start and end of current week
   const now = new Date();
   const weekStart = new Date(now.setDate(now.getDate() - now.getDay()));
   const weekEnd = new Date(now.setDate(now.getDate() - now.getDay() + 6));
-  const weekStartStr = weekStart.toISOString().split('T')[0];
-  const weekEndStr = weekEnd.toISOString().split('T')[0];
-  const thisWeekAppointments = appointments.filter(apt =>
-    apt.date >= weekStartStr && apt.date <= weekEndStr
+  const weekStartStr = weekStart.toISOString().split("T")[0];
+  const weekEndStr = weekEnd.toISOString().split("T")[0];
+  const thisWeekAppointments = appointments.filter(
+    (apt) => apt.date >= weekStartStr && apt.date <= weekEndStr,
   );
 
   return (
@@ -159,7 +163,9 @@ export default function Appointments() {
                 <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
                   Today
                 </p>
-                                <p className="text-3xl font-bold text-foreground">{todayAppointments.length}</p>
+                <p className="text-3xl font-bold text-foreground">
+                  {todayAppointments.length}
+                </p>
               </div>
               <div className="p-3 bg-primary/20 rounded-2xl group-hover:scale-110 transition-transform">
                 <Calendar className="w-8 h-8 text-primary" />
@@ -174,7 +180,9 @@ export default function Appointments() {
                 <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
                   This Week
                 </p>
-                                <p className="text-3xl font-bold text-foreground">{thisWeekAppointments.length}</p>
+                <p className="text-3xl font-bold text-foreground">
+                  {thisWeekAppointments.length}
+                </p>
               </div>
               <div className="p-3 bg-info/20 rounded-2xl group-hover:scale-110 transition-transform">
                 <Clock className="w-8 h-8 text-info" />
@@ -189,7 +197,9 @@ export default function Appointments() {
                 <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
                   Pending
                 </p>
-                                <p className="text-3xl font-bold text-foreground">{pendingAppointments.length}</p>
+                <p className="text-3xl font-bold text-foreground">
+                  {pendingAppointments.length}
+                </p>
               </div>
               <div className="p-3 bg-warning/20 rounded-2xl group-hover:scale-110 transition-transform">
                 <User className="w-8 h-8 text-warning" />
@@ -204,7 +214,9 @@ export default function Appointments() {
                 <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
                   Completed
                 </p>
-                                <p className="text-3xl font-bold text-foreground">{completedAppointments.length}</p>
+                <p className="text-3xl font-bold text-foreground">
+                  {completedAppointments.length}
+                </p>
               </div>
               <div className="p-3 bg-success/20 rounded-2xl group-hover:scale-110 transition-transform">
                 <Calendar className="w-8 h-8 text-success" />
@@ -224,10 +236,12 @@ export default function Appointments() {
             View and manage your scheduled appointments
           </CardDescription>
         </CardHeader>
-                <CardContent>
+        <CardContent>
           {loading ? (
             <div className="text-center py-8">
-              <div className="text-muted-foreground">Loading appointments...</div>
+              <div className="text-muted-foreground">
+                Loading appointments...
+              </div>
             </div>
           ) : error ? (
             <div className="text-center py-8">
@@ -252,71 +266,72 @@ export default function Appointments() {
           ) : (
             <div className="space-y-4">
               {appointments.map((appointment) => (
-              <div
-                key={appointment.id}
-                className="flex items-center justify-between p-6 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group"
-              >
-                <div className="flex items-center space-x-5">
-                  <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Calendar className="w-7 h-7 text-primary" />
-                  </div>
-                  <div>
-                                        <div className="font-bold text-foreground text-lg">
-                      {appointment.patient.name}
+                <div
+                  key={appointment.id}
+                  className="flex items-center justify-between p-6 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group"
+                >
+                  <div className="flex items-center space-x-5">
+                    <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Calendar className="w-7 h-7 text-primary" />
                     </div>
-                    <div className="text-sm text-muted-foreground font-medium mb-2">
-                      {appointment.reason}
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center text-sm text-muted-foreground font-medium">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        {new Date(appointment.date).toLocaleDateString()}
+                    <div>
+                      <div className="font-bold text-foreground text-lg">
+                        {appointment.patient.name}
                       </div>
-                      <div className="flex items-center text-sm text-muted-foreground font-medium">
-                        <Clock className="w-4 h-4 mr-2" />
-                                                {formatTime(appointment.time)}
+                      <div className="text-sm text-muted-foreground font-medium mb-2">
+                        {appointment.reason}
+                      </div>
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center text-sm text-muted-foreground font-medium">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          {new Date(appointment.date).toLocaleDateString()}
+                        </div>
+                        <div className="flex items-center text-sm text-muted-foreground font-medium">
+                          <Clock className="w-4 h-4 mr-2" />
+                          {formatTime(appointment.time)}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center space-x-4">
-                                    <Link to={`/patients/${appointment.patient_id}`}>
+                  <div className="flex items-center space-x-4">
+                    <Link to={`/patients/${appointment.patient_id}`}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+                      >
+                        View Patient
+                      </Button>
+                    </Link>
+                    <Badge
+                      variant={
+                        appointment.status === "confirmed"
+                          ? "default"
+                          : "secondary"
+                      }
+                      className={
+                        appointment.status === "confirmed"
+                          ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
+                          : appointment.status === "pending"
+                            ? "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
+                            : "px-3 py-1"
+                      }
+                    >
+                      {appointment.status}
+                    </Badge>
                     <Button
                       variant="ghost"
                       size="sm"
                       className="hover:bg-primary/10 hover:text-primary transition-colors font-medium"
                     >
-                      View Patient
+                      View Details
                     </Button>
-                  </Link>
-                  <Badge
-                    variant={
-                      appointment.status === "confirmed"
-                        ? "default"
-                        : "secondary"
-                    }
-                    className={
-                      appointment.status === "confirmed"
-                        ? "bg-success/15 text-success hover:bg-success/25 border-success/20 px-3 py-1"
-                        : appointment.status === "pending"
-                          ? "bg-warning/15 text-warning hover:bg-warning/25 border-warning/20 px-3 py-1"
-                          : "px-3 py-1"
-                    }
-                  >
-                    {appointment.status}
-                  </Badge>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="hover:bg-primary/10 hover:text-primary transition-colors font-medium"
-                  >
-                    View Details
-                  </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
