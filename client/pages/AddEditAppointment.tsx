@@ -87,23 +87,56 @@ export default function AddEditAppointment() {
     message: string;
   }>({ type: null, message: "" });
 
-  // Load appointment data for editing
+  // Load patients and appointment data
   useEffect(() => {
-    if (isEditing && appointmentId) {
-      const appointment =
-        mockAppointmentData[
-          parseInt(appointmentId) as keyof typeof mockAppointmentData
-        ];
-      if (appointment) {
-        setFormData({
-          patientId: appointment.patientId.toString(),
-          date: appointment.date,
-          time: appointment.time,
-          reason: appointment.reason,
-          notes: appointment.notes,
-        });
+    const loadData = async () => {
+      try {
+        setLoading(true);
+
+        // Load patients
+        const { data: patientsData, error: patientsError } =
+          await db.getPatients();
+        if (patientsError) {
+          console.error("Error loading patients:", patientsError);
+          setSubmitStatus({
+            type: "error",
+            message: "Failed to load patients",
+          });
+        } else {
+          setPatients(patientsData || []);
+        }
+
+        // Load appointment data for editing
+        if (isEditing && appointmentId) {
+          const { data: appointmentData, error: appointmentError } =
+            await db.getAppointment(appointmentId);
+          if (appointmentError) {
+            console.error("Error loading appointment:", appointmentError);
+            setSubmitStatus({
+              type: "error",
+              message: "Failed to load appointment",
+            });
+          } else if (appointmentData) {
+            setAppointment(appointmentData);
+            setFormData({
+              patient_id: appointmentData.patient_id,
+              date: appointmentData.date,
+              time: appointmentData.time,
+              reason: appointmentData.reason,
+              notes: appointmentData.notes || "",
+              status: appointmentData.status,
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Error loading data:", err);
+        setSubmitStatus({ type: "error", message: "Failed to load data" });
+      } finally {
+        setLoading(false);
       }
-    }
+    };
+
+    loadData();
   }, [isEditing, appointmentId]);
 
   const validateForm = (): boolean => {
