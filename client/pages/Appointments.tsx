@@ -281,12 +281,15 @@ export default function Appointments() {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  <Badge
-                    variant="outline"
-                    className="text-xs font-semibold px-3 py-1 bg-muted/30"
-                  >
-                    {appointment.type}
-                  </Badge>
+                                    <Link to={`/patients/${appointment.patient_id}`}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+                    >
+                      View Patient
+                    </Button>
+                  </Link>
                   <Badge
                     variant={
                       appointment.status === "confirmed"
