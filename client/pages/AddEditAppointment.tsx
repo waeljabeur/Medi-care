@@ -67,13 +67,19 @@ export default function AddEditAppointment() {
   const preSelectedPatientId = searchParams.get("patientId");
 
   const [formData, setFormData] = useState<FormData>({
-    patientId: preSelectedPatientId || "",
+    patient_id: preSelectedPatientId || "",
     date: "",
     time: "",
     reason: "",
     notes: "",
+    status: "pending",
   });
 
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [appointment, setAppointment] = useState<AppointmentWithPatient | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
