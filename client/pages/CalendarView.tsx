@@ -35,6 +35,33 @@ export default function CalendarView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Load appointments from database
+  useEffect(() => {
+    const loadAppointments = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await db.getAppointments();
+
+        if (error) {
+          console.error("Error loading appointments:", error);
+          setError("Failed to load appointments");
+          setAppointments([]);
+        } else {
+          setAppointments(data || []);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error loading appointments:", err);
+        setError("Failed to load appointments");
+        setAppointments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAppointments();
+  }, []);
+
   // Get current month/year for display
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
@@ -65,7 +92,7 @@ export default function CalendarView() {
   // Get appointments for a specific date
   const getAppointmentsForDate = (date: Date) => {
     const dateString = date.toISOString().split("T")[0];
-    return mockAppointments.filter((apt) => apt.date === dateString);
+    return appointments.filter((apt) => apt.date === dateString);
   };
 
   // Generate calendar days
