@@ -142,11 +142,6 @@ export class DatabaseService {
 
   constructor() {
     this.isDemoMode = authHelpers.isDemoMode();
-    console.log(
-      "🔍 DatabaseService constructor - isDemoMode:",
-      this.isDemoMode,
-    );
-    console.log("🔍 authHelpers.isDemoMode():", authHelpers.isDemoMode());
   }
 
   // Patient methods
