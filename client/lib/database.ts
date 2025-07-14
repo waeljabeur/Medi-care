@@ -329,6 +329,35 @@ export class DatabaseService {
       console.log("🔍 DEMO_APPOINTMENTS:", DEMO_APPOINTMENTS);
       console.log("🔍 DEMO_PATIENTS:", DEMO_PATIENTS);
 
+      // TEMPORARY TEST: Return hardcoded simple data
+      console.log("🔍 TEMPORARY: Returning hardcoded simple data");
+      return {
+        data: [
+          {
+            id: "test-1",
+            doctor_id: "test-doc",
+            patient_id: "test-patient",
+            date: "2024-12-20",
+            time: "09:00:00",
+            reason: "Test appointment",
+            notes: "Test notes",
+            status: "confirmed" as const,
+            created_at: "2024-01-01T00:00:00Z",
+            patient: {
+              id: "test-patient",
+              doctor_id: "test-doc",
+              name: "Test Patient",
+              dob: "1990-01-01",
+              phone: "(555) 123-4567",
+              email: "test@example.com",
+              medical_history: "Test history",
+              created_at: "2024-01-01T00:00:00Z",
+            },
+          },
+        ],
+        error: null,
+      };
+
       try {
         // First, let's test with just an empty array to see if the error is in the mapping
         console.log("🔍 Testing with empty array first...");
