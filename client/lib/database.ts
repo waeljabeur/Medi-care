@@ -322,74 +322,13 @@ export class DatabaseService {
     data: AppointmentWithPatient[] | null;
     error: any;
   }> {
-    console.log("🔍 getAppointments called, isDemoMode:", this.isDemoMode);
-
     if (this.isDemoMode) {
-      console.log("🔍 Using demo mode, returning demo appointments");
-      console.log("🔍 DEMO_APPOINTMENTS length:", DEMO_APPOINTMENTS.length);
-      console.log("🔍 DEMO_PATIENTS length:", DEMO_PATIENTS.length);
+      const appointmentsWithPatients = DEMO_APPOINTMENTS.map((appointment) => ({
+        ...appointment,
+        patient: DEMO_PATIENTS.find((p) => p.id === appointment.patient_id)!,
+      }));
 
-      // Verify data integrity first
-      const patientIds = DEMO_PATIENTS.map((p) => p.id);
-      console.log("🔍 Available patient IDs:", patientIds);
-
-      for (const appointment of DEMO_APPOINTMENTS) {
-        console.log(
-          `🔍 Checking appointment ${appointment.id} references patient ${appointment.patient_id}`,
-        );
-        if (!patientIds.includes(appointment.patient_id)) {
-          const errorMsg = `Patient ID ${appointment.patient_id} not found in demo patients`;
-          console.error("🔍 ERROR:", errorMsg);
-          return { data: null, error: { message: errorMsg } };
-        }
-      }
-
-      console.log("🔍 Data integrity check passed, proceeding with mapping");
-
-      try {
-        const appointmentsWithPatients = DEMO_APPOINTMENTS.map(
-          (appointment, index) => {
-            console.log(
-              `🔍 Processing appointment ${index + 1}/${DEMO_APPOINTMENTS.length}: ${appointment.id}`,
-            );
-
-            const patient = DEMO_PATIENTS.find(
-              (p) => p.id === appointment.patient_id,
-            );
-            if (!patient) {
-              throw new Error(
-                `Patient ${appointment.patient_id} not found for appointment ${appointment.id}`,
-              );
-            }
-
-            const result = {
-              ...appointment,
-              patient,
-            };
-
-            console.log(
-              `🔍 Successfully mapped appointment ${appointment.id} to patient ${patient.name}`,
-            );
-            return result;
-          },
-        );
-
-        console.log(
-          "🔍 All appointments successfully mapped:",
-          appointmentsWithPatients.length,
-        );
-        return { data: appointmentsWithPatients, error: null };
-      } catch (err) {
-        console.error("🔍 Error in appointment mapping:", err);
-        return {
-          data: null,
-          error: {
-            message:
-              err instanceof Error ? err.message : "Unknown error in demo mode",
-            originalError: err,
-          },
-        };
-      }
+      return { data: appointmentsWithPatients, error: null };
     }
 
     if (!supabase) {
