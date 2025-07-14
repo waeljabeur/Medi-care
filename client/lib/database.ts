@@ -53,6 +53,31 @@ export interface AppointmentFormData {
   status?: "pending" | "confirmed" | "completed" | "cancelled";
 }
 
+// Demo doctor profile
+const getDemoDoctorProfile = (): Doctor => {
+  const storedProfile = localStorage.getItem("demo-user-profile");
+  if (storedProfile) {
+    try {
+      const profile = JSON.parse(storedProfile);
+      return {
+        id: profile.id || "demo-user-123",
+        name: profile.name || "Dr. Demo User",
+        email: profile.email || "demo@doctor.com",
+        created_at: profile.created_at || new Date().toISOString(),
+      };
+    } catch (e) {
+      console.warn("Failed to parse stored demo profile");
+    }
+  }
+
+  return {
+    id: "demo-user-123",
+    name: "Dr. Demo User",
+    email: "demo@doctor.com",
+    created_at: new Date().toISOString(),
+  };
+};
+
 // Demo data for when Supabase is not available
 const DEMO_PATIENTS: Patient[] = [
   {
