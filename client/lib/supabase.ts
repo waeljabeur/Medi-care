@@ -86,13 +86,27 @@ export const authHelpers = {
         };
       }
 
+      // Store demo user data for later login
+      const demoUser = {
+        ...DEMO_USER,
+        email,
+        user_metadata: { name: metadata?.name || "Demo User" },
+      };
+
+      // Store in localStorage for demo mode persistence
+      localStorage.setItem(
+        "demo-user-profile",
+        JSON.stringify({
+          id: DEMO_USER.id,
+          name: metadata?.name || "Demo User",
+          email: email,
+          created_at: new Date().toISOString(),
+        }),
+      );
+
       return {
         data: {
-          user: {
-            ...DEMO_USER,
-            email,
-            user_metadata: { name: metadata?.name || "Demo User" },
-          },
+          user: demoUser,
           session: null, // In real Supabase, user needs to verify email first
         },
         error: null,
