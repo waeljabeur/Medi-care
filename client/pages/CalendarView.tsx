@@ -40,7 +40,12 @@ export default function CalendarView() {
     const loadAppointments = async () => {
       try {
         setLoading(true);
+        console.log("🔍 CalendarView: About to call db.getAppointments()");
         const { data, error } = await db.getAppointments();
+        console.log("🔍 CalendarView: db.getAppointments() returned:", {
+          data,
+          error,
+        });
 
         if (error) {
           console.error("Error loading appointments:", error);
