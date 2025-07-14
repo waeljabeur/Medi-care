@@ -174,7 +174,7 @@ export default function PrintExportDemo() {
                         </div>
                         <div>
                           <h4 className="font-semibold text-foreground">
-                            {apt.patient}
+                            {apt.patient.name}
                           </h4>
                           <p className="text-sm text-muted-foreground">
                             {apt.reason}
