@@ -44,13 +44,30 @@ export const authHelpers = {
         };
       }
 
+      // Check if we have a stored demo user profile
+      const storedProfile = localStorage.getItem("demo-user-profile");
+      let userProfile = DEMO_USER;
+
+      if (storedProfile) {
+        try {
+          const profile = JSON.parse(storedProfile);
+          userProfile = {
+            ...DEMO_USER,
+            email: profile.email,
+            user_metadata: { name: profile.name },
+          };
+        } catch (e) {
+          console.warn("Failed to parse stored demo profile");
+        }
+      }
+
       console.log("🟡 Demo mode - returning success");
       return {
         data: {
-          user: { ...DEMO_USER, email },
+          user: { ...userProfile, email },
           session: {
             access_token: "demo-token",
-            user: { ...DEMO_USER, email },
+            user: { ...userProfile, email },
           },
         },
         error: null,
