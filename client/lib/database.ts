@@ -169,6 +169,80 @@ export class DatabaseService {
     this.isDemoMode = authHelpers.isDemoMode();
   }
 
+  // Doctor methods
+  async getDoctorProfile(): Promise<{ data: Doctor | null; error: any }> {
+    if (this.isDemoMode) {
+      return { data: getDemoDoctorProfile(), error: null };
+    }
+
+    if (!supabase) {
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) {
+        return { data: null, error: { message: "User not authenticated" } };
+      }
+
+      const { data, error } = await supabase
+        .from("doctors")
+        .select("*")
+        .eq("id", user.user.id)
+        .single();
+
+      return { data, error };
+    } catch (err) {
+      return { data: null, error: err };
+    }
+  }
+
+  async createDoctorProfile(doctorData: {
+    name: string;
+    email: string;
+  }): Promise<{ data: Doctor | null; error: any }> {
+    if (this.isDemoMode) {
+      const profile = {
+        id: "demo-user-123",
+        ...doctorData,
+        created_at: new Date().toISOString(),
+      };
+
+      localStorage.setItem("demo-user-profile", JSON.stringify(profile));
+      return { data: profile, error: null };
+    }
+
+    if (!supabase) {
+      return {
+        data: null,
+        error: { message: "Supabase client not initialized" },
+      };
+    }
+
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) {
+        return { data: null, error: { message: "User not authenticated" } };
+      }
+
+      const { data, error } = await supabase
+        .from("doctors")
+        .insert({
+          id: user.user.id,
+          ...doctorData,
+        })
+        .select()
+        .single();
+
+      return { data, error };
+    } catch (err) {
+      return { data: null, error: err };
+    }
+  }
+
   // Patient methods
   async getPatients(): Promise<{ data: Patient[] | null; error: any }> {
     if (this.isDemoMode) {
