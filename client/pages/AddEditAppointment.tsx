@@ -143,8 +143,8 @@ export default function AddEditAppointment() {
     const newErrors: FormErrors = {};
 
     // Patient validation
-    if (!formData.patientId) {
-      newErrors.patientId = "Please select a patient";
+    if (!formData.patient_id) {
+      newErrors.patient_id = "Please select a patient";
     }
 
     // Date validation
