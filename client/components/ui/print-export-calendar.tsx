@@ -258,10 +258,10 @@ function formatDateForFilename(date: Date): string {
 }
 
 function filterAppointmentsByView(
-  appointments: Appointment[],
+  appointments: AppointmentWithPatient[],
   currentDate: Date,
   viewType: "day" | "week" | "month",
-): Appointment[] {
+): AppointmentWithPatient[] {
   switch (viewType) {
     case "day":
       const dayString = currentDate.toISOString().split("T")[0];
