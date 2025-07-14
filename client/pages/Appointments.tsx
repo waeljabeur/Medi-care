@@ -180,7 +180,9 @@ export default function Appointments() {
                 <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
                   This Week
                 </p>
-                <p className="text-3xl font-bold text-foreground">12</p>
+                <p className="text-3xl font-bold text-foreground">
+                  {thisWeekAppointments.length}
+                </p>
               </div>
               <div className="p-3 bg-info/20 rounded-2xl group-hover:scale-110 transition-transform">
                 <Clock className="w-8 h-8 text-info" />
