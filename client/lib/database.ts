@@ -317,7 +317,10 @@ export class DatabaseService {
     data: AppointmentWithPatient[] | null;
     error: any;
   }> {
+    console.log("🔍 getAppointments called, isDemoMode:", this.isDemoMode);
+
     if (this.isDemoMode) {
+      console.log("🔍 Using demo mode, returning demo appointments");
       const appointmentsWithPatients = DEMO_APPOINTMENTS.map((appointment) => ({
         ...appointment,
         patient: DEMO_PATIENTS.find((p) => p.id === appointment.patient_id)!,
@@ -326,6 +329,7 @@ export class DatabaseService {
     }
 
     if (!supabase) {
+      console.log("🔍 Supabase client not initialized");
       return {
         data: null,
         error: { message: "Supabase client not initialized" },
@@ -333,6 +337,7 @@ export class DatabaseService {
     }
 
     try {
+      console.log("🔍 Querying Supabase for appointments...");
       const { data, error } = await supabase
         .from("appointments")
         .select(
@@ -344,8 +349,10 @@ export class DatabaseService {
         .order("date", { ascending: true })
         .order("time", { ascending: true });
 
+      console.log("🔍 Supabase query result:", { data, error });
       return { data, error };
     } catch (err) {
+      console.log("🔍 Supabase query caught error:", err);
       return { data: null, error: err };
     }
   }
