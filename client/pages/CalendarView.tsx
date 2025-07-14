@@ -532,7 +532,7 @@ export default function CalendarView() {
                     {todayAppointments.map((apt) => (
                       <Link
                         key={apt.id}
-                        to={`/patients/${apt.patientId}`}
+                        to={`/patients/${apt.patient_id}`}
                         className="block"
                       >
                         <div className="p-3 bg-background/50 border border-border/50 rounded-xl hover:bg-background transition-colors">
