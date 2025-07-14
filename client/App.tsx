@@ -23,6 +23,7 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import FixDemoProfile from "./pages/FixDemoProfile";
 import { DoctorProvider } from "./contexts/DoctorContext-simple";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
