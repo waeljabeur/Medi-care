@@ -163,7 +163,9 @@ export default function Appointments() {
                 <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wide">
                   Today
                 </p>
-                <p className="text-3xl font-bold text-foreground">3</p>
+                <p className="text-3xl font-bold text-foreground">
+                  {todayAppointments.length}
+                </p>
               </div>
               <div className="p-3 bg-primary/20 rounded-2xl group-hover:scale-110 transition-transform">
                 <Calendar className="w-8 h-8 text-primary" />
