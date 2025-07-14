@@ -512,7 +512,7 @@ export default function CalendarView() {
             <CardContent>
               {(() => {
                 const todayString = new Date().toISOString().split("T")[0];
-                const todayAppointments = mockAppointments.filter(
+                const todayAppointments = appointments.filter(
                   (apt) => apt.date === todayString,
                 );
 
