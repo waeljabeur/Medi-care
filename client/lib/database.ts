@@ -330,6 +330,36 @@ export class DatabaseService {
       console.log("🔍 DEMO_PATIENTS:", DEMO_PATIENTS);
 
       try {
+        // First, let's test with just an empty array to see if the error is in the mapping
+        console.log("🔍 Testing with empty array first...");
+        const testEmpty = [];
+        console.log("🔍 Empty array test passed");
+
+        // Now try with just the first appointment
+        console.log("🔍 Testing with first appointment only...");
+        const firstAppointment = DEMO_APPOINTMENTS[0];
+        console.log("🔍 First appointment:", firstAppointment);
+
+        const firstPatient = DEMO_PATIENTS.find(
+          (p) => p.id === firstAppointment.patient_id,
+        );
+        console.log("🔍 First patient found:", firstPatient);
+
+        if (!firstPatient) {
+          throw new Error(
+            `Patient not found for first appointment: ${firstAppointment.patient_id}`,
+          );
+        }
+
+        const testSingle = [
+          {
+            ...firstAppointment,
+            patient: firstPatient,
+          },
+        ];
+        console.log("🔍 Single appointment test passed:", testSingle);
+
+        // If that works, try all appointments
         const appointmentsWithPatients = DEMO_APPOINTMENTS.map(
           (appointment) => {
             console.log(
@@ -374,6 +404,10 @@ export class DatabaseService {
         return { data: appointmentsWithPatients, error: null };
       } catch (err) {
         console.error("🔍 Error creating appointmentsWithPatients:", err);
+        console.error(
+          "🔍 Error stack:",
+          err instanceof Error ? err.stack : "No stack",
+        );
         return {
           data: null,
           error: {
