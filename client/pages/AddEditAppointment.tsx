@@ -404,10 +404,10 @@ export default function AddEditAppointment() {
                       ))}
                     </SelectContent>
                   </Select>
-                  {errors.patientId && (
+                  {errors.patient_id && (
                     <p className="text-sm text-destructive flex items-center">
                       <AlertCircle className="w-3 h-3 mr-1" />
-                      {errors.patientId}
+                      {errors.patient_id}
                     </p>
                   )}
                 </div>
