@@ -23,6 +23,68 @@ import {
 import { db, type AppointmentWithPatient } from "@/lib/database";
 
 export default function Appointments() {
+  const [appointments, setAppointments] = useState<AppointmentWithPatient[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load appointments from database
+  useEffect(() => {
+    const loadAppointments = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await db.getAppointments();
+
+        if (error) {
+          console.error("Error loading appointments:", error);
+          setError("Failed to load appointments");
+          setAppointments([]);
+        } else {
+          setAppointments(data || []);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error loading appointments:", err);
+        setError("Failed to load appointments");
+        setAppointments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAppointments();
+  }, []);
+
+  // Helper function to format time from 24h to 12h format
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  // Calculate stats from appointments
+  const today = new Date().toISOString().split("T")[0];
+  const todayAppointments = appointments.filter((apt) => apt.date === today);
+  const pendingAppointments = appointments.filter(
+    (apt) => apt.status === "pending",
+  );
+  const completedAppointments = appointments.filter(
+    (apt) => apt.status === "completed",
+  );
+
+  // Get start and end of current week
+  const now = new Date();
+  const weekStart = new Date(now.setDate(now.getDate() - now.getDay()));
+  const weekEnd = new Date(now.setDate(now.getDate() - now.getDay() + 6));
+  const weekStartStr = weekStart.toISOString().split("T")[0];
+  const weekEndStr = weekEnd.toISOString().split("T")[0];
+  const thisWeekAppointments = appointments.filter(
+    (apt) => apt.date >= weekStartStr && apt.date <= weekEndStr,
+  );
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
