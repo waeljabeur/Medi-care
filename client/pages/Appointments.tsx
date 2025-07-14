@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -19,6 +20,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { db, type AppointmentWithPatient } from "@/lib/database";
 
 // Mock appointments data
 const mockAppointments = [
