@@ -344,85 +344,43 @@ export class DatabaseService {
         }
       }
 
+      console.log("🔍 Data integrity check passed, proceeding with mapping");
+
       try {
-        // First, let's test with just an empty array to see if the error is in the mapping
-        console.log("🔍 Testing with empty array first...");
-        const testEmpty = [];
-        console.log("🔍 Empty array test passed");
-
-        // Now try with just the first appointment
-        console.log("🔍 Testing with first appointment only...");
-        const firstAppointment = DEMO_APPOINTMENTS[0];
-        console.log("🔍 First appointment:", firstAppointment);
-
-        const firstPatient = DEMO_PATIENTS.find(
-          (p) => p.id === firstAppointment.patient_id,
-        );
-        console.log("🔍 First patient found:", firstPatient);
-
-        if (!firstPatient) {
-          throw new Error(
-            `Patient not found for first appointment: ${firstAppointment.patient_id}`,
-          );
-        }
-
-        const testSingle = [
-          {
-            ...firstAppointment,
-            patient: firstPatient,
-          },
-        ];
-        console.log("🔍 Single appointment test passed:", testSingle);
-
-        // If that works, try all appointments
         const appointmentsWithPatients = DEMO_APPOINTMENTS.map(
-          (appointment) => {
+          (appointment, index) => {
             console.log(
-              "🔍 Processing appointment:",
-              appointment.id,
-              "patient_id:",
-              appointment.patient_id,
+              `🔍 Processing appointment ${index + 1}/${DEMO_APPOINTMENTS.length}: ${appointment.id}`,
             );
+
             const patient = DEMO_PATIENTS.find(
               (p) => p.id === appointment.patient_id,
             );
             if (!patient) {
-              console.error(
-                "🔍 Patient not found for appointment:",
-                appointment.patient_id,
-              );
-              console.error(
-                "🔍 Available patients:",
-                DEMO_PATIENTS.map((p) => p.id),
-              );
               throw new Error(
-                `Patient not found for appointment: ${appointment.patient_id}`,
+                `Patient ${appointment.patient_id} not found for appointment ${appointment.id}`,
               );
             }
-            console.log(
-              "🔍 Found patient:",
-              patient.name,
-              "for appointment:",
-              appointment.id,
-            );
-            return {
+
+            const result = {
               ...appointment,
               patient,
             };
+
+            console.log(
+              `🔍 Successfully mapped appointment ${appointment.id} to patient ${patient.name}`,
+            );
+            return result;
           },
         );
 
         console.log(
-          "🔍 appointmentsWithPatients successfully created:",
-          appointmentsWithPatients,
+          "🔍 All appointments successfully mapped:",
+          appointmentsWithPatients.length,
         );
         return { data: appointmentsWithPatients, error: null };
       } catch (err) {
-        console.error("🔍 Error creating appointmentsWithPatients:", err);
-        console.error(
-          "🔍 Error stack:",
-          err instanceof Error ? err.stack : "No stack",
-        );
+        console.error("🔍 Error in appointment mapping:", err);
         return {
           data: null,
           error: {
