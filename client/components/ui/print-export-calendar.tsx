@@ -2,20 +2,10 @@ import React from "react";
 import { Button } from "./button";
 import { Printer, Download, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-interface Appointment {
-  id: number;
-  patientId: number;
-  patient: string;
-  date: string;
-  time: string;
-  reason: string;
-  status: string;
-  notes: string;
-}
+import { type AppointmentWithPatient } from "@/lib/database";
 
 interface PrintExportCalendarProps {
-  appointments: Appointment[];
+  appointments: AppointmentWithPatient[];
   currentDate: Date;
   viewType: "day" | "week" | "month";
   className?: string;
@@ -85,7 +75,7 @@ export function PrintExportCalendar({
           // Time and Patient
           doc.setFontSize(12);
           doc.setTextColor(0, 0, 0);
-          doc.text(`${apt.time} - ${apt.patient}`, 20, yPosition + 10);
+          doc.text(`${apt.time} - ${apt.patient.name}`, 20, yPosition + 10);
 
           // Reason
           doc.setFontSize(10);
@@ -170,11 +160,11 @@ export function PrintExportCalendar({
         [
           apt.date,
           apt.time,
-          `"${apt.patient}"`,
+          `"${apt.patient.name}"`,
           `"${apt.reason}"`,
           apt.status,
           `"${apt.notes.replace(/"/g, '""')}"`,
-          apt.patientId,
+          apt.patient_id,
         ].join(","),
       ),
     ];
@@ -268,10 +258,10 @@ function formatDateForFilename(date: Date): string {
 }
 
 function filterAppointmentsByView(
-  appointments: Appointment[],
+  appointments: AppointmentWithPatient[],
   currentDate: Date,
   viewType: "day" | "week" | "month",
-): Appointment[] {
+): AppointmentWithPatient[] {
   switch (viewType) {
     case "day":
       const dayString = currentDate.toISOString().split("T")[0];

@@ -4,48 +4,93 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
+import { type AppointmentWithPatient } from "@/lib/database";
 
 // Sample appointments data for demo
-const demoAppointments = [
+const demoAppointments: AppointmentWithPatient[] = [
   {
-    id: 1,
-    patientId: 1,
-    patient: "Emma Wilson",
+    id: "demo-1",
+    doctor_id: "demo-doc",
+    patient_id: "demo-patient-1",
     date: "2024-01-20",
     time: "09:00",
     reason: "Annual Checkup",
     status: "confirmed",
     notes: "Complete physical examination including blood work",
+    created_at: "2024-01-01T00:00:00Z",
+    patient: {
+      id: "demo-patient-1",
+      doctor_id: "demo-doc",
+      name: "Emma Wilson",
+      dob: "1990-01-01",
+      phone: "(555) 123-4567",
+      email: "emma@example.com",
+      medical_history: "No significant history",
+      created_at: "2024-01-01T00:00:00Z",
+    },
   },
   {
-    id: 2,
-    patientId: 2,
-    patient: "Michael Chen",
+    id: "demo-2",
+    doctor_id: "demo-doc",
+    patient_id: "demo-patient-2",
     date: "2024-01-20",
     time: "11:00",
     reason: "Blood Pressure Check",
     status: "confirmed",
     notes: "Follow-up on hypertension medication",
+    created_at: "2024-01-01T00:00:00Z",
+    patient: {
+      id: "demo-patient-2",
+      doctor_id: "demo-doc",
+      name: "Michael Chen",
+      dob: "1985-05-15",
+      phone: "(555) 234-5678",
+      email: "michael@example.com",
+      medical_history: "Hypertension",
+      created_at: "2024-01-01T00:00:00Z",
+    },
   },
   {
-    id: 3,
-    patientId: 3,
-    patient: "Sarah Davis",
+    id: "demo-3",
+    doctor_id: "demo-doc",
+    patient_id: "demo-patient-3",
     date: "2024-01-22",
     time: "14:00",
     reason: "Consultation",
     status: "pending",
     notes: "New patient consultation for chronic pain",
+    created_at: "2024-01-01T00:00:00Z",
+    patient: {
+      id: "demo-patient-3",
+      doctor_id: "demo-doc",
+      name: "Sarah Davis",
+      dob: "1992-03-10",
+      phone: "(555) 345-6789",
+      email: "sarah@example.com",
+      medical_history: "Chronic pain",
+      created_at: "2024-01-01T00:00:00Z",
+    },
   },
   {
-    id: 4,
-    patientId: 1,
-    patient: "Emma Wilson",
+    id: "demo-4",
+    doctor_id: "demo-doc",
+    patient_id: "demo-patient-1",
     date: "2024-01-25",
     time: "10:30",
     reason: "Follow-up",
     status: "confirmed",
     notes: "Review test results and discuss treatment plan",
+    created_at: "2024-01-01T00:00:00Z",
+    patient: {
+      id: "demo-patient-1",
+      doctor_id: "demo-doc",
+      name: "Emma Wilson",
+      dob: "1990-01-01",
+      phone: "(555) 123-4567",
+      email: "emma@example.com",
+      medical_history: "No significant history",
+      created_at: "2024-01-01T00:00:00Z",
+    },
   },
 ];
 
@@ -129,7 +174,7 @@ export default function PrintExportDemo() {
                         </div>
                         <div>
                           <h4 className="font-semibold text-foreground">
-                            {apt.patient}
+                            {apt.patient.name}
                           </h4>
                           <p className="text-sm text-muted-foreground">
                             {apt.reason}

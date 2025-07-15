@@ -23,6 +23,9 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import FixDemoProfile from "./pages/FixDemoProfile";
+import SupabaseSetup from "./pages/SupabaseSetup";
+import CreateDoctorProfile from "./pages/CreateDoctorProfile";
 import { DoctorProvider } from "./contexts/DoctorContext-simple";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
@@ -88,6 +91,12 @@ const App = () => {
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/fix-demo-profile" element={<FixDemoProfile />} />
+                <Route path="/supabase-setup" element={<SupabaseSetup />} />
+                <Route
+                  path="/create-doctor-profile"
+                  element={<CreateDoctorProfile />}
+                />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route

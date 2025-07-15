@@ -96,8 +96,27 @@ export default function Signup() {
       }
 
       if (data.user) {
-        // For now, just show success message
-        // Doctor profile will be created on first login/dashboard access
+        // Try to create doctor profile manually if trigger failed
+        try {
+          const { data: profileData, error: profileError } = await supabase
+            .from("doctors")
+            .insert({
+              id: data.user.id,
+              name: name,
+              email: email,
+            })
+            .select()
+            .single();
+
+          if (
+            profileError &&
+            !profileError.message.includes("unique_violation")
+          ) {
+            console.error("Failed to create doctor profile:", profileError);
+          }
+        } catch (profileErr) {
+          console.error("Error creating doctor profile:", profileErr);
+        }
         setSuccess(
           "Account created successfully! Please check your email to verify your account.",
         );

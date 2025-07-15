@@ -9,9 +9,20 @@ const isDemoMode =
   !supabaseUrl ||
   !supabaseKey ||
   supabaseUrl.includes("your-project") ||
-  supabaseKey.includes("your-anon-key");
+  supabaseKey.includes("your-anon-key") ||
+  supabaseUrl === "your-supabase-project-url" ||
+  supabaseKey === "your-supabase-anon-key";
 
-console.log("🔧 Supabase mode:", isDemoMode ? "DEMO" : "LIVE");
+console.log("🔧 Supabase Configuration Check:");
+console.log(
+  "🔧 URL:",
+  supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : "Not set",
+);
+console.log(
+  "🔧 Key:",
+  supabaseKey ? `${supabaseKey.substring(0, 20)}...` : "Not set",
+);
+console.log("🔧 Mode:", isDemoMode ? "DEMO" : "LIVE");
 
 // Create Supabase client (only if we have real credentials)
 export const supabase = isDemoMode
@@ -44,13 +55,30 @@ export const authHelpers = {
         };
       }
 
+      // Check if we have a stored demo user profile
+      const storedProfile = localStorage.getItem("demo-user-profile");
+      let userProfile = DEMO_USER;
+
+      if (storedProfile) {
+        try {
+          const profile = JSON.parse(storedProfile);
+          userProfile = {
+            ...DEMO_USER,
+            email: profile.email,
+            user_metadata: { name: profile.name },
+          };
+        } catch (e) {
+          console.warn("Failed to parse stored demo profile");
+        }
+      }
+
       console.log("🟡 Demo mode - returning success");
       return {
         data: {
-          user: { ...DEMO_USER, email },
+          user: { ...userProfile, email },
           session: {
             access_token: "demo-token",
-            user: { ...DEMO_USER, email },
+            user: { ...userProfile, email },
           },
         },
         error: null,
@@ -86,13 +114,27 @@ export const authHelpers = {
         };
       }
 
+      // Store demo user data for later login
+      const demoUser = {
+        ...DEMO_USER,
+        email,
+        user_metadata: { name: metadata?.name || "Demo User" },
+      };
+
+      // Store in localStorage for demo mode persistence
+      localStorage.setItem(
+        "demo-user-profile",
+        JSON.stringify({
+          id: DEMO_USER.id,
+          name: metadata?.name || "Demo User",
+          email: email,
+          created_at: new Date().toISOString(),
+        }),
+      );
+
       return {
         data: {
-          user: {
-            ...DEMO_USER,
-            email,
-            user_metadata: { name: metadata?.name || "Demo User" },
-          },
+          user: demoUser,
           session: null, // In real Supabase, user needs to verify email first
         },
         error: null,

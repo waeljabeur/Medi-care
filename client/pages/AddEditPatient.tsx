@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { authHelpers, supabase } from "@/lib/supabase";
+import { db, type Patient, type PatientFormData } from "@/lib/database";
 import {
   Card,
   CardContent,
@@ -104,16 +105,21 @@ export default function AddEditPatient() {
       if (!isEditing || !patientId) return;
 
       if (authHelpers.isDemoMode()) {
-        // Demo mode: use mock data
-        const patient =
-          mockPatientData[parseInt(patientId) as keyof typeof mockPatientData];
-        if (patient) {
+        // Demo mode: use database service
+        const { data: patient, error } = await db.getPatient(patientId);
+        if (error) {
+          console.error("Error loading patient:", error);
+          setSubmitStatus({
+            type: "error",
+            message: "Failed to load patient data",
+          });
+        } else if (patient) {
           setFormData({
             name: patient.name,
-            email: patient.email,
-            phone: patient.phone,
-            dateOfBirth: patient.dateOfBirth,
-            medicalHistory: patient.medicalHistory,
+            email: patient.email || "",
+            phone: patient.phone || "",
+            dateOfBirth: patient.dob || "",
+            medicalHistory: patient.medical_history || "",
           });
         }
         return;
@@ -240,12 +246,25 @@ export default function AddEditPatient() {
 
     try {
       if (authHelpers.isDemoMode()) {
-        // Demo mode: simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // Demo mode: use database service
+        const patientData: PatientFormData = {
+          name: formData.name,
+          email: formData.email || undefined,
+          phone: formData.phone || undefined,
+          dob: formData.dateOfBirth || undefined,
+          medical_history: formData.medicalHistory || undefined,
+        };
 
-        if (formData.email.includes("error")) {
+        let result;
+        if (isEditing && patientId) {
+          result = await db.updatePatient(patientId, patientData);
+        } else {
+          result = await db.createPatient(patientData);
+        }
+
+        if (result.error) {
           throw new Error(
-            "Failed to save patient information. Please try again.",
+            result.error.message || "Failed to save patient information",
           );
         }
 

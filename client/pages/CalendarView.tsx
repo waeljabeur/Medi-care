@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -23,75 +23,48 @@ import {
   Stethoscope,
   FileText,
 } from "lucide-react";
-
-// Mock appointments data - in real app this would come from API filtered by doctor_id
-const mockAppointments = [
-  {
-    id: 1,
-    patientId: 1,
-    patient: "Emma Wilson",
-    date: "2024-01-20",
-    time: "09:00",
-    reason: "Annual Checkup",
-    status: "confirmed",
-    notes: "Complete physical examination",
-  },
-  {
-    id: 2,
-    patientId: 2,
-    patient: "Michael Chen",
-    date: "2024-01-20",
-    time: "11:00",
-    reason: "Blood Pressure Check",
-    status: "confirmed",
-    notes: "Follow-up on hypertension",
-  },
-  {
-    id: 3,
-    patientId: 3,
-    patient: "Sarah Davis",
-    date: "2024-01-22",
-    time: "14:00",
-    reason: "Consultation",
-    status: "pending",
-    notes: "New patient consultation",
-  },
-  {
-    id: 4,
-    patientId: 1,
-    patient: "Emma Wilson",
-    date: "2024-01-25",
-    time: "10:30",
-    reason: "Follow-up",
-    status: "confirmed",
-    notes: "Review test results",
-  },
-  {
-    id: 5,
-    patientId: 4,
-    patient: "Robert Johnson",
-    date: "2024-01-25",
-    time: "15:00",
-    reason: "Physical Exam",
-    status: "confirmed",
-    notes: "Annual physical examination",
-  },
-  {
-    id: 6,
-    patientId: 2,
-    patient: "Michael Chen",
-    date: "2024-01-28",
-    time: "09:30",
-    reason: "Medication Review",
-    status: "confirmed",
-    notes: "Review current medications",
-  },
-];
+import { db, type AppointmentWithPatient } from "@/lib/database";
 
 export default function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewType, setViewType] = useState<ViewType>("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [appointments, setAppointments] = useState<AppointmentWithPatient[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load appointments from database
+  useEffect(() => {
+    const loadAppointments = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await db.getAppointments();
+
+        if (error) {
+          console.error("Error loading appointments:", error);
+          setError(
+            `Failed to load appointments: ${error.message || "Unknown error"}`,
+          );
+          setAppointments([]);
+        } else {
+          setAppointments(data || []);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error loading appointments:", err);
+        setError(
+          `Failed to load appointments: ${err instanceof Error ? err.message : "Unknown error"}`,
+        );
+        setAppointments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAppointments();
+  }, []);
 
   // Get current month/year for display
   const currentMonth = currentDate.getMonth();
@@ -123,7 +96,7 @@ export default function CalendarView() {
   // Get appointments for a specific date
   const getAppointmentsForDate = (date: Date) => {
     const dateString = date.toISOString().split("T")[0];
-    return mockAppointments.filter((apt) => apt.date === dateString);
+    return appointments.filter((apt) => apt.date === dateString);
   };
 
   // Generate calendar days
@@ -317,7 +290,7 @@ export default function CalendarView() {
                             {day.appointments.slice(0, 2).map((apt) => (
                               <Link
                                 key={apt.id}
-                                to={`/patients/${apt.patientId}`}
+                                to={`/patients/${apt.patient_id}`}
                                 className="block"
                               >
                                 <div
@@ -328,7 +301,7 @@ export default function CalendarView() {
                                   }`}
                                 >
                                   <div className="truncate">
-                                    {apt.time} {apt.patient}
+                                    {apt.time} {apt.patient.name}
                                   </div>
                                   <div className="truncate text-xs opacity-80">
                                     {apt.reason}
@@ -436,7 +409,7 @@ export default function CalendarView() {
                             .map((apt) => (
                               <Link
                                 key={apt.id}
-                                to={`/patients/${apt.patientId}`}
+                                to={`/patients/${apt.patient_id}`}
                                 className="block"
                               >
                                 <div className="p-6 bg-background/50 border border-border/50 rounded-xl hover:bg-background hover:shadow-md transition-all duration-200 group">
@@ -448,7 +421,7 @@ export default function CalendarView() {
                                       <div className="flex-1">
                                         <div className="flex items-center space-x-3 mb-2">
                                           <h4 className="font-bold text-foreground text-lg">
-                                            {apt.patient}
+                                            {apt.patient.name}
                                           </h4>
                                           <Badge
                                             variant="outline"
@@ -516,7 +489,7 @@ export default function CalendarView() {
             </CardHeader>
             <CardContent>
               <PrintExportCalendar
-                appointments={mockAppointments}
+                appointments={appointments}
                 currentDate={currentDate}
                 viewType={viewType}
               />
@@ -543,7 +516,7 @@ export default function CalendarView() {
             <CardContent>
               {(() => {
                 const todayString = new Date().toISOString().split("T")[0];
-                const todayAppointments = mockAppointments.filter(
+                const todayAppointments = appointments.filter(
                   (apt) => apt.date === todayString,
                 );
 
@@ -563,13 +536,13 @@ export default function CalendarView() {
                     {todayAppointments.map((apt) => (
                       <Link
                         key={apt.id}
-                        to={`/patients/${apt.patientId}`}
+                        to={`/patients/${apt.patient_id}`}
                         className="block"
                       >
                         <div className="p-3 bg-background/50 border border-border/50 rounded-xl hover:bg-background transition-colors">
                           <div className="flex justify-between items-start mb-2">
                             <h4 className="font-semibold text-foreground text-sm">
-                              {apt.patient}
+                              {apt.patient.name}
                             </h4>
                             <Badge
                               variant="outline"
@@ -611,30 +584,48 @@ export default function CalendarView() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Total Appointments
-                </span>
-                <span className="font-semibold">{mockAppointments.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Confirmed</span>
-                <span className="font-semibold text-success">
-                  {
-                    mockAppointments.filter((apt) => apt.status === "confirmed")
-                      .length
-                  }
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Pending</span>
-                <span className="font-semibold text-warning">
-                  {
-                    mockAppointments.filter((apt) => apt.status === "pending")
-                      .length
-                  }
-                </span>
-              </div>
+              {loading ? (
+                <div className="text-center py-4">
+                  <div className="text-sm text-muted-foreground">
+                    Loading...
+                  </div>
+                </div>
+              ) : error ? (
+                <div className="text-center py-4">
+                  <div className="text-sm text-destructive">{error}</div>
+                </div>
+              ) : (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Total Appointments
+                    </span>
+                    <span className="font-semibold">{appointments.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Confirmed
+                    </span>
+                    <span className="font-semibold text-success">
+                      {
+                        appointments.filter((apt) => apt.status === "confirmed")
+                          .length
+                      }
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Pending
+                    </span>
+                    <span className="font-semibold text-warning">
+                      {
+                        appointments.filter((apt) => apt.status === "pending")
+                          .length
+                      }
+                    </span>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
