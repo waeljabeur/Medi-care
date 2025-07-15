@@ -200,6 +200,24 @@ export class DatabaseService {
         .eq("id", user.user.id)
         .single();
 
+      // If no doctor profile exists, try to create one
+      if (error && error.code === "PGRST116") {
+        console.log("No doctor profile found, creating one...");
+        const createResult = await this.createDoctorProfile({
+          name:
+            user.user.user_metadata?.name ||
+            user.user.email?.split("@")[0] ||
+            "Doctor",
+          email: user.user.email || "",
+        });
+
+        if (createResult.error) {
+          return { data: null, error: createResult.error };
+        }
+
+        return { data: createResult.data, error: null };
+      }
+
       return { data, error };
     } catch (err) {
       return { data: null, error: err };
