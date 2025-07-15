@@ -25,6 +25,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import FixDemoProfile from "./pages/FixDemoProfile";
 import SupabaseSetup from "./pages/SupabaseSetup";
+import CreateDoctorProfile from "./pages/CreateDoctorProfile";
 import { DoctorProvider } from "./contexts/DoctorContext-simple";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
